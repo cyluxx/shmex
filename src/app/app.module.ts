@@ -7,6 +7,7 @@ import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {EditComponent} from './components/edit/edit.component';
 import {CodemirrorModule} from "@ctrl/ngx-codemirror";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {CodemirrorModule} from "@ctrl/ngx-codemirror";
     BrowserModule,
     BrowserAnimationsModule,
     CodemirrorModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production})
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

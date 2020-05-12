@@ -1,7 +1,9 @@
 <ngx-codemirror
+  [(ngModel)]="codeMirrorContent"
   [options]="{
     lineNumbers: true,
     theme: 'material-darker',
     mode: 'shmexl'
   }"
+  (ngModelChange)="onChange()"
 ></ngx-codemirror>
