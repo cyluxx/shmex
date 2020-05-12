@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import 'codemirror/addon/runmode/runmode'
-import * as CodeMirror from "codemirror";
+import {Store} from "@ngrx/store";
+import {parseShmexlText} from "../../store/actions";
 
 @Component({
   selector: 'app-edit',
@@ -11,15 +11,13 @@ export class EditComponent implements OnInit {
 
   codeMirrorContent = '';
 
-  constructor() {
+  constructor(private store: Store) {
   }
 
   ngOnInit(): void {
   }
 
   onChange(): void {
-    CodeMirror.runMode(this.codeMirrorContent, 'shmexl', (token, style) => {
-      console.log(`Token: ${token}; Style: ${style}`);
-    });
+    this.store.dispatch(parseShmexlText({shmexlText: this.codeMirrorContent}));
   }
 }

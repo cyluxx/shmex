@@ -8,7 +8,8 @@ import {environment} from '../environments/environment';
 import {EditComponent} from './components/edit/edit.component';
 import {CodemirrorModule} from "@ctrl/ngx-codemirror";
 import {FormsModule} from "@angular/forms";
-import { StoreModule } from '@ngrx/store';
+import {StoreModule} from '@ngrx/store';
+import {reducer} from "./store/reducer";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { StoreModule } from '@ngrx/store';
     CodemirrorModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     FormsModule,
-    StoreModule.forRoot({}, {})
+    StoreModule.forRoot({reducer}, {})
   ],
   providers: [],
   bootstrap: [AppComponent]
