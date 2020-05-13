@@ -8,13 +8,12 @@ const _reducer = createReducer(
   initialAppState,
 
   on(parseShmexlText, (state, {shmexlText}) => {
-    const rhythmElements: RhythmElement[] = [];
-    const next: RhythmElement = {duration: null, tones: []};
+    const rhythmElements: RhythmElement[] = [{duration: null, tones: []}];
     CodeMirror.runMode(shmexlText, 'shmexl', (token, style) => {
       switch (style) {
         case 'atom':
           const splitDurationToken = token.split('/');
-          next.duration = {
+          rhythmElements[rhythmElements.length - 1].duration = {
             numerator: +splitDurationToken[0],
             denominator: +splitDurationToken[1] as 1 | 2 | 4 | 8 | 16 | 32
           }
@@ -22,12 +21,12 @@ const _reducer = createReducer(
         case 'keyword':
           const splitToneToken = token.split('');
           if (splitToneToken.length === 2) {
-            next.tones.push({
+            rhythmElements[rhythmElements.length - 1].tones.push({
               tone: splitToneToken[0] as 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g',
               octave: +splitToneToken[1] as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
             });
           } else {
-            next.tones.push({
+            rhythmElements[rhythmElements.length - 1].tones.push({
               tone: splitToneToken[0] as 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g',
               accidental: splitToneToken[1] as '#' | 'b',
               octave: +splitToneToken[2] as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
@@ -35,8 +34,7 @@ const _reducer = createReducer(
           }
           break;
         case 'operator':
-          rhythmElements.push(next);
-          next.tones = [];
+          rhythmElements.push({duration: null, tones: []});
           break;
       }
     });
