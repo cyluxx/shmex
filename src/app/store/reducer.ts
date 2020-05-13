@@ -38,6 +38,9 @@ const _reducer = createReducer(
           break;
       }
     });
+    if (rhythmElements.length > 0) {
+      rhythmElements.pop();
+    }
     return {...state, track: {...state.track, rhythmElements}};
   }),
 );
