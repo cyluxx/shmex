@@ -11,11 +11,13 @@ import {FormsModule} from "@angular/forms";
 import {StoreModule} from '@ngrx/store';
 import {reducer} from "./store/reducer";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { PreviewComponent } from './components/preview/preview.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EditComponent
+    EditComponent,
+    PreviewComponent
   ],
   imports: [
     BrowserModule,
