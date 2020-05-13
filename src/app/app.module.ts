@@ -10,6 +10,7 @@ import {CodemirrorModule} from "@ctrl/ngx-codemirror";
 import {FormsModule} from "@angular/forms";
 import {StoreModule} from '@ngrx/store';
 import {reducer} from "./store/reducer";
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {reducer} from "./store/reducer";
     CodemirrorModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     FormsModule,
-    StoreModule.forRoot({reducer}, {})
+    StoreModule.forRoot({reducer}, {}),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [],
   bootstrap: [AppComponent]
