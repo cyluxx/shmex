@@ -22,15 +22,15 @@ const _reducer = createReducer(
           const splitToneToken = token.split('');
           if (splitToneToken.length === 2) {
             rhythmElements[rhythmElements.length - 1].tones.push({
-              tone: splitToneToken[0] as 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g',
+              key: splitToneToken[0] as 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g',
               octave: +splitToneToken[1] as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
             });
           } else {
             rhythmElements[rhythmElements.length - 1].tones.push({
-              tone: splitToneToken[0] as 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g',
+              key: splitToneToken[0] as 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g',
               accidental: splitToneToken[1] as '#' | 'b',
               octave: +splitToneToken[2] as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
-            })
+            });
           }
           break;
         case 'operator':
