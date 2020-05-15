@@ -1,36 +1,51 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import * as vexflow from 'vexflow'
+import {Store} from "@ngrx/store";
+import {Observable} from "rxjs";
+import {Track} from "../../store/state";
+import {selectCurrentTrack} from "../../store/selectors";
 
 @Component({
   selector: 'app-preview',
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css']
 })
-export class PreviewComponent implements AfterViewInit {
+export class PreviewComponent implements AfterViewInit, OnInit {
 
   @ViewChild('vexflowCanvas', {static: false}) vexflowCanvas: ElementRef;
 
-  constructor() {
+  private VF = vexflow.Flow;
+  private renderer;
+  private context;
+
+  private currentTrack$: Observable<Track>;
+
+  constructor(private store: Store) {
+  }
+
+  ngOnInit() {
+    this.currentTrack$ = this.store.select(selectCurrentTrack);
   }
 
   ngAfterViewInit() {
-    var VF = vexflow.Flow;
-
-    // Create an SVG renderer and attach it to the DIV element named "boo".
-    var renderer = new VF.Renderer(this.vexflowCanvas.nativeElement, VF.Renderer.Backends.SVG);
+    this.renderer = new this.VF.Renderer(this.vexflowCanvas.nativeElement, this.VF.Renderer.Backends.SVG);
+    this.context = this.renderer.getContext();
 
     // Configure the rendering context.
-    renderer.resize(500, 500);
-    var context = renderer.getContext();
-    context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+    this.renderer.resize(1000, 1000);
+    this.context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
     // Create a stave of width 400 at position 10, 40 on the canvas.
-    var stave = new VF.Stave(10, 40, 400);
+    const stave = new this.VF.Stave(10, 40, 400);
 
     // Add a clef and time signature.
-    stave.addClef("treble").addTimeSignature("4/4");
 
     // Connect it to the rendering context and draw!
-    stave.setContext(context).draw();
+    stave.setContext(this.context).draw();
+
+    this.currentTrack$.subscribe(() => {
+      stave.addClef("treble").addTimeSignature("4/4");
+      stave.setContext(this.context).draw();
+    });
   }
 }
