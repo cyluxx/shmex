@@ -2,8 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/
 import * as vexflow from 'vexflow';
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {Track} from "../../store/state";
-import {selectCurrentTrack, selectCurrentTrackNotes} from "../../store/selectors";
+import {selectCurrentTrackNotes} from "../../store/selectors";
 
 @Component({
   selector: 'app-preview',
@@ -19,14 +18,12 @@ export class PreviewComponent implements AfterViewInit, OnInit {
   private context;
   private formatter;
 
-  private currentTrack$: Observable<Track>;
   private currentTrackNotes$: Observable<any[]>
 
   constructor(private store: Store) {
   }
 
   ngOnInit() {
-    this.currentTrack$ = this.store.select(selectCurrentTrack);
     this.currentTrackNotes$ = this.store.select(selectCurrentTrackNotes);
   }
 
@@ -35,7 +32,7 @@ export class PreviewComponent implements AfterViewInit, OnInit {
     this.context = this.renderer.getContext();
     this.formatter = new this.VF.Formatter();
 
-      // Configure the rendering context.
+    // Configure the rendering context.
     this.renderer.resize(1000, 1000);
     this.context.setFont("Arial", 10, "").setBackgroundFillStyle("#aaaaaa");
 
