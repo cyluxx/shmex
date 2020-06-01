@@ -1,6 +1,6 @@
 import {createSelector} from "@ngrx/store";
 import {AppState, Track} from "./state";
-import {isRest, toVexRest, toVexTones} from "./utils";
+import {getEndingRests, isRest, toVexRest, toVexTones} from "./utils";
 
 const selectAppState = state => state.app;
 
@@ -12,11 +12,15 @@ export const selectCurrentTrack = createSelector(
 export const selectCurrentTrackNotes = createSelector(
   selectCurrentTrack,
   (track: Track) => {
-    return track.rhythmElements.map(rhythmElement => {
+    const staveNotes = track.rhythmElements.map(rhythmElement => {
       if (isRest(rhythmElement)) {
         return toVexRest(rhythmElement);
       }
       return toVexTones(rhythmElement);
     });
+    const endingRests = getEndingRests(track).map(rhythmElement => {
+      return toVexRest(rhythmElement);
+    });
+    return staveNotes.concat(endingRests);
   }
 )
