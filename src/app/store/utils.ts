@@ -55,6 +55,9 @@ export function toVexDuration(duration: Duration): string {
 
 export function toVexRest(rhythmElement: RhythmElement) {
   const duration: string = toVexDuration(rhythmElement.duration);
+  if (duration === 'w') {
+    return new vexflow.Flow.StaveNote({clef: "treble", keys: ["d/4"], duration: duration + "r"});
+  }
   return new vexflow.Flow.StaveNote({clef: "treble", keys: ["b/4"], duration: duration + "r"});
 }
 
