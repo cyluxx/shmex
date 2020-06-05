@@ -49,11 +49,8 @@ export class PreviewComponent implements AfterViewInit, OnInit {
       this.context.clear();
       stave.setContext(this.context).draw();
 
-      const voice = new this.VF.Voice({num_beats: 4, beat_value: 4});
-      if (notes.length === 4) {
-        voice.addTickables(notes);
-        this.formatter.joinVoices([voice]).format([voice], 400);
-        voice.draw(this.context, stave);
+      if (notes.length > 0) {
+        this.VF.Formatter.FormatAndDraw(this.context, stave, notes);
       }
     });
   }
