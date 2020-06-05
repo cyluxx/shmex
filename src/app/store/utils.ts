@@ -59,10 +59,15 @@ export function toVexRest(rhythmElement: RhythmElement) {
 }
 
 export function toVexTones(rhythmElement: RhythmElement) {
-  const keys: string[] = [];
-  rhythmElement.tones.forEach(tone => {
-    keys.push(tone.key + '/' + tone.octave);
+  const keys: string[] = rhythmElement.tones.map(tone => {
+    return tone.key + '/' + tone.octave;
   });
   const duration: string = toVexDuration(rhythmElement.duration);
-  return new vexflow.Flow.StaveNote({clef: "treble", keys, duration});
+  const staveNote = new vexflow.Flow.StaveNote({clef: "treble", keys, duration});
+  rhythmElement.tones.forEach((tone, index) => {
+    if (tone.accidental) {
+      staveNote.addAccidental(index, new vexflow.Flow.Accidental(tone.accidental));
+    }
+  })
+  return staveNote;
 }

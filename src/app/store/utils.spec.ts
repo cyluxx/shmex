@@ -1,5 +1,5 @@
 import {RhythmElement} from "./state";
-import {toVexRest} from "./utils";
+import {toVexRest, toVexTones} from "./utils";
 
 describe('toVexRest', () => {
   it('should return a rest with correct duration, when rhythm element has no tones', () => {
@@ -35,3 +35,27 @@ describe('toVexRest', () => {
     expect(toVexRest(thirtySecond).keys[0]).toBe('b/4');
   });
 });
+
+describe('toVexTones', () => {
+  it('should return correct accidental, when rhythm element has tone with accidental', () => {
+    const sharp: RhythmElement = {
+      duration: {numerator: 1, denominator: 1}, tones: [{
+        key: 'a',
+        accidental: '#',
+        octave: 4
+      }]
+    };
+    const flat: RhythmElement = {
+      duration: {numerator: 1, denominator: 1}, tones: [{
+        key: 'a',
+        accidental: 'b',
+        octave: 4
+      }]
+    };
+
+    expect(toVexTones(sharp).modifiers[0].type).toBe('#');
+    expect(toVexTones(flat).modifiers[0].type).toBe('b');
+  });
+});
+
+// TODO: test note sorting, test notes w/o accidentals, test duration
