@@ -37,7 +37,23 @@ describe('toVexRest', () => {
 });
 
 describe('toVexTones', () => {
-  it('should return correct accidental, when rhythm element has tone with accidental', () => {
+
+  it('should return correct tone', () => {
+    const rhythmElement: RhythmElement = {
+      duration: {numerator: 1, denominator: 2}, tones: [
+        {
+          key: 'a',
+          octave: 4,
+        }
+      ]
+    };
+
+    expect(toVexTones(rhythmElement).duration).toBe('h');
+    expect(toVexTones(rhythmElement).noteType).toBe('n');
+    expect(toVexTones(rhythmElement).keys[0]).toBe('a/4');
+  });
+
+  it('should return correct tone with accidental, when rhythm element has tone with accidental', () => {
     const sharp: RhythmElement = {
       duration: {numerator: 1, denominator: 1}, tones: [{
         key: 'a',
@@ -56,6 +72,24 @@ describe('toVexTones', () => {
     expect(toVexTones(sharp).modifiers[0].type).toBe('#');
     expect(toVexTones(flat).modifiers[0].type).toBe('b');
   });
-});
 
-// TODO: test note sorting, test notes w/o accidentals, test duration
+  it('should return correct tones, when rhythm element has unsorted tones', () => {
+    const rhythmElement: RhythmElement = {
+      duration: {numerator: 1, denominator: 1}, tones: [
+        {
+          key: 'a',
+          accidental: '#',
+          octave: 4,
+        },
+        {
+          key: 'g',
+          octave: 4,
+        }
+      ]
+    };
+
+    expect(toVexTones(rhythmElement).modifiers[0].type).toBe('#');
+    expect(toVexTones(rhythmElement).keys[0]).toBe('a/4');
+    expect(toVexTones(rhythmElement).keys[1]).toBe('g/4');
+  });
+});
