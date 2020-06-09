@@ -2,12 +2,16 @@
   "name": "shmex",
   "version": "0.0.0",
   "scripts": {
+    "build": "ng build",
+    "build:ci": "npm run clean && npm run test && npm run build:prod",
+    "build:prod": "ng build --prod",
+    "clean": "rimraf ./dist",
+    "e2e": "ng e2e",
+    "lint": "ng lint",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom"
   },
   "private": true,
   "dependencies": {
@@ -48,6 +52,7 @@
     "karma-jasmine": "~3.0.1",
     "karma-jasmine-html-reporter": "^1.4.2",
     "protractor": "~5.4.3",
+    "puppeteer": "^3.3.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.8.3"
