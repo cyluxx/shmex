@@ -50,7 +50,11 @@ export class PreviewComponent implements AfterViewInit, OnInit {
       stave.setContext(this.context).draw();
 
       if (notes.length > 0) {
+        const beams = this.VF.Beam.generateBeams(notes);
         this.VF.Formatter.FormatAndDraw(this.context, stave, notes);
+        beams.forEach(beam => {
+          beam.setContext(this.context).draw()
+        });
       }
     });
   }
