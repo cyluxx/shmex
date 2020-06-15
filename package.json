@@ -31,6 +31,7 @@
     "@ngrx/store-devtools": "^9.1.2",
     "codemirror": "^5.53.2",
     "fraction.js": "^4.0.12",
+    "opensheetmusicdisplay": "^0.8.2",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "vexflow": "^1.2.87",

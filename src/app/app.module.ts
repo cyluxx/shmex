@@ -12,12 +12,14 @@ import {StoreModule} from '@ngrx/store';
 import {reducer} from "./store/reducer";
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {PreviewComponent} from './components/preview/preview.component';
+import { RenderComponent } from './components/render/render.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EditComponent,
-    PreviewComponent
+    PreviewComponent,
+    RenderComponent
   ],
   imports: [
     BrowserModule,
