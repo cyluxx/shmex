@@ -23,4 +23,11 @@ export const selectCurrentTrackNotes = createSelector(
     });
     return staveNotes.concat(endingRests);
   }
-)
+);
+
+export const selectMusicXml = createSelector(
+  selectCurrentTrack,
+  (track: Track) => {
+
+  }
+);
