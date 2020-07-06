@@ -1,17 +1,24 @@
-import {Duration, Tone} from "../store/state";
+import {Duration, RhythmElement, Tone, Track} from "../store/state";
 
 export function buildAlter(accidental: '#' | 'b'): string {
-  switch (accidental) {
-    case '#':
-      return '<alter>1</alter>';
-    case "b":
-      return '<alter>-1</alter>';
-  }
-  return '';
+  return accidental === '#' ? '<alter>1</alter>' : '<alter>-1</alter>';
 }
 
-export function buildDuration(duration: Duration): string {
-  return `<duration></duration>`;
+export function buildDurationAndType(duration: Duration): string {
+  switch (duration.denominator) {
+    case 1:
+      return '<duration>4</duration><type>whole</type>';
+    case 2:
+      return '<duration>2</duration><type>half</type>';
+    case 4:
+      return '<duration>1</duration><type>quarter</type>';
+    case 8:
+      return '<duration>1/2</duration><type>whole</type>';
+    case 16:
+      return '<duration>1/4</duration><type>whole</type>';
+    case 32:
+      return '<duration>1/8</duration><type>whole</type>';
+  }
 }
 
 // TODO for now hardcoded
@@ -19,23 +26,23 @@ export function buildMeasureAttributes(): string {
   return '<attributes><divisions>1</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>';
 }
 
+export function buildMeasures(rhythmElements: RhythmElement[]): string {
+  return rhythmElements.map(rhythmElement => {
+    buildNotes(rhythmElement.duration, rhythmElement.tones)
+  }).join();
+}
+
 export function buildNotes(duration: Duration, tones: Tone[]): string {
   return tones
-    .map(tone => `<note>${buildPitch(tone)}${buildDuration(duration)}${buildNoteType(duration)}</note>`)
+    .map(tone => `<note>${buildPitch(tone)}${buildDurationAndType(duration)}</note>`)
     .join();
 }
 
-export function buildNoteType(duration: Duration): string {
-  switch (duration.denominator) {
-    case 1:
-      return '<type>whole</type>';
-
-  }
-}
-
-// TODO for now hardcoded
-export function buildPart(measures: string): string {
-  return '<part id="P1">' + measures + '</part>';
+export function buildPart(track: Track): string {
+  return '<part id="P1">'
+    + buildMeasureAttributes()
+    + buildMeasures(track.rhythmElements)
+    + '</part>';
 }
 
 // TODO for now hardcoded

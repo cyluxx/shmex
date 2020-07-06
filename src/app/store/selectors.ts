@@ -1,6 +1,7 @@
 import {createSelector} from "@ngrx/store";
 import {AppState, Track} from "./state";
 import {getEndingRests, isRest, toVexRest, toVexTones} from "./utils";
+import {buildPart, buildPartList, finalize} from "../utils/music-xml-builder";
 
 const selectAppState = state => state.app;
 
@@ -28,6 +29,6 @@ export const selectCurrentTrackNotes = createSelector(
 export const selectMusicXml = createSelector(
   selectCurrentTrack,
   (track: Track) => {
-
+    return finalize(buildPartList() + buildPart(track));
   }
 );
