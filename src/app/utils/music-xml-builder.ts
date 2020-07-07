@@ -1,6 +1,9 @@
 import {Duration, RhythmElement, Tone, Track} from "../store/state";
 
 export function buildAlter(accidental: '#' | 'b'): string {
+  if (!accidental) {
+    return '';
+  }
   return accidental === '#' ? '<alter>1</alter>' : '<alter>-1</alter>';
 }
 
@@ -27,15 +30,26 @@ export function buildMeasureAttributes(): string {
 }
 
 export function buildMeasures(rhythmElements: RhythmElement[]): string {
-  return rhythmElements.map(rhythmElement => {
-    buildNotes(rhythmElement.duration, rhythmElement.tones)
-  }).join();
+  return '<measure number="1">'
+    + rhythmElements.map(rhythmElement => {
+      return buildNotes(rhythmElement.duration, rhythmElement.tones)
+    }).join('')
+    + '</measure>';
 }
 
 export function buildNotes(duration: Duration, tones: Tone[]): string {
   return tones
-    .map(tone => `<note>${buildPitch(tone)}${buildDurationAndType(duration)}</note>`)
-    .join();
+    .map(tone => {
+      return '<note>'
+        + buildPitch(tone)
+        + buildDurationAndType(duration)
+        + '</note>';
+    })
+    .join('');
+}
+
+function buildOctave(octave: number): string {
+  return '<octave>' + octave + '</octave>';
 }
 
 export function buildPart(track: Track): string {
@@ -51,7 +65,15 @@ export function buildPartList(): string {
 }
 
 export function buildPitch(tone: Tone): string {
-  return `<pitch><step>${tone.key.toUpperCase()}</step>${buildAlter(tone.accidental)}<octave>${tone.octave}</octave></pitch>`;
+  return '<pitch>'
+    + buildStep(tone.key)
+    + buildAlter(tone.accidental)
+    + buildOctave(tone.octave)
+    + '</pitch>';
+}
+
+function buildStep(key: string): string {
+  return '<step>' + key.toUpperCase() + '</step>';
 }
 
 /**
