@@ -13,11 +13,11 @@ export function buildDurationAndType(duration: Duration): string {
     case 4:
       return '<duration>1</duration><type>quarter</type>';
     case 8:
-      return '<duration>1/2</duration><type>whole</type>';
+      return '<duration>0.5</duration><type>eighth</type>';
     case 16:
-      return '<duration>1/4</duration><type>whole</type>';
+      return '<duration>0.25</duration><type>16th</type>';
     case 32:
-      return '<duration>1/8</duration><type>whole</type>';
+      return '<duration>0.125</duration><type>32nd</type>';
   }
 }
 

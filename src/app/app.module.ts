@@ -11,22 +11,20 @@ import {FormsModule} from "@angular/forms";
 import {StoreModule} from '@ngrx/store';
 import {reducer} from "./store/reducer";
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {PreviewComponent} from './components/preview/preview.component';
-import { RenderComponent } from './components/render/render.component';
+import {RenderComponent} from './components/render/render.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EditComponent,
-    PreviewComponent,
     RenderComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     CodemirrorModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     FormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     StoreModule.forRoot({app: reducer}, {}),
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production})
   ],

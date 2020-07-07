@@ -1,4 +1,4 @@
-import {buildAlter, finalize} from "./music-xml-builder";
+import {buildAlter, buildDurationAndType, finalize} from "./music-xml-builder";
 
 describe('finalize', () => {
   it('wraps body correctly', () => {
@@ -19,3 +19,16 @@ describe('buildAlter', () => {
     expect(buildAlter('b')).toBe('<alter>-1</alter>');
   });
 });
+
+describe('buildDurationAndType', () => {
+  it('builds all correct variants, if duration numerator is 1', () => {
+    expect(buildDurationAndType({numerator: 1, denominator: 1})).toBe('<duration>4</duration><type>whole</type>');
+    expect(buildDurationAndType({numerator: 1, denominator: 2})).toBe('<duration>2</duration><type>half</type>');
+    expect(buildDurationAndType({numerator: 1, denominator: 4})).toBe('<duration>1</duration><type>quarter</type>');
+    expect(buildDurationAndType({numerator: 1, denominator: 8})).toBe('<duration>0.5</duration><type>eighth</type>');
+    expect(buildDurationAndType({numerator: 1, denominator: 16})).toBe('<duration>0.25</duration><type>16th</type>');
+    expect(buildDurationAndType({numerator: 1, denominator: 32})).toBe('<duration>0.125</duration><type>32nd</type>');
+  });
+});
+
+
