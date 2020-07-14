@@ -1,5 +1,6 @@
 import {Duration, RhythmElement, Tone, Track} from '../store/model';
 import {isRest} from './model-utils';
+import {addDurations, getFractionalPart} from './duration-calculator';
 
 export function buildAlter(accidental: '#' | 'b'): string {
   if (!accidental) {
@@ -25,6 +26,25 @@ export function buildDurationAndType(duration: Duration): string {
   }
 }
 
+/**
+ * returns ending rests, if track does not fit into time signature (currently only 4/4)
+ */
+export function buildEndingRests(rhythmElements: RhythmElement[]): string {
+  let combinedDuration: Duration = {numerator: 0, denominator: 1};
+  rhythmElements.map(rhythmElement => {
+    combinedDuration = addDurations(combinedDuration, rhythmElement.duration);
+  });
+  let endingRests = '';
+  let fractionalPart: Duration = getFractionalPart(combinedDuration);
+  while (fractionalPart.numerator / fractionalPart.denominator !== 0) {
+    const duration: Duration = {numerator: 1, denominator: fractionalPart.denominator};
+    endingRests += buildRest(duration);
+    combinedDuration = addDurations(combinedDuration, duration);
+    fractionalPart = getFractionalPart(combinedDuration);
+  }
+  return endingRests;
+}
+
 // TODO for now hardcoded
 export function buildMeasureAttributes(): string {
   return '<attributes><divisions>1</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>';
@@ -38,6 +58,7 @@ export function buildMeasures(rhythmElements: RhythmElement[]): string {
       }
       return buildNotes(rhythmElement.duration, rhythmElement.tones);
     }).join('')
+    + buildEndingRests(rhythmElements)
     + '</measure>';
 }
 
