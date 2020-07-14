@@ -1,8 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {RenderComponent} from './render.component';
-import {MockStore, provideMockStore} from "@ngrx/store/testing";
-import {initialAppState} from "../../store/state";
+import {MockStore, provideMockStore} from '@ngrx/store/testing';
+import {initialAppState} from '../../store/model';
 
 describe('RenderComponent', () => {
   let component: RenderComponent;

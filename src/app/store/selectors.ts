@@ -1,5 +1,5 @@
 import {createSelector} from '@ngrx/store';
-import {AppState, Track} from './state';
+import {AppState, Track} from './model';
 import {build} from '../utils/music-xml-builder';
 
 const selectAppState = state => state.app;

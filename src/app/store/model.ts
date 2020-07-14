@@ -2,7 +2,7 @@ export const initialAppState: AppState = {
   track: {
     rhythmElements: []
   }
-}
+};
 
 export interface AppState {
   track: Track;

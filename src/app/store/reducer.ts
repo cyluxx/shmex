@@ -1,8 +1,8 @@
-import {Action, createReducer, on} from "@ngrx/store";
-import {AppState, initialAppState, RhythmElement} from "./state";
-import {parseShmexlText} from "./actions";
-import 'codemirror/addon/runmode/runmode'
-import * as CodeMirror from "codemirror";
+import {Action, createReducer, on} from '@ngrx/store';
+import {AppState, initialAppState, RhythmElement} from './model';
+import {parseShmexlText} from './actions';
+import 'codemirror/addon/runmode/runmode';
+import * as CodeMirror from 'codemirror';
 
 const _reducer = createReducer(
   initialAppState,
@@ -16,7 +16,7 @@ const _reducer = createReducer(
           rhythmElements[rhythmElements.length - 1].duration = {
             numerator: +splitDurationToken[0],
             denominator: +splitDurationToken[1] as 1 | 2 | 4 | 8 | 16 | 32
-          }
+          };
           break;
         case 'keyword':
           const splitToneToken = token.split('');

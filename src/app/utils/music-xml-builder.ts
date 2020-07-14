@@ -1,4 +1,5 @@
-import {Duration, RhythmElement, Tone, Track} from '../store/state';
+import {Duration, RhythmElement, Tone, Track} from '../store/model';
+import {isRest} from './model-utils';
 
 export function buildAlter(accidental: '#' | 'b'): string {
   if (!accidental) {
@@ -10,17 +11,17 @@ export function buildAlter(accidental: '#' | 'b'): string {
 export function buildDurationAndType(duration: Duration): string {
   switch (duration.denominator) {
     case 1:
-      return '<duration>4</duration><type>whole</type>';
+      return '<duration>32</duration><type>whole</type>';
     case 2:
-      return '<duration>2</duration><type>half</type>';
+      return '<duration>16</duration><type>half</type>';
     case 4:
-      return '<duration>1</duration><type>quarter</type>';
+      return '<duration>8</duration><type>quarter</type>';
     case 8:
-      return '<duration>0.5</duration><type>eighth</type>';
+      return '<duration>4</duration><type>eighth</type>';
     case 16:
-      return '<duration>0.25</duration><type>16th</type>';
+      return '<duration>2</duration><type>16th</type>';
     case 32:
-      return '<duration>0.125</duration><type>32nd</type>';
+      return '<duration>1</duration><type>32nd</type>';
   }
 }
 
@@ -32,6 +33,9 @@ export function buildMeasureAttributes(): string {
 export function buildMeasures(rhythmElements: RhythmElement[]): string {
   return '<measure number="1">'
     + rhythmElements.map(rhythmElement => {
+      if (isRest(rhythmElement)) {
+        return buildRest(rhythmElement.duration);
+      }
       return buildNotes(rhythmElement.duration, rhythmElement.tones);
     }).join('')
     + '</measure>';
@@ -70,6 +74,13 @@ export function buildPitch(tone: Tone): string {
     + buildAlter(tone.accidental)
     + buildOctave(tone.octave)
     + '</pitch>';
+}
+
+export function buildRest(duration: Duration): string {
+  return '<note>'
+    + '<rest />'
+    + buildDurationAndType(duration)
+    + '</note>';
 }
 
 export function buildStep(key: string): string {
