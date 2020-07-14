@@ -1,4 +1,4 @@
-import {Duration, RhythmElement, Tone, Track} from "../store/state";
+import {Duration, RhythmElement, Tone, Track} from '../store/state';
 
 export function buildAlter(accidental: '#' | 'b'): string {
   if (!accidental) {
@@ -32,7 +32,7 @@ export function buildMeasureAttributes(): string {
 export function buildMeasures(rhythmElements: RhythmElement[]): string {
   return '<measure number="1">'
     + rhythmElements.map(rhythmElement => {
-      return buildNotes(rhythmElement.duration, rhythmElement.tones)
+      return buildNotes(rhythmElement.duration, rhythmElement.tones);
     }).join('')
     + '</measure>';
 }
@@ -48,7 +48,7 @@ export function buildNotes(duration: Duration, tones: Tone[]): string {
     .join('');
 }
 
-function buildOctave(octave: number): string {
+export function buildOctave(octave: number): string {
   return '<octave>' + octave + '</octave>';
 }
 
@@ -72,17 +72,18 @@ export function buildPitch(tone: Tone): string {
     + '</pitch>';
 }
 
-function buildStep(key: string): string {
+export function buildStep(key: string): string {
   return '<step>' + key.toUpperCase() + '</step>';
 }
 
 /**
  * Wraps body into meta information, and thus finalizes xml string
  */
-export function finalize(body: string): string {
+export function build(track: Track): string {
   return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
     + '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">'
     + '<score-partwise version="3.1">'
-    + body
+    + buildPartList()
+    + buildPart(track)
     + '</score-partwise>';
 }

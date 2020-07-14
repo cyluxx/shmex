@@ -1,6 +1,6 @@
-import {createSelector} from "@ngrx/store";
-import {AppState, Track} from "./state";
-import {buildPart, buildPartList, finalize} from "../utils/music-xml-builder";
+import {createSelector} from '@ngrx/store';
+import {AppState, Track} from './state';
+import {build} from '../utils/music-xml-builder';
 
 const selectAppState = state => state.app;
 
@@ -12,6 +12,6 @@ export const selectCurrentTrack = createSelector(
 export const selectMusicXml = createSelector(
   selectCurrentTrack,
   (track: Track) => {
-    return finalize(buildPartList() + buildPart(track));
+    return build(track);
   }
 );
