@@ -9,6 +9,7 @@ export function buildAlter(accidental: '#' | 'b'): string {
   return accidental === '#' ? '<alter>1</alter>' : '<alter>-1</alter>';
 }
 
+// TODO duration for now hardcoded
 export function buildDurationAndType(duration: Duration): string {
   switch (duration.denominator) {
     case 1:
@@ -45,9 +46,9 @@ export function buildEndingRests(rhythmElements: RhythmElement[]): string {
   return endingRests;
 }
 
-// TODO for now hardcoded
+// TODO for now hardcoded. Divisions important for note durations!
 export function buildMeasureAttributes(): string {
-  return '<attributes><divisions>1</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>';
+  return '<attributes><divisions>8</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>';
 }
 
 export function buildMeasures(rhythmElements: RhythmElement[]): string {

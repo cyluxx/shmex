@@ -13,7 +13,7 @@ describe('build', () => {
       '<part id="P1">' +
       '<measure number="1">' +
       '<attributes>' +
-      '<divisions>1</divisions>' +
+      '<divisions>8</divisions>' +
       '<key>' +
       '<fifths>0</fifths>' +
       '</key>' +
@@ -26,7 +26,9 @@ describe('build', () => {
       '<line>2</line>' +
       '</clef>' +
       '</attributes>' +
-      '<barline location="right"><bar-style>light-heavy</bar-style></barline>' +
+      '<barline location="right">' +
+      '<bar-style>light-heavy</bar-style>' +
+      '</barline>' +
       '</measure>' +
       '</part>' +
       '</score-partwise>');
