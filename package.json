@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "scripts": {
     "build": "ng build",
-    "build:ci": "npm run clean && npm run test:ci && npm run build:prod",
     "build:prod": "ng build --prod",
     "clean": "rimraf ./dist",
     "e2e": "ng e2e",
@@ -11,7 +10,7 @@
     "ng": "ng",
     "start": "ng serve",
     "test": "ng test",
-    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom --code-coverage",
     "version": "git add -A src",
     "postversion": "git push && git push --tags"
   },
