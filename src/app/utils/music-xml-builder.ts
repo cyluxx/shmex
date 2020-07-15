@@ -60,9 +60,7 @@ export function buildMeasures(rhythmElements: RhythmElement[]): string {
       return buildNotes(rhythmElement.duration, rhythmElement.tones);
     }).join('')
     + buildEndingRests(rhythmElements)
-    + `<barline location="right">
-        <bar-style>light-heavy</bar-style>
-      </barline>`
+    + '<barline location="right"><bar-style>light-heavy</bar-style></barline>'
     + '</measure>';
 }
 

@@ -1,7 +1,7 @@
 import {buildAlter, buildDurationAndType, build} from './music-xml-builder';
 
-describe('finalize', () => {
-  it('wraps body correctly', () => {
+describe('build', () => {
+  it('builds empty xml', () => {
     expect(build({rhythmElements: []})).toBe('<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
       '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">' +
       '<score-partwise version="3.1">' +
@@ -11,6 +11,7 @@ describe('finalize', () => {
       '</score-part>' +
       '</part-list>' +
       '<part id="P1">' +
+      '<measure number="1">' +
       '<attributes>' +
       '<divisions>1</divisions>' +
       '<key>' +
@@ -25,7 +26,7 @@ describe('finalize', () => {
       '<line>2</line>' +
       '</clef>' +
       '</attributes>' +
-      '<measure number="1">' +
+      '<barline location="right"><bar-style>light-heavy</bar-style></barline>' +
       '</measure>' +
       '</part>' +
       '</score-partwise>');
