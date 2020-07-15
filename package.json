@@ -11,7 +11,9 @@
     "ng": "ng",
     "start": "ng serve",
     "test": "ng test",
-    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom"
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
+    "version" : "git add -A src",
+    "postversion" : "git push && git push --tags"
   },
   "private": true,
   "dependencies": {
