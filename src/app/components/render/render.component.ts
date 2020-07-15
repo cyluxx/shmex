@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {OpenSheetMusicDisplay} from "opensheetmusicdisplay";
+import {OpenSheetMusicDisplay} from 'opensheetmusicdisplay';
 import {Store} from '@ngrx/store';
-import {selectMusicXml} from "../../store/selectors";
-import {Observable} from "rxjs";
-import {switchMap} from "rxjs/operators";
-import format from "xml-formatter";
+import {selectMusicXml} from '../../store/selectors';
+import {Observable} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
+import format from 'xml-formatter';
 
 @Component({
   selector: 'app-render',

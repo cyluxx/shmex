@@ -52,6 +52,7 @@ export function buildMeasureAttributes(): string {
 
 export function buildMeasures(rhythmElements: RhythmElement[]): string {
   return '<measure number="1">'
+    + buildMeasureAttributes()
     + rhythmElements.map(rhythmElement => {
       if (isRest(rhythmElement)) {
         return buildRest(rhythmElement.duration);
@@ -59,6 +60,9 @@ export function buildMeasures(rhythmElements: RhythmElement[]): string {
       return buildNotes(rhythmElement.duration, rhythmElement.tones);
     }).join('')
     + buildEndingRests(rhythmElements)
+    + `<barline location="right">
+        <bar-style>light-heavy</bar-style>
+      </barline>`
     + '</measure>';
 }
 
@@ -79,7 +83,6 @@ export function buildOctave(octave: number): string {
 
 export function buildPart(track: Track): string {
   return '<part id="P1">'
-    + buildMeasureAttributes()
     + buildMeasures(track.rhythmElements)
     + '</part>';
 }
