@@ -2,7 +2,7 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.5.
 
-![Build](https://github.com/cyluxx/shmex/workflows/Build/badge.svg)
+![Build](https://github.com/cyluxx/shmex/workflows/Build/badge.svg) [![codecov](https://codecov.io/gh/cyluxx/shmex/branch/master/graph/badge.svg)](https://codecov.io/gh/cyluxx/shmex)
 
 ## Development server
 
