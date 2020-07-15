@@ -1,4 +1,5 @@
-import {buildAlter, buildDurationAndType, build} from './music-xml-builder';
+import {buildAlter, buildDurationAndType, build, buildEndingRests} from './music-xml-builder';
+import {RhythmElement} from '../store/model';
 
 describe('build', () => {
   it('builds empty xml', () => {
@@ -56,4 +57,50 @@ describe('buildDurationAndType', () => {
   });
 });
 
+describe('buildEndingRests', () => {
+  it('builds no rests, if rhythmElements are empty', () => {
+    const rhythmElements: RhythmElement[] = [];
+    expect(buildEndingRests(rhythmElements)).toBe('');
+  });
 
+  it('builds no rests, if rhythmElements fit into 4/4 time signature', () => {
+    const rhythmElements: RhythmElement[] = [{duration: {numerator: 1, denominator: 1}, tones: []}];
+    expect(buildEndingRests(rhythmElements)).toBe('');
+  });
+
+  it('builds a 32nd, if rhythmElements exceed by a half, a quarter, an eighth, a 16th and a 32nd', () => {
+    const rhythmElements: RhythmElement[] = [
+      {duration: {numerator: 1, denominator: 2}, tones: []},
+      {duration: {numerator: 1, denominator: 4}, tones: []},
+      {duration: {numerator: 1, denominator: 8}, tones: []},
+      {duration: {numerator: 1, denominator: 16}, tones: []},
+      {duration: {numerator: 1, denominator: 32}, tones: []},
+    ];
+    expect(buildEndingRests(rhythmElements)).toBe(
+      '<note><rest /><duration>1</duration><type>32nd</type></note>'
+    );
+  });
+
+  it('builds a 16th, and a half rest, if rhythmElements exceed by a quarter, an eighth and a 16th', () => {
+    const rhythmElements: RhythmElement[] = [
+      {duration: {numerator: 1, denominator: 4}, tones: []},
+      {duration: {numerator: 1, denominator: 8}, tones: []},
+      {duration: {numerator: 1, denominator: 16}, tones: []},
+    ];
+    expect(buildEndingRests(rhythmElements)).toBe(
+      '<note><rest /><duration>2</duration><type>16th</type></note>' +
+      '<note><rest /><duration>16</duration><type>half</type></note>'
+    );
+  });
+
+  it('builds a 32nd, a 16th, an 8th, a quarter and a half rest, if rhythmElements exceed by a 32nd', () => {
+    const rhythmElements: RhythmElement[] = [{duration: {numerator: 1, denominator: 32}, tones: []}];
+    expect(buildEndingRests(rhythmElements)).toBe(
+      '<note><rest /><duration>1</duration><type>32nd</type></note>' +
+      '<note><rest /><duration>2</duration><type>16th</type></note>' +
+      '<note><rest /><duration>4</duration><type>eighth</type></note>' +
+      '<note><rest /><duration>8</duration><type>quarter</type></note>' +
+      '<note><rest /><duration>16</duration><type>half</type></note>'
+    );
+  });
+});
