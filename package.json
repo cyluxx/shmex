@@ -1,6 +1,6 @@
 {
   "name": "shmex",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "build": "ng build",
     "build:ci": "npm run clean && npm run test:ci && npm run build:prod",
@@ -12,8 +12,8 @@
     "start": "ng serve",
     "test": "ng test",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
-    "version" : "git add -A src",
-    "postversion" : "git push && git push --tags"
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "private": true,
   "dependencies": {
