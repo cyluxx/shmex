@@ -1,5 +1,14 @@
-import {buildAlter, buildDurationAndType, build, buildEndingRests} from './music-xml-builder';
-import {RhythmElement} from '../store/model';
+import {
+  buildAlter,
+  buildDurationAndType,
+  build,
+  buildEndingRests,
+  buildStep,
+  buildPitch,
+  buildOctave,
+  buildNotes
+} from './music-xml-builder';
+import {Duration, RhythmElement, Tone} from '../store/model';
 
 describe('build', () => {
   it('builds empty xml', () => {
@@ -43,6 +52,10 @@ describe('buildAlter', () => {
 
   it('builds -1, when b', () => {
     expect(buildAlter('b')).toBe('<alter>-1</alter>');
+  });
+
+  it('returns empty, when undefined accidental', () => {
+    expect(buildAlter(undefined)).toBe('');
   });
 });
 
@@ -102,5 +115,129 @@ describe('buildEndingRests', () => {
       '<note><rest /><duration>8</duration><type>quarter</type></note>' +
       '<note><rest /><duration>16</duration><type>half</type></note>'
     );
+  });
+});
+
+describe('buildNotes', () => {
+  it('builds single note correctly', () => {
+    const duration: Duration = {
+      numerator: 1,
+      denominator: 1,
+    };
+    const tones: Tone[] = [
+      {
+        key: 'a',
+        octave: 4,
+      }
+    ];
+    expect(buildNotes(duration, tones)).toBe('<note>' +
+      '<pitch><step>A</step><octave>4</octave></pitch>' +
+      '<duration>32</duration><type>whole</type>' +
+      '</note>'
+    );
+  });
+
+  it('builds multiple notes correctly', () => {
+    const duration: Duration = {
+      numerator: 1,
+      denominator: 1,
+    };
+    const tones: Tone[] = [
+      {
+        key: 'a',
+        octave: 4,
+      },
+      {
+        key: 'c',
+        accidental: '#',
+        octave: 5,
+      },
+      {
+        key: 'e',
+        octave: 5,
+      },
+    ];
+    expect(buildNotes(duration, tones)).toBe('<note>' +
+      '<pitch><step>A</step><octave>4</octave></pitch>' +
+      '<duration>32</duration><type>whole</type>' +
+      '</note>' +
+      '<note>' +
+      '<pitch><step>C</step><alter>1</alter><octave>5</octave></pitch>' +
+      '<duration>32</duration><type>whole</type>' +
+      '</note>' +
+      '<note>' +
+      '<pitch><step>E</step><octave>5</octave></pitch>' +
+      '<duration>32</duration><type>whole</type>' +
+      '</note>'
+    );
+  });
+
+  it('returns an empty string, when no notes', () => {
+    const duration: Duration = {
+      numerator: 1,
+      denominator: 1,
+    };
+    const tones: Tone[] = [];
+    expect(buildNotes(duration, tones)).toBe('');
+  });
+
+  it('does not build duplicate notes', () => {
+    const duration: Duration = {
+      numerator: 1,
+      denominator: 1,
+    };
+    const tones: Tone[] = [
+      {
+        key: 'a',
+        octave: 4,
+      },
+      {
+        key: 'a',
+        octave: 4,
+      }
+    ];
+    expect(buildNotes(duration, tones)).toBe('<note>' +
+      '<pitch><step>A</step><octave>4</octave></pitch>' +
+      '<duration>32</duration><type>whole</type>' +
+      '</note>'
+    );
+  });
+});
+
+describe('buildOctave', () => {
+  it('builds octave correctly', () => {
+    expect(buildOctave(4)).toBe('<octave>4</octave>');
+  });
+});
+
+describe('buildPitch', () => {
+  it('builds correct pitch, when tone has no accidental', () => {
+    const tone: Tone = {
+      octave: 0,
+      key: 'a'
+    };
+    expect(buildPitch(tone)).toBe('<pitch><step>A</step><octave>0</octave></pitch>');
+  });
+
+  it('builds correct pitch, when tone has accidental', () => {
+    const tone: Tone = {
+      octave: 8,
+      accidental: '#',
+      key: 'g'
+    };
+    expect(buildPitch(tone)).toBe('<pitch><step>G</step><alter>1</alter><octave>8</octave></pitch>');
+  });
+});
+
+
+describe('buildStep', () => {
+  it('builds all steps correctly', () => {
+    expect(buildStep('a')).toBe('<step>A</step>');
+    expect(buildStep('b')).toBe('<step>B</step>');
+    expect(buildStep('c')).toBe('<step>C</step>');
+    expect(buildStep('d')).toBe('<step>D</step>');
+    expect(buildStep('e')).toBe('<step>E</step>');
+    expect(buildStep('f')).toBe('<step>F</step>');
+    expect(buildStep('g')).toBe('<step>G</step>');
   });
 });

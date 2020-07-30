@@ -1,5 +1,5 @@
 import {Duration, RhythmElement, Tone, Track} from '../store/model';
-import {isRest} from './model-utils';
+import {isRest, removeDuplicateTones} from './model-utils';
 import {addDurations, getFractionalPart} from './duration-calculator';
 
 export function buildAlter(accidental: '#' | 'b'): string {
@@ -66,13 +66,12 @@ export function buildMeasures(rhythmElements: RhythmElement[]): string {
 }
 
 export function buildNotes(duration: Duration, tones: Tone[]): string {
-  return tones
-    .map(tone => {
-      return '<note>'
-        + buildPitch(tone)
-        + buildDurationAndType(duration)
-        + '</note>';
-    })
+  return removeDuplicateTones(tones).map(tone => {
+    return '<note>'
+      + buildPitch(tone)
+      + buildDurationAndType(duration)
+      + '</note>';
+  })
     .join('');
 }
 
@@ -106,7 +105,7 @@ export function buildRest(duration: Duration): string {
     + '</note>';
 }
 
-export function buildStep(key: string): string {
+export function buildStep(key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g'): string {
   return '<step>' + key.toUpperCase() + '</step>';
 }
 
