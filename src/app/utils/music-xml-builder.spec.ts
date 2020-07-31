@@ -162,10 +162,12 @@ describe('buildNotes', () => {
       '<duration>32</duration><type>whole</type>' +
       '</note>' +
       '<note>' +
+      '<chord/>' +
       '<pitch><step>C</step><alter>1</alter><octave>5</octave></pitch>' +
       '<duration>32</duration><type>whole</type>' +
       '</note>' +
       '<note>' +
+      '<chord/>' +
       '<pitch><step>E</step><octave>5</octave></pitch>' +
       '<duration>32</duration><type>whole</type>' +
       '</note>'

@@ -66,8 +66,10 @@ export function buildMeasures(rhythmElements: RhythmElement[]): string {
 }
 
 export function buildNotes(duration: Duration, tones: Tone[]): string {
-  return removeDuplicateTones(tones).map(tone => {
+  return removeDuplicateTones(tones).map((tone, index) => {
     return '<note>'
+      // add chord tag, only when more then one tone
+      + (index > 0 ? '<chord/>' : '')
       + buildPitch(tone)
       + buildDurationAndType(duration)
       + '</note>';
