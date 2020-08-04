@@ -1,6 +1,6 @@
 import {Duration, RhythmElement, Tone, Track} from '../store/model';
 import {isRest, removeDuplicateTones} from './model-utils';
-import {addDurations, getFractionalPart} from './duration-calculator';
+import {addDurations, getFractionalPart, toFraction} from './duration-calculator';
 
 export function buildAlter(accidental: '#' | 'b'): string {
   if (!accidental) {
@@ -51,18 +51,42 @@ export function buildMeasureAttributes(): string {
   return '<attributes><divisions>8</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>';
 }
 
-export function buildMeasures(rhythmElements: RhythmElement[]): string {
-  return '<measure number="1">'
-    + buildMeasureAttributes()
-    + rhythmElements.map(rhythmElement => {
+export function buildMeasure(measureRhythmElements: RhythmElement[], index: number, allRhythmElements: RhythmElement[][]): string {
+  const measureNumber = index + 1;
+  let result = '';
+  if (measureRhythmElements.length > 0) {
+    result += '<measure number="' + measureNumber + '">';
+    if (measureNumber === 1) {
+      result += buildMeasureAttributes();
+    }
+    result += measureRhythmElements.map(rhythmElement => {
       if (isRest(rhythmElement)) {
         return buildRest(rhythmElement.duration);
       }
       return buildNotes(rhythmElement.duration, rhythmElement.tones);
-    }).join('')
-    + buildEndingRests(rhythmElements)
-    + '<barline location="right"><bar-style>light-heavy</bar-style></barline>'
-    + '</measure>';
+    }).join('');
+    if (index === allRhythmElements.length - 1) {
+      result += buildEndingRests(measureRhythmElements);
+      result += '<barline location="right"><bar-style>light-heavy</bar-style></barline>';
+    }
+    result += '</measure>';
+  }
+  return result;
+}
+
+export function buildMeasures(rhythmElements: RhythmElement[]): string {
+  const measuredRhythmElements: RhythmElement[][] = [[]];
+  let durationSum: Duration = {numerator: 0, denominator: 1};
+  rhythmElements.forEach(rhythmElement => {
+    if (toFraction(durationSum).valueOf() <= 1) {
+      measuredRhythmElements[measuredRhythmElements.length - 1].push(rhythmElement);
+      durationSum = addDurations(durationSum, rhythmElement.duration);
+    } else {
+      measuredRhythmElements.push([rhythmElement]);
+      durationSum = rhythmElement.duration;
+    }
+  });
+  return measuredRhythmElements.map(buildMeasure).join('');
 }
 
 export function buildNotes(duration: Duration, tones: Tone[]): string {

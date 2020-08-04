@@ -6,42 +6,15 @@ import {
   buildStep,
   buildPitch,
   buildOctave,
-  buildNotes
+  buildNotes, buildMeasures
 } from './music-xml-builder';
 import {Duration, RhythmElement, Tone} from '../store/model';
 
 describe('build', () => {
   it('builds empty xml', () => {
-    expect(build({rhythmElements: []})).toBe('<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
-      '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">' +
-      '<score-partwise version="3.1">' +
-      '<part-list>' +
-      '<score-part id="P1">' +
-      '<part-name>Music</part-name>' +
-      '</score-part>' +
-      '</part-list>' +
-      '<part id="P1">' +
-      '<measure number="1">' +
-      '<attributes>' +
-      '<divisions>8</divisions>' +
-      '<key>' +
-      '<fifths>0</fifths>' +
-      '</key>' +
-      '<time>' +
-      '<beats>4</beats>' +
-      '<beat-type>4</beat-type>' +
-      '</time>' +
-      '<clef>' +
-      '<sign>G</sign>' +
-      '<line>2</line>' +
-      '</clef>' +
-      '</attributes>' +
-      '<barline location="right">' +
-      '<bar-style>light-heavy</bar-style>' +
-      '</barline>' +
-      '</measure>' +
-      '</part>' +
-      '</score-partwise>');
+    expect(build({rhythmElements: []})).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
+    expect(build({rhythmElements: []})).toContain('<score-partwise version="3.1">');
+    expect(build({rhythmElements: []})).toContain('</score-partwise>');
   });
 });
 
@@ -115,6 +88,61 @@ describe('buildEndingRests', () => {
       '<note><rest /><duration>8</duration><type>quarter</type></note>' +
       '<note><rest /><duration>16</duration><type>half</type></note>'
     );
+  });
+});
+
+describe('buildMeasures', () => {
+  it('builds no measure, when rhythmElements empty', () => {
+    expect(buildMeasures([])).toBe('');
+  });
+
+  it('builds one measure, when duration sum of rhythmElements equal measure length', () => {
+    const rhythmElements: RhythmElement[] = [
+      {
+        tones: [],
+        duration: {
+          numerator: 1,
+          denominator: 1,
+        }
+      }
+    ];
+    expect(buildMeasures(rhythmElements)).toContain('<measure number="1">');
+    expect(buildMeasures(rhythmElements)).not.toContain('<measure number="2">');
+  });
+
+  it('builds one measure, when duration of rhythmElements is smaller than measure length', () => {
+    const rhythmElements: RhythmElement[] = [
+      {
+        tones: [],
+        duration: {
+          numerator: 1,
+          denominator: 2,
+        }
+      }
+    ];
+    expect(buildMeasures(rhythmElements)).toContain('<measure number="1">');
+    expect(buildMeasures(rhythmElements)).not.toContain('<measure number="2">');
+  });
+
+  it('builds two measures, when duration of rhythmElements is greater than measure length', () => {
+    const rhythmElements: RhythmElement[] = [
+      {
+        tones: [],
+        duration: {
+          numerator: 1,
+          denominator: 1,
+        }
+      },
+      {
+        tones: [],
+        duration: {
+          numerator: 1,
+          denominator: 2,
+        }
+      }
+    ];
+    expect(buildMeasures(rhythmElements)).toContain('<measure number="1">');
+    expect(buildMeasures(rhythmElements)).toContain('<measure number="2">');
   });
 });
 
