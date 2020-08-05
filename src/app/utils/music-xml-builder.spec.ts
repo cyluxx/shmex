@@ -92,8 +92,17 @@ describe('buildEndingRests', () => {
 });
 
 describe('buildMeasures', () => {
-  it('builds no measure, when rhythmElements empty', () => {
-    expect(buildMeasures([])).toBe('');
+  it('builds one empty measure, when rhythmElements empty', () => {
+    const builtMeasures = buildMeasures([]);
+    expect(builtMeasures).toContain('<measure number="1">');
+    expect(builtMeasures).toContain('<attributes><divisions>8</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>');
+    expect(builtMeasures).toContain('<attributes>');
+    expect(builtMeasures).toContain('<divisions>');
+    expect(builtMeasures).toContain('<key>');
+    expect(builtMeasures).toContain('<fifths>');
+    expect(builtMeasures).toContain('<time>');
+    expect(builtMeasures).toContain('<beats>');
+    expect(builtMeasures).toContain('<beat-type>');
   });
 
   it('builds one measure, when duration sum of rhythmElements equal measure length', () => {
