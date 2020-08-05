@@ -1,8 +1,21 @@
 # Shmex
+**Sh**eet **M**usic **Ex**perience. 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.5.
+> Vexflow Shmexflow like I always say! This project is based on [opensheetmusicdisplay](https://opensheetmusicdisplay.org/) and was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.5.
+> 
+> Note to myself: I definitely have to come up with a better name...
 
-![Build](https://github.com/cyluxx/shmex/workflows/Build/badge.svg) [![codecov](https://codecov.io/gh/cyluxx/shmex/branch/master/graph/badge.svg)](https://codecov.io/gh/cyluxx/shmex)
+Current state of the app: [Preview](https://shmex-437b5.web.app/).
+
+![Build](https://github.com/cyluxx/shmex/workflows/Build/badge.svg) [![codecov](https://codecov.io/gh/cyluxx/shmex/branch/master/graph/badge.svg)](https://codecov.io/gh/cyluxx/shmex) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/cyluxx/shmex)
+
+## Motivation
+
+Why do we need another music scoring app?
+
+1. I like it simple. Unfortunetaly, Music notation is complicated. I want to concentrate on the basics of band sheet music.
+2. I am a programmer. The concept of describing music with a domain specific language is worth a try. Even after 100+ Sheets, I find WYSIWYG quite tedious.
+3. I write music. The most fun programming projects are the ones, you are passionate about. Maybe I'll never finish this app. But at least, I had fun :).
 
 ## Development server
 
