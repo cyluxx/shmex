@@ -16,3 +16,7 @@ export function toDuration(fraction: Fraction): Duration {
 export function toFraction(duration: Duration): Fraction {
   return new Fraction(duration.numerator, duration.denominator);
 }
+
+export function shorten(duration: Duration): Duration {
+  return toDuration(toFraction(duration));
+}
