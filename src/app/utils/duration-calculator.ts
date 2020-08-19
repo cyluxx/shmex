@@ -5,6 +5,10 @@ export function addDurations(x: Duration, y: Duration): Duration {
   return toDuration(toFraction(x).add(toFraction(y)));
 }
 
+export function fitsInMeasure(duration: Duration): boolean {
+  return toFraction(duration).valueOf() < 1;
+}
+
 export function getFractionalPart(duration: Duration): Duration {
   return toDuration(toFraction(duration).mod(1));
 }

@@ -8,13 +8,13 @@ import {
   buildOctave,
   buildNotes, buildMeasures
 } from './music-xml-builder';
-import {Duration, RhythmElement, Tone} from '../store/model';
+import {Duration, Measure, RhythmElement, Tone} from '../store/model';
 
 describe('build', () => {
   it('builds empty xml', () => {
-    expect(build({rhythmElements: []})).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
-    expect(build({rhythmElements: []})).toContain('<score-partwise version="3.1">');
-    expect(build({rhythmElements: []})).toContain('</score-partwise>');
+    expect(build({measures: []})).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
+    expect(build({measures: []})).toContain('<score-partwise version="3.1">');
+    expect(build({measures: []})).toContain('</score-partwise>');
   });
 });
 
@@ -106,52 +106,64 @@ describe('buildMeasures', () => {
   });
 
   it('builds one measure, when duration sum of rhythmElements equal measure length', () => {
-    const rhythmElements: RhythmElement[] = [
+    const measures: Measure[] = [
       {
-        tones: [],
-        duration: {
-          numerator: 1,
-          denominator: 1,
-        }
+        rhythmElements: [{
+          tones: [],
+          duration: {
+            numerator: 1,
+            denominator: 1,
+          }
+        }]
       }
     ];
-    expect(buildMeasures(rhythmElements)).toContain('<measure number="1">');
-    expect(buildMeasures(rhythmElements)).not.toContain('<measure number="2">');
+    expect(buildMeasures(measures)).toContain('<measure number="1">');
+    expect(buildMeasures(measures)).not.toContain('<measure number="2">');
   });
 
   it('builds one measure, when duration of rhythmElements is smaller than measure length', () => {
-    const rhythmElements: RhythmElement[] = [
+    const measures: Measure[] = [
       {
-        tones: [],
-        duration: {
-          numerator: 1,
-          denominator: 2,
-        }
+        rhythmElements: [{
+          tones: [],
+          duration: {
+            numerator: 1,
+            denominator: 2,
+          }
+        }]
       }
     ];
-    expect(buildMeasures(rhythmElements)).toContain('<measure number="1">');
-    expect(buildMeasures(rhythmElements)).not.toContain('<measure number="2">');
+    expect(buildMeasures(measures)).toContain('<measure number="1">');
+    expect(buildMeasures(measures)).not.toContain('<measure number="2">');
   });
 
-  it('builds two measures, when duration of rhythmElements is greater than measure length', () => {
-    const rhythmElements: RhythmElement[] = [
+  it('builds two measures', () => {
+    const measures: Measure[] = [
       {
-        tones: [],
-        duration: {
-          numerator: 1,
-          denominator: 1,
-        }
+        rhythmElements: [
+          {
+            tones: [],
+            duration: {
+              numerator: 1,
+              denominator: 1,
+            }
+          }
+        ]
       },
       {
-        tones: [],
-        duration: {
-          numerator: 1,
-          denominator: 2,
-        }
+        rhythmElements: [
+          {
+            tones: [],
+            duration: {
+              numerator: 1,
+              denominator: 2,
+            }
+          }
+        ]
       }
     ];
-    expect(buildMeasures(rhythmElements)).toContain('<measure number="1">');
-    expect(buildMeasures(rhythmElements)).toContain('<measure number="2">');
+    expect(buildMeasures(measures)).toContain('<measure number="1">');
+    expect(buildMeasures(measures)).toContain('<measure number="2">');
   });
 });
 

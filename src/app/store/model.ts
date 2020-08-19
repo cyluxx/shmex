@@ -1,6 +1,6 @@
 export const initialAppState: AppState = {
   track: {
-    rhythmElements: []
+    measures: []
   }
 };
 
@@ -9,6 +9,10 @@ export interface AppState {
 }
 
 export interface Track {
+  measures: Measure[];
+}
+
+export interface Measure {
   rhythmElements: RhythmElement[];
 }
 

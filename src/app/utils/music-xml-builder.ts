@@ -1,6 +1,6 @@
-import {Duration, RhythmElement, Tone, Track} from '../store/model';
+import {Duration, Measure, RhythmElement, Tone, Track} from '../store/model';
 import {isRest, removeDuplicateTones} from './model-utils';
-import {addDurations, getFractionalPart, toFraction} from './duration-calculator';
+import {addDurations, getFractionalPart} from './duration-calculator';
 
 export function buildAlter(accidental: '#' | 'b'): string {
   if (!accidental) {
@@ -71,19 +71,14 @@ export function buildMeasure(measureRhythmElements: RhythmElement[], index: numb
   return result;
 }
 
-export function buildMeasures(rhythmElements: RhythmElement[]): string {
-  const measuredRhythmElements: RhythmElement[][] = [[]];
-  let durationSum: Duration = {numerator: 0, denominator: 1};
-  rhythmElements.forEach(rhythmElement => {
-    if (toFraction(durationSum).valueOf() < 1) {
-      measuredRhythmElements[measuredRhythmElements.length - 1].push(rhythmElement);
-      durationSum = addDurations(durationSum, rhythmElement.duration);
-    } else {
-      measuredRhythmElements.push([rhythmElement]);
-      durationSum = rhythmElement.duration;
-    }
-  });
-  return measuredRhythmElements.map(buildMeasure).join('');
+export function buildMeasures(measures: Measure[]): string {
+  if (measures.length === 0) {
+    return buildMeasure([], 0, [[]]);
+  }
+  return measures
+    .map(measure => measure.rhythmElements)
+    .map(buildMeasure)
+    .join('');
 }
 
 export function buildNotes(duration: Duration, tones: Tone[]): string {
@@ -104,7 +99,7 @@ export function buildOctave(octave: number): string {
 
 export function buildPart(track: Track): string {
   return '<part id="P1">'
-    + buildMeasures(track.rhythmElements)
+    + buildMeasures(track.measures)
     + '</part>';
 }
 

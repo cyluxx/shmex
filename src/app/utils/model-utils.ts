@@ -13,3 +13,4 @@ export function removeDuplicateTones(tones: Tone[]): Tone[] {
     )) === index;
   });
 }
+
