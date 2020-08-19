@@ -5,22 +5,23 @@ export function addDurations(x: Duration, y: Duration): Duration {
   return toDuration(toFraction(x).add(toFraction(y)));
 }
 
-export function fitsInMeasure(duration: Duration): boolean {
-  return toFraction(duration).valueOf() < 1;
+export function asDurationValue(n: number){
+  return n as 1 | 2 | 4 | 8 | 16 | 32;
 }
 
-export function getFractionalPart(duration: Duration): Duration {
-  return toDuration(toFraction(duration).mod(1));
+export function fitsInMeasure(duration: Duration): boolean {
+  return toFraction(duration).valueOf() <= 1;
+}
+
+export function getFractionalPart(duration: Duration): Fraction {
+  return toFraction(duration).mod(1);
 }
 
 export function toDuration(fraction: Fraction): Duration {
-  return {numerator: fraction.n, denominator: fraction.d as 1 | 2 | 4 | 8 | 16 | 32};
+  return {value: fraction.d as 1 | 2 | 4 | 8 | 16 | 32};
 }
 
 export function toFraction(duration: Duration): Fraction {
-  return new Fraction(duration.numerator, duration.denominator);
+  return new Fraction(1, duration.value);
 }
 
-export function shorten(duration: Duration): Duration {
-  return toDuration(toFraction(duration));
-}

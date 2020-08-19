@@ -22,8 +22,7 @@ export interface RhythmElement {
 }
 
 export interface Duration {
-  numerator: number;
-  denominator: 1 | 2 | 4 | 8 | 16 | 32;
+  value: 1 | 2 | 4 | 8 | 16 | 32;
 }
 
 export interface Tone {

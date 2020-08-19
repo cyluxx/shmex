@@ -34,12 +34,12 @@ describe('buildAlter', () => {
 
 describe('buildDurationAndType', () => {
   it('builds all correct variants, if duration numerator is 1', () => {
-    expect(buildDurationAndType({numerator: 1, denominator: 1})).toBe('<duration>32</duration><type>whole</type>');
-    expect(buildDurationAndType({numerator: 1, denominator: 2})).toBe('<duration>16</duration><type>half</type>');
-    expect(buildDurationAndType({numerator: 1, denominator: 4})).toBe('<duration>8</duration><type>quarter</type>');
-    expect(buildDurationAndType({numerator: 1, denominator: 8})).toBe('<duration>4</duration><type>eighth</type>');
-    expect(buildDurationAndType({numerator: 1, denominator: 16})).toBe('<duration>2</duration><type>16th</type>');
-    expect(buildDurationAndType({numerator: 1, denominator: 32})).toBe('<duration>1</duration><type>32nd</type>');
+    expect(buildDurationAndType({value: 1})).toBe('<duration>32</duration><type>whole</type>');
+    expect(buildDurationAndType({value: 2})).toBe('<duration>16</duration><type>half</type>');
+    expect(buildDurationAndType({value: 4})).toBe('<duration>8</duration><type>quarter</type>');
+    expect(buildDurationAndType({value: 8})).toBe('<duration>4</duration><type>eighth</type>');
+    expect(buildDurationAndType({value: 16})).toBe('<duration>2</duration><type>16th</type>');
+    expect(buildDurationAndType({value: 32})).toBe('<duration>1</duration><type>32nd</type>');
   });
 });
 
@@ -50,17 +50,17 @@ describe('buildEndingRests', () => {
   });
 
   it('builds no rests, if rhythmElements fit into 4/4 time signature', () => {
-    const rhythmElements: RhythmElement[] = [{duration: {numerator: 1, denominator: 1}, tones: []}];
+    const rhythmElements: RhythmElement[] = [{duration: {value: 1}, tones: []}];
     expect(buildEndingRests(rhythmElements)).toBe('');
   });
 
   it('builds a 32nd, if rhythmElements exceed by a half, a quarter, an eighth, a 16th and a 32nd', () => {
     const rhythmElements: RhythmElement[] = [
-      {duration: {numerator: 1, denominator: 2}, tones: []},
-      {duration: {numerator: 1, denominator: 4}, tones: []},
-      {duration: {numerator: 1, denominator: 8}, tones: []},
-      {duration: {numerator: 1, denominator: 16}, tones: []},
-      {duration: {numerator: 1, denominator: 32}, tones: []},
+      {duration: {value: 2}, tones: []},
+      {duration: {value: 4}, tones: []},
+      {duration: {value: 8}, tones: []},
+      {duration: {value: 16}, tones: []},
+      {duration: {value: 32}, tones: []},
     ];
     expect(buildEndingRests(rhythmElements)).toBe(
       '<note><rest /><duration>1</duration><type>32nd</type></note>'
@@ -69,9 +69,9 @@ describe('buildEndingRests', () => {
 
   it('builds a 16th, and a half rest, if rhythmElements exceed by a quarter, an eighth and a 16th', () => {
     const rhythmElements: RhythmElement[] = [
-      {duration: {numerator: 1, denominator: 4}, tones: []},
-      {duration: {numerator: 1, denominator: 8}, tones: []},
-      {duration: {numerator: 1, denominator: 16}, tones: []},
+      {duration: {value: 4}, tones: []},
+      {duration: {value: 8}, tones: []},
+      {duration: {value: 16}, tones: []},
     ];
     expect(buildEndingRests(rhythmElements)).toBe(
       '<note><rest /><duration>2</duration><type>16th</type></note>' +
@@ -80,7 +80,7 @@ describe('buildEndingRests', () => {
   });
 
   it('builds a 32nd, a 16th, an 8th, a quarter and a half rest, if rhythmElements exceed by a 32nd', () => {
-    const rhythmElements: RhythmElement[] = [{duration: {numerator: 1, denominator: 32}, tones: []}];
+    const rhythmElements: RhythmElement[] = [{duration: {value: 32}, tones: []}];
     expect(buildEndingRests(rhythmElements)).toBe(
       '<note><rest /><duration>1</duration><type>32nd</type></note>' +
       '<note><rest /><duration>2</duration><type>16th</type></note>' +
@@ -111,8 +111,7 @@ describe('buildMeasures', () => {
         rhythmElements: [{
           tones: [],
           duration: {
-            numerator: 1,
-            denominator: 1,
+            value: 1,
           }
         }]
       }
@@ -127,8 +126,7 @@ describe('buildMeasures', () => {
         rhythmElements: [{
           tones: [],
           duration: {
-            numerator: 1,
-            denominator: 2,
+            value: 2,
           }
         }]
       }
@@ -144,8 +142,7 @@ describe('buildMeasures', () => {
           {
             tones: [],
             duration: {
-              numerator: 1,
-              denominator: 1,
+              value: 1,
             }
           }
         ]
@@ -155,8 +152,7 @@ describe('buildMeasures', () => {
           {
             tones: [],
             duration: {
-              numerator: 1,
-              denominator: 2,
+              value: 2,
             }
           }
         ]
@@ -170,8 +166,7 @@ describe('buildMeasures', () => {
 describe('buildNotes', () => {
   it('builds single note correctly', () => {
     const duration: Duration = {
-      numerator: 1,
-      denominator: 1,
+      value: 1,
     };
     const tones: Tone[] = [
       {
@@ -188,8 +183,7 @@ describe('buildNotes', () => {
 
   it('builds multiple notes correctly', () => {
     const duration: Duration = {
-      numerator: 1,
-      denominator: 1,
+      value: 1,
     };
     const tones: Tone[] = [
       {
@@ -225,8 +219,7 @@ describe('buildNotes', () => {
 
   it('returns an empty string, when no notes', () => {
     const duration: Duration = {
-      numerator: 1,
-      denominator: 1,
+      value: 1,
     };
     const tones: Tone[] = [];
     expect(buildNotes(duration, tones)).toBe('');
@@ -234,8 +227,7 @@ describe('buildNotes', () => {
 
   it('does not build duplicate notes', () => {
     const duration: Duration = {
-      numerator: 1,
-      denominator: 1,
+      value: 1,
     };
     const tones: Tone[] = [
       {

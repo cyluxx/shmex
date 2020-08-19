@@ -9,8 +9,7 @@ describe('fillMeasures', () => {
   it('returns one measure, when rhythmElements contain one whole rest', () => {
     const rhythmElements: RhythmElement[] = [{
       duration: {
-        numerator: 1,
-        denominator: 1
+        value: 1
       },
       tones: []
     }];
@@ -20,27 +19,24 @@ describe('fillMeasures', () => {
   it('returns one measure, when rhythmElements contain one 32nd rest', () => {
     const rhythmElements: RhythmElement[] = [{
       duration: {
-        numerator: 1,
-        denominator: 32
+        value: 32
       },
       tones: []
     }];
     expect(fillMeasures(rhythmElements)).toEqual([{rhythmElements}]);
   });
 
-  it('returns two measure, when rhythmElements contain one whole rest and one 32nd rest', () => {
+  it('returns two measures, when rhythmElements contain one whole rest and one 32nd rest', () => {
     const rhythmElements: RhythmElement[] = [
       {
         duration: {
-          numerator: 1,
-          denominator: 1
+          value: 1
         },
         tones: []
       },
       {
         duration: {
-          numerator: 1,
-          denominator: 32
+          value: 32
         },
         tones: []
       }
@@ -49,8 +45,7 @@ describe('fillMeasures', () => {
       {
         rhythmElements: [{
           duration: {
-            numerator: 1,
-            denominator: 1
+            value: 1
           },
           tones: []
         }]
@@ -58,8 +53,7 @@ describe('fillMeasures', () => {
       {
         rhythmElements: [{
           duration: {
-            numerator: 1,
-            denominator: 32
+            value: 32
           },
           tones: []
         }]
