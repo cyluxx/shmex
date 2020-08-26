@@ -23,10 +23,16 @@ export interface RhythmElement {
 
 export interface Duration {
   value: 1 | 2 | 4 | 8 | 16 | 32;
+  tie?: boolean;
 }
 
 export interface Tone {
   key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g';
   accidental?: '#' | 'b';
   octave: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+}
+
+export interface RhythmElementToken {
+  durationToken: string;
+  toneTokens: string[];
 }

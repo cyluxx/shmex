@@ -1,4 +1,4 @@
-import {fillMeasures} from './reducer-utils';
+import {fillMeasures, shorten} from './reducer-utils';
 import {RhythmElement} from '../store/model';
 
 describe('fillMeasures', () => {
@@ -59,5 +59,19 @@ describe('fillMeasures', () => {
         }]
       }
     ]);
+  });
+});
+
+describe('shorten', () => {
+  it('shortens 4/4 to 1/1', () => {
+    expect(shorten('4/4')).toEqual('1/1');
+  });
+
+  it('shortens 2/4 to 1/2', () => {
+    expect(shorten('2/4')).toEqual('1/2');
+  });
+
+  it('shortens 3/4 to 3/4', () => {
+    expect(shorten('3/4')).toEqual('3/4');
   });
 });
