@@ -1,6 +1,6 @@
 import {Duration, Measure, RhythmElement, Tone, Track} from '../store/model';
 import {isRest, removeDuplicateTones} from './model-utils';
-import {addDurations, getFractionalPart, toDuration} from './duration-calculator';
+import {addDuration, asDurationValue, getFractionalPart} from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 
 export function buildAlter(accidental: '#' | 'b'): string {
@@ -32,16 +32,16 @@ export function buildDurationAndType(duration: Duration): string {
  * returns ending rests, if track does not fit into time signature (currently only 4/4)
  */
 export function buildEndingRests(rhythmElements: RhythmElement[]): string {
-  let combinedDuration: Duration = {value: 1};
+  let combinedDuration: Fraction = new Fraction(1, 1);
   rhythmElements.map(rhythmElement => {
-    combinedDuration = addDurations(combinedDuration, rhythmElement.duration);
+    combinedDuration = addDuration(combinedDuration, rhythmElement.duration);
   });
   let endingRests = '';
   let fractionalPart: Fraction = getFractionalPart(combinedDuration);
   while (fractionalPart.n / fractionalPart.d !== 0) {
-    const duration: Duration = toDuration(fractionalPart);
+    const duration: Duration = {value: asDurationValue(fractionalPart.d)};
     endingRests += buildRest(duration);
-    combinedDuration = addDurations(combinedDuration, duration);
+    combinedDuration = addDuration(combinedDuration, duration);
     fractionalPart = getFractionalPart(combinedDuration);
   }
   return endingRests;

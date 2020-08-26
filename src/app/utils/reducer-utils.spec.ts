@@ -16,13 +16,21 @@ describe('fillMeasures', () => {
     expect(fillMeasures(rhythmElements)).toEqual([{rhythmElements}]);
   });
 
-  it('returns one measure, when rhythmElements contain one 32nd rest', () => {
-    const rhythmElements: RhythmElement[] = [{
-      duration: {
-        value: 32
+  it('returns one measure, when rhythmElements contain two 32nd rests', () => {
+    const rhythmElements: RhythmElement[] = [
+      {
+        duration: {
+          value: 32
+        },
+        tones: []
       },
-      tones: []
-    }];
+      {
+        duration: {
+          value: 32
+        },
+        tones: []
+      }
+    ];
     expect(fillMeasures(rhythmElements)).toEqual([{rhythmElements}]);
   });
 

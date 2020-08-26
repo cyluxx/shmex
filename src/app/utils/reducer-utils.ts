@@ -1,5 +1,5 @@
 import {Duration, Measure, RhythmElement, RhythmElementToken, Tone} from '../store/model';
-import {addDurations, asDurationValue, fitsInMeasure} from './duration-calculator';
+import {addDuration, asDurationValue, fitsInMeasure, toFraction} from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 
 /**
@@ -7,14 +7,15 @@ import Fraction from 'fraction.js/fraction';
  */
 export function fillMeasures(rhythmElements: RhythmElement[]): Measure[] {
   const measuredRhythmElements: RhythmElement[][] = [];
-  let durationSum: Duration = {value: 1};
+  let durationSum: Fraction = new Fraction(1, 1);
   rhythmElements.forEach(rhythmElement => {
-    durationSum = addDurations(durationSum, rhythmElement.duration);
+    durationSum = addDuration(durationSum, rhythmElement.duration);
+    console.log(durationSum);
     if (fitsInMeasure(durationSum)) {
       measuredRhythmElements[measuredRhythmElements.length - 1].push(rhythmElement);
     } else {
       measuredRhythmElements.push([rhythmElement]);
-      durationSum = rhythmElement.duration;
+      durationSum = toFraction(rhythmElement.duration);
     }
   });
   return measuredRhythmElements.map((elements) => ({rhythmElements: elements}));
