@@ -27,15 +27,6 @@ export function shorten(durationToken: string): string {
   return fraction.n + '/' + fraction.d;
 }
 
-export function toRhythmElements(rhythmElementTokens: RhythmElementToken[]): RhythmElement[] {
-  return rhythmElementTokens.flatMap(rhythmElementToken => (
-    toDurations(rhythmElementToken.durationToken).map(duration => ({
-      duration,
-      tones: toTones(rhythmElementToken.toneTokens)
-    }))
-  ));
-}
-
 /**
  * Converts a durationToken into an array, containing at least one duration, or multiple tied durations.
  */
@@ -46,6 +37,15 @@ export function toDurations(durationToken: string): Duration[] {
   return [{
     value: asDurationValue(+splitDurationToken[1])
   }];
+}
+
+export function toRhythmElements(rhythmElementTokens: RhythmElementToken[]): RhythmElement[] {
+  return rhythmElementTokens.flatMap(rhythmElementToken => (
+    toDurations(rhythmElementToken.durationToken).map(duration => ({
+      duration,
+      tones: toTones(rhythmElementToken.toneTokens)
+    }))
+  ));
 }
 
 export function toTones(toneTokens: string[]): Tone[] {

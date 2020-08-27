@@ -1,4 +1,4 @@
-import {fillMeasures, shorten} from './reducer-utils';
+import {fillMeasures, shorten, toTones} from './reducer-utils';
 import {RhythmElement} from '../store/model';
 
 describe('fillMeasures', () => {
@@ -81,5 +81,49 @@ describe('shorten', () => {
 
   it('shortens 3/4 to 3/4', () => {
     expect(shorten('3/4')).toEqual('3/4');
+  });
+});
+
+describe('toTones', () => {
+  it('converts no tones to empty array', () => {
+    expect(toTones([])).toEqual([]);
+  });
+
+  it('converts tone without accidental', () => {
+    expect(toTones(['a4'])).toEqual([{
+      key: 'a',
+      octave: 4
+    }]);
+  });
+
+  it('converts tone with accidental', () => {
+    expect(toTones(['c#4'])).toEqual([{
+      key: 'c',
+      accidental: '#',
+      octave: 4
+    }]);
+    expect(toTones(['bb4'])).toEqual([{
+      key: 'b',
+      accidental: 'b',
+      octave: 4
+    }]);
+  });
+
+  it('converts multiple tones', () => {
+    expect(toTones(['a4', 'c#5', 'e5'])).toEqual([
+      {
+        key: 'a',
+        octave: 4
+      },
+      {
+        key: 'c',
+        accidental: '#',
+        octave: 5
+      },
+      {
+        key: 'e',
+        octave: 5
+      }
+    ]);
   });
 });
