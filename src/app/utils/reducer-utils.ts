@@ -1,6 +1,30 @@
 import {Duration, Measure, RhythmElement, RhythmElementToken, Tone} from '../store/model';
-import {addDuration, asDurationValue, fitsInMeasure, toFraction} from './duration-calculator';
+import {addDuration, asDurationValue, decomposeAsc, decomposeDesc, fitsInMeasure, toFraction} from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
+
+/**
+ * Divides a duration token, if there is a measure bar in between
+ */
+export function divideDurationTokenAtBar(durationToken: Fraction, position: number): Fraction[] {
+  return [];
+}
+
+/**
+ * Divides a duration token by the rules of a given duration tree (currently only 4/4)
+ */
+export function divideDurationTokenByTree(durationToken: Fraction, position: number): Fraction[] {
+  return [];
+}
+
+/**
+ * Divides an overlong duration token by its numerator. Depending on the position, the returned array is sorted asc or desc.
+ */
+export function divideDurationTokenByNumerator(durationToken: Fraction, position: number): Fraction[] {
+  if (position === 0) {
+    return decomposeDesc(durationToken);
+  }
+  return decomposeAsc(durationToken);
+}
 
 /**
  * Divides an arbitrary long array of rhythm elements into measures (currently only 4/4)
@@ -10,7 +34,6 @@ export function fillMeasures(rhythmElements: RhythmElement[]): Measure[] {
   let durationSum: Fraction = new Fraction(1, 1);
   rhythmElements.forEach(rhythmElement => {
     durationSum = addDuration(durationSum, rhythmElement.duration);
-    console.log(durationSum);
     if (fitsInMeasure(durationSum)) {
       measuredRhythmElements[measuredRhythmElements.length - 1].push(rhythmElement);
     } else {
@@ -21,27 +44,24 @@ export function fillMeasures(rhythmElements: RhythmElement[]): Measure[] {
   return measuredRhythmElements.map((elements) => ({rhythmElements: elements}));
 }
 
-export function shorten(durationToken: string): string {
-  const splitDurationToken = durationToken.split('/');
-  const fraction = new Fraction(+splitDurationToken[0], +splitDurationToken[1]);
-  return fraction.n + '/' + fraction.d;
+export function toDurationToken(durationTokenString: string): Fraction {
+  const splitDurationToken = durationTokenString.split('/');
+  return new Fraction(+splitDurationToken[0], +splitDurationToken[1]);
 }
 
 /**
  * Converts a durationToken into an array, containing at least one duration, or multiple tied durations.
  */
-export function toDurations(durationToken: string): Duration[] {
-  const shortenedDurationToken = shorten(durationToken);
-  const splitDurationToken = shortenedDurationToken.split('/');
+export function toDurations(durationToken: Fraction, measurePosition: number): Duration[] {
   // TODO hardcoded
   return [{
-    value: asDurationValue(+splitDurationToken[1])
+    value: asDurationValue(durationToken.d)
   }];
 }
 
 export function toRhythmElements(rhythmElementTokens: RhythmElementToken[]): RhythmElement[] {
   return rhythmElementTokens.flatMap(rhythmElementToken => (
-    toDurations(rhythmElementToken.durationToken).map(duration => ({
+    toDurations(rhythmElementToken.durationToken, 0).map(duration => ({
       duration,
       tones: toTones(rhythmElementToken.toneTokens)
     }))

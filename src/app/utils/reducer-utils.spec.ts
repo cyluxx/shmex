@@ -1,5 +1,36 @@
-import {fillMeasures, shorten, toTones} from './reducer-utils';
+import {divideDurationTokenByNumerator, fillMeasures, toDurationToken, toTones} from './reducer-utils';
 import {RhythmElement} from '../store/model';
+import Fraction from 'fraction.js';
+
+describe('divideDurationTokenByNumerator', () => {
+  it('returns [1/1], when duration token is 1/1 at position 0', () => {
+    expect(divideDurationTokenByNumerator(new Fraction(1, 1), 0))
+      .toEqual([new Fraction(1, 1)]);
+  });
+
+  it('returns [1/4], when duration token is 1/4 4 at position 3', () => {
+    expect(divideDurationTokenByNumerator(new Fraction(1, 4), 3))
+      .toEqual([new Fraction(1, 4)]);
+  });
+
+  it('returns [1/4, 1/16], when duration token is 5/16 at position 0', () => {
+    expect(divideDurationTokenByNumerator(new Fraction(5, 16), 0))
+      .toEqual([
+          new Fraction(1, 4),
+          new Fraction(1, 16)
+        ]
+      );
+  });
+
+  it('returns [1/16, 1/4], when duration token is 5/16 at position 2', () => {
+    expect(divideDurationTokenByNumerator(new Fraction(5, 16), 2))
+      .toEqual([
+          new Fraction(1, 16),
+          new Fraction(1, 4)
+        ]
+      );
+  });
+});
 
 describe('fillMeasures', () => {
   it('returns empty measures, when no rhythm elements', () => {
@@ -70,17 +101,20 @@ describe('fillMeasures', () => {
   });
 });
 
-describe('shorten', () => {
-  it('shortens 4/4 to 1/1', () => {
-    expect(shorten('4/4')).toEqual('1/1');
+describe('toDurationToken', () => {
+  it('converts 4/4 to 1/1', () => {
+    expect(toDurationToken('4/4').n).toBe(1);
+    expect(toDurationToken('4/4').d).toBe(1);
   });
 
-  it('shortens 2/4 to 1/2', () => {
-    expect(shorten('2/4')).toEqual('1/2');
+  it('converts 2/4 to 1/2', () => {
+    expect(toDurationToken('2/4').n).toBe(1);
+    expect(toDurationToken('2/4').d).toBe(2);
   });
 
-  it('shortens 3/4 to 3/4', () => {
-    expect(shorten('3/4')).toEqual('3/4');
+  it('converts 3/4 to 3/4', () => {
+    expect(toDurationToken('3/4').n).toBe(3);
+    expect(toDurationToken('3/4').d).toBe(4);
   });
 });
 

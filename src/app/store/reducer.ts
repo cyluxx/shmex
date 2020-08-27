@@ -3,20 +3,21 @@ import {AppState, initialAppState, RhythmElementToken} from './model';
 import {parseShmexlText} from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
-import {fillMeasures, toRhythmElements} from '../utils/reducer-utils';
+import {fillMeasures, toDurationToken, toRhythmElements} from '../utils/reducer-utils';
+import Fraction from 'fraction.js/fraction';
 
 const _reducer = createReducer(
   initialAppState,
 
   on(parseShmexlText, (state, {shmexlText}) => {
     const rhythmElementTokens: RhythmElementToken[] = [];
-    let durationToken: string;
+    let durationToken: Fraction;
     let toneTokens: string[] = [];
 
     CodeMirror.runMode(shmexlText, 'shmexl', (token, style) => {
       switch (style) {
         case 'atom':
-          durationToken = token;
+          durationToken = toDurationToken(token);
           break;
         case 'keyword':
           toneTokens = toneTokens.concat([token]);

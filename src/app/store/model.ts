@@ -1,3 +1,5 @@
+import Fraction from 'fraction.js/fraction';
+
 export const initialAppState: AppState = {
   track: {
     measures: []
@@ -33,6 +35,6 @@ export interface Tone {
 }
 
 export interface RhythmElementToken {
-  durationToken: string;
+  durationToken: Fraction;
   toneTokens: string[];
 }
