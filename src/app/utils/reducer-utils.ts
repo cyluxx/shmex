@@ -1,29 +1,71 @@
 import {Duration, Measure, RhythmElement, RhythmElementToken, Tone} from '../store/model';
 import {addDuration, asDurationValue, decomposeAsc, decomposeDesc, fitsInMeasure, toFraction} from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
+import {constructDurationTree} from './duration-tree';
 
 /**
- * Divides a duration token, if there is a measure bar in between
+ * Divides rhythm element tokens into measures. Ties two tokens, whenever there is a measure bar in between.
  */
-export function divideDurationTokenAtBar(durationToken: Fraction, position: number): Fraction[] {
-  return [];
+export function divideRhythmElementTokensByMeasure(rhythmElementTokens: RhythmElementToken[]): RhythmElementToken[][] {
+  if (rhythmElementTokens.length === 0) {
+    return [];
+  }
+  const measuredRhythmElementTokens: RhythmElementToken[][] = [[]];
+  let durationSum: Fraction = new Fraction(0);
+  rhythmElementTokens.forEach(rhythmElementToken => {
+    const diff = new Fraction(1).sub(durationSum);
+    if (diff < rhythmElementToken.durationToken) {
+      // add rhythm element with difference and tie to current measure and begin next measure with leftover
+      measuredRhythmElementTokens[measuredRhythmElementTokens.length - 1].push({
+        ...rhythmElementToken,
+        durationToken: diff,
+        tie: true
+      });
+      measuredRhythmElementTokens.push([{
+        ...rhythmElementToken,
+        durationToken: rhythmElementToken.durationToken.sub(diff)
+      }]);
+      durationSum = rhythmElementToken.durationToken.sub(diff);
+    } else if (diff > rhythmElementToken.durationToken) {
+      // add to current measure
+      measuredRhythmElementTokens[measuredRhythmElementTokens.length - 1].push(rhythmElementToken);
+      durationSum = durationSum.add(rhythmElementToken.durationToken);
+    } else { // diff === rhythmElementToken.durationToken
+      // add to current measure and begin next measure
+      measuredRhythmElementTokens[measuredRhythmElementTokens.length - 1].push(rhythmElementToken);
+      measuredRhythmElementTokens.push([]);
+      durationSum = new Fraction(0);
+    }
+  });
+  return measuredRhythmElementTokens;
 }
 
 /**
- * Divides a duration token by the rules of a given duration tree (currently only 4/4)
+ * Divides a rhythm element token by the rules of a given duration tree (currently only 4/4)
  */
-export function divideDurationTokenByTree(durationToken: Fraction, position: number): Fraction[] {
+export function divideRhythmElementTokenByTree(rhythmElementTokens: RhythmElementToken[], position: number): RhythmElementToken[] {
+  const durationTree = constructDurationTree();
+  // if da ist ein knoten mit corresponding value und position return value
+  // ODER if da ist ein knoten
+  // ansonsten
   return [];
 }
 
 /**
  * Divides an overlong duration token by its numerator. Depending on the position, the returned array is sorted asc or desc.
  */
-export function divideDurationTokenByNumerator(durationToken: Fraction, position: number): Fraction[] {
+export function divideRhythmElementTokenByNumerator(rhythmElementToken: RhythmElementToken, position: number): RhythmElementToken[] {
+  let durationTokens: Fraction[];
   if (position === 0) {
-    return decomposeDesc(durationToken);
+    durationTokens = decomposeDesc(rhythmElementToken.durationToken);
+  } else {
+    durationTokens = decomposeAsc(rhythmElementToken.durationToken);
   }
-  return decomposeAsc(durationToken);
+  return durationTokens.map((durationToken, index, tokens) => ({
+    ...rhythmElementToken,
+    durationToken,
+    tie: index !== tokens.length - 1
+  }));
 }
 
 /**

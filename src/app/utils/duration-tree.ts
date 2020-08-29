@@ -35,12 +35,18 @@ function constructDurationTreeRecursive(noteValue: 1 | 2 | 4 | 8 | 16 | 32, posi
 
 function positionValueOf(noteValue: 1 | 2 | 4 | 8 | 16 | 32): number {
   switch (noteValue) {
-    case 1: return 32;
-    case 2: return 16;
-    case 4: return 8;
-    case 8: return 4;
-    case 16: return 2;
-    case 32: return 1;
+    case 1:
+      return 32;
+    case 2:
+      return 16;
+    case 4:
+      return 8;
+    case 8:
+      return 4;
+    case 16:
+      return 2;
+    case 32:
+      return 1;
   }
 }
 
@@ -49,4 +55,13 @@ function doubleNoteValue(noteValue: 1 | 2 | 4 | 8 | 16 | 32): 1 | 2 | 4 | 8 | 16
     return 32;
   }
   return noteValue * 2 as 1 | 2 | 4 | 8 | 16 | 32;
+}
+
+/**
+ * Gets the corresponding vertex in the tree by a note value and position
+ */
+export function getCorrespondingVertex(vertex: DurationVertex, noteValue: 1 | 2 | 4 | 8 | 16 | 32, position: number) {
+  if (vertex.noteValue === noteValue) {
+    return 0;
+  }
 }

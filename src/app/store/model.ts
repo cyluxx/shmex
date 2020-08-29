@@ -37,4 +37,5 @@ export interface Tone {
 export interface RhythmElementToken {
   durationToken: Fraction;
   toneTokens: string[];
+  tie?: boolean;
 }

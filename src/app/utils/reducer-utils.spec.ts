@@ -1,32 +1,108 @@
-import {divideDurationTokenByNumerator, fillMeasures, toDurationToken, toTones} from './reducer-utils';
-import {RhythmElement} from '../store/model';
+import {
+  divideRhythmElementTokenByNumerator,
+  divideRhythmElementTokensByMeasure,
+  fillMeasures,
+  toDurationToken,
+  toTones
+} from './reducer-utils';
+import {RhythmElement, RhythmElementToken} from '../store/model';
 import Fraction from 'fraction.js';
 
-describe('divideDurationTokenByNumerator', () => {
-  it('returns [1/1], when duration token is 1/1 at position 0', () => {
-    expect(divideDurationTokenByNumerator(new Fraction(1, 1), 0))
-      .toEqual([new Fraction(1, 1)]);
+describe('divideRhythmElementTokensByMeasure', () => {
+  it('returns no measure, when no rhythm elements', () => {
+    expect(divideRhythmElementTokensByMeasure([])).toEqual([]);
   });
 
-  it('returns [1/4], when duration token is 1/4 4 at position 3', () => {
-    expect(divideDurationTokenByNumerator(new Fraction(1, 4), 3))
-      .toEqual([new Fraction(1, 4)]);
+  it('returns one measure, when rhythm elements fit into measure', () => {
+    const rhythmElementTokens: RhythmElementToken[] = [
+      {durationToken: new Fraction(1, 8), toneTokens: []},
+      {durationToken: new Fraction(1, 2), toneTokens: []},
+      {durationToken: new Fraction(1, 4), toneTokens: []},
+      {durationToken: new Fraction(1, 8), toneTokens: []}
+    ];
+    expect(divideRhythmElementTokensByMeasure(rhythmElementTokens)).toEqual([rhythmElementTokens]);
   });
 
-  it('returns [1/4, 1/16], when duration token is 5/16 at position 0', () => {
-    expect(divideDurationTokenByNumerator(new Fraction(5, 16), 0))
+  it('returns two measures, when rhythm elements fit into two measures', () => {
+    expect(divideRhythmElementTokensByMeasure([
+      {durationToken: new Fraction(1, 1), toneTokens: []},
+      {durationToken: new Fraction(1, 2), toneTokens: []}
+    ])).toEqual([
+      [
+        {durationToken: new Fraction(1, 1), toneTokens: []}
+      ],
+      [
+        {durationToken: new Fraction(1, 2), toneTokens: []}
+      ]
+    ]);
+  });
+
+  it('returns two measures with tied rhythm elements, when rhythm elements do not fit into first measure', () => {
+    expect(divideRhythmElementTokensByMeasure([
+      {durationToken: new Fraction(1, 8), toneTokens: []},
+      {durationToken: new Fraction(11, 8), toneTokens: []}
+    ])).toEqual([
+      [
+        {durationToken: new Fraction(1, 8), toneTokens: []},
+        {durationToken: new Fraction(7, 8), toneTokens: [], tie: true}
+      ],
+      [
+        {durationToken: new Fraction(3, 8), toneTokens: []}
+      ]
+    ]);
+  });
+
+  it('returns two measures with tied rhythm elements, when rhythm elements has a duration of 2/1', () => {
+    expect(divideRhythmElementTokensByMeasure([
+      {durationToken: new Fraction(2, 1), toneTokens: []}
+    ])).toEqual([
+      [
+        {durationToken: new Fraction(1, 1), toneTokens: [], tie: true}
+      ],
+      [
+        {durationToken: new Fraction(1, 1), toneTokens: []}
+      ]
+    ]);
+  });
+});
+
+describe('divideRhythmElementTokenByNumerator', () => {
+  it('returns 1/1, when duration of rhythm element token is 1/1 at position 0', () => {
+    expect(divideRhythmElementTokenByNumerator({
+      durationToken: new Fraction(1, 1),
+      toneTokens: []
+    }, 0))
+      .toEqual([{durationToken: new Fraction(1, 1), toneTokens: [], tie: false}]);
+  });
+
+  it('returns 1/4, when duration of rhythm element token is 1/4 4 at position 3', () => {
+    expect(divideRhythmElementTokenByNumerator({
+      durationToken: new Fraction(1, 4),
+      toneTokens: []
+    }, 3))
+      .toEqual([{durationToken: new Fraction(1, 4), toneTokens: [], tie: false}]);
+  });
+
+  it('returns 1/4_1/16, when duration of rhythm element token is 5/16 at position 0', () => {
+    expect(divideRhythmElementTokenByNumerator({
+      durationToken: new Fraction(5, 16),
+      toneTokens: []
+    }, 0))
       .toEqual([
-          new Fraction(1, 4),
-          new Fraction(1, 16)
+          {durationToken: new Fraction(1, 4), toneTokens: [], tie: true},
+          {durationToken: new Fraction(1, 16), toneTokens: [], tie: false},
         ]
       );
   });
 
-  it('returns [1/16, 1/4], when duration token is 5/16 at position 2', () => {
-    expect(divideDurationTokenByNumerator(new Fraction(5, 16), 2))
+  it('returns 1/16_1/4, when duration of rhythm element token is 5/16 at position 2', () => {
+    expect(divideRhythmElementTokenByNumerator({
+      durationToken: new Fraction(5, 16),
+      toneTokens: []
+    }, 2))
       .toEqual([
-          new Fraction(1, 16),
-          new Fraction(1, 4)
+          {durationToken: new Fraction(1, 16), toneTokens: [], tie: true},
+          {durationToken: new Fraction(1, 4), toneTokens: [], tie: false},
         ]
       );
   });
