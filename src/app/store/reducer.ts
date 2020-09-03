@@ -3,7 +3,7 @@ import {AppState, initialAppState, RhythmElementToken} from './model';
 import {parseShmexlText} from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
-import {fillMeasures, toDurationToken, toRhythmElements} from '../utils/reducer-utils';
+import {divideRhythmElementTokensByMeasure, toDurationToken, toMeasures} from '../utils/reducer-utils';
 import Fraction from 'fraction.js/fraction';
 
 const _reducer = createReducer(
@@ -23,13 +23,13 @@ const _reducer = createReducer(
           toneTokens = toneTokens.concat([token]);
           break;
         case 'operator':
-          rhythmElementTokens.push({durationToken, toneTokens});
+          rhythmElementTokens.push({durationToken, toneTokens, tie: false});
           toneTokens = [];
           break;
       }
     });
 
-    const measures = fillMeasures(toRhythmElements(rhythmElementTokens));
+    const measures = toMeasures(divideRhythmElementTokensByMeasure(rhythmElementTokens));
     return {...state, track: {...state.track, measures}};
   }),
 );

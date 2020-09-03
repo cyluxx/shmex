@@ -35,6 +35,10 @@ export function getFractionalPart(fraction: Fraction): Fraction {
   return fraction.mod(1);
 }
 
+export function sumFractions(fractions: Fraction[]): Fraction {
+  return fractions.reduce((a, b) => a.add(b), new Fraction(0));
+}
+
 export function toFraction(duration: Duration): Fraction {
   return new Fraction(1, duration.value);
 }

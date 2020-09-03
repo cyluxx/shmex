@@ -1,11 +1,5 @@
-import {
-  divideRhythmElementTokenByNumerator,
-  divideRhythmElementTokensByMeasure,
-  fillMeasures,
-  toDurationToken,
-  toTones
-} from './reducer-utils';
-import {RhythmElement, RhythmElementToken} from '../store/model';
+import {divideRhythmElementTokenByNumerator, divideRhythmElementTokensByMeasure, toDurationToken, toTones} from './reducer-utils';
+import {RhythmElementToken} from '../store/model';
 import Fraction from 'fraction.js';
 
 describe('divideRhythmElementTokensByMeasure', () => {
@@ -15,52 +9,52 @@ describe('divideRhythmElementTokensByMeasure', () => {
 
   it('returns one measure, when rhythm elements fit into measure', () => {
     const rhythmElementTokens: RhythmElementToken[] = [
-      {durationToken: new Fraction(1, 8), toneTokens: []},
-      {durationToken: new Fraction(1, 2), toneTokens: []},
-      {durationToken: new Fraction(1, 4), toneTokens: []},
-      {durationToken: new Fraction(1, 8), toneTokens: []}
+      {durationToken: new Fraction(1, 8), toneTokens: [], tie: false},
+      {durationToken: new Fraction(1, 2), toneTokens: [], tie: false},
+      {durationToken: new Fraction(1, 4), toneTokens: [], tie: false},
+      {durationToken: new Fraction(1, 8), toneTokens: [], tie: false}
     ];
     expect(divideRhythmElementTokensByMeasure(rhythmElementTokens)).toEqual([rhythmElementTokens]);
   });
 
   it('returns two measures, when rhythm elements fit into two measures', () => {
     expect(divideRhythmElementTokensByMeasure([
-      {durationToken: new Fraction(1, 1), toneTokens: []},
-      {durationToken: new Fraction(1, 2), toneTokens: []}
+      {durationToken: new Fraction(1, 1), toneTokens: [], tie: false},
+      {durationToken: new Fraction(1, 2), toneTokens: [], tie: false}
     ])).toEqual([
       [
-        {durationToken: new Fraction(1, 1), toneTokens: []}
+        {durationToken: new Fraction(1, 1), toneTokens: [], tie: false}
       ],
       [
-        {durationToken: new Fraction(1, 2), toneTokens: []}
+        {durationToken: new Fraction(1, 2), toneTokens: [], tie: false}
       ]
     ]);
   });
 
   it('returns two measures with tied rhythm elements, when rhythm elements do not fit into first measure', () => {
     expect(divideRhythmElementTokensByMeasure([
-      {durationToken: new Fraction(1, 8), toneTokens: []},
-      {durationToken: new Fraction(11, 8), toneTokens: []}
+      {durationToken: new Fraction(1, 8), toneTokens: [], tie: false},
+      {durationToken: new Fraction(11, 8), toneTokens: [], tie: false}
     ])).toEqual([
       [
-        {durationToken: new Fraction(1, 8), toneTokens: []},
+        {durationToken: new Fraction(1, 8), toneTokens: [], tie: false},
         {durationToken: new Fraction(7, 8), toneTokens: [], tie: true}
       ],
       [
-        {durationToken: new Fraction(3, 8), toneTokens: []}
+        {durationToken: new Fraction(1, 2), toneTokens: [], tie: false}
       ]
     ]);
   });
 
   it('returns two measures with tied rhythm elements, when rhythm elements has a duration of 2/1', () => {
     expect(divideRhythmElementTokensByMeasure([
-      {durationToken: new Fraction(2, 1), toneTokens: []}
+      {durationToken: new Fraction(2, 1), toneTokens: [], tie: false}
     ])).toEqual([
       [
         {durationToken: new Fraction(1, 1), toneTokens: [], tie: true}
       ],
       [
-        {durationToken: new Fraction(1, 1), toneTokens: []}
+        {durationToken: new Fraction(1, 1), toneTokens: [], tie: false}
       ]
     ]);
   });
@@ -70,24 +64,27 @@ describe('divideRhythmElementTokenByNumerator', () => {
   it('returns 1/1, when duration of rhythm element token is 1/1 at position 0', () => {
     expect(divideRhythmElementTokenByNumerator({
       durationToken: new Fraction(1, 1),
-      toneTokens: []
-    }, 0))
+      toneTokens: [],
+      tie: false
+    }, new Fraction(0)))
       .toEqual([{durationToken: new Fraction(1, 1), toneTokens: [], tie: false}]);
   });
 
-  it('returns 1/4, when duration of rhythm element token is 1/4 4 at position 3', () => {
+  it('returns 1/4, when duration of rhythm element token is 1/4 4 at position 1/4', () => {
     expect(divideRhythmElementTokenByNumerator({
       durationToken: new Fraction(1, 4),
-      toneTokens: []
-    }, 3))
+      toneTokens: [],
+      tie: false
+    }, new Fraction(1, 4)))
       .toEqual([{durationToken: new Fraction(1, 4), toneTokens: [], tie: false}]);
   });
 
   it('returns 1/4_1/16, when duration of rhythm element token is 5/16 at position 0', () => {
     expect(divideRhythmElementTokenByNumerator({
       durationToken: new Fraction(5, 16),
-      toneTokens: []
-    }, 0))
+      toneTokens: [],
+      tie: false
+    }, new Fraction(0)))
       .toEqual([
           {durationToken: new Fraction(1, 4), toneTokens: [], tie: true},
           {durationToken: new Fraction(1, 16), toneTokens: [], tie: false},
@@ -95,85 +92,17 @@ describe('divideRhythmElementTokenByNumerator', () => {
       );
   });
 
-  it('returns 1/16_1/4, when duration of rhythm element token is 5/16 at position 2', () => {
+  it('returns 1/16_1/4, when duration of rhythm element token is 5/16 at position 1/2', () => {
     expect(divideRhythmElementTokenByNumerator({
       durationToken: new Fraction(5, 16),
-      toneTokens: []
-    }, 2))
+      toneTokens: [],
+      tie: false
+    }, new Fraction(1, 2)))
       .toEqual([
           {durationToken: new Fraction(1, 16), toneTokens: [], tie: true},
           {durationToken: new Fraction(1, 4), toneTokens: [], tie: false},
         ]
       );
-  });
-});
-
-describe('fillMeasures', () => {
-  it('returns empty measures, when no rhythm elements', () => {
-    expect(fillMeasures([])).toEqual([]);
-  });
-
-  it('returns one measure, when rhythmElements contain one whole rest', () => {
-    const rhythmElements: RhythmElement[] = [{
-      duration: {
-        value: 1
-      },
-      tones: []
-    }];
-    expect(fillMeasures(rhythmElements)).toEqual([{rhythmElements}]);
-  });
-
-  it('returns one measure, when rhythmElements contain two 32nd rests', () => {
-    const rhythmElements: RhythmElement[] = [
-      {
-        duration: {
-          value: 32
-        },
-        tones: []
-      },
-      {
-        duration: {
-          value: 32
-        },
-        tones: []
-      }
-    ];
-    expect(fillMeasures(rhythmElements)).toEqual([{rhythmElements}]);
-  });
-
-  it('returns two measures, when rhythmElements contain one whole rest and one 32nd rest', () => {
-    const rhythmElements: RhythmElement[] = [
-      {
-        duration: {
-          value: 1
-        },
-        tones: []
-      },
-      {
-        duration: {
-          value: 32
-        },
-        tones: []
-      }
-    ];
-    expect(fillMeasures(rhythmElements)).toEqual([
-      {
-        rhythmElements: [{
-          duration: {
-            value: 1
-          },
-          tones: []
-        }]
-      },
-      {
-        rhythmElements: [{
-          duration: {
-            value: 32
-          },
-          tones: []
-        }]
-      }
-    ]);
   });
 });
 

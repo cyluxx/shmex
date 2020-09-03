@@ -10,7 +10,6 @@ export function buildAlter(accidental: '#' | 'b'): string {
   return accidental === '#' ? '<alter>1</alter>' : '<alter>-1</alter>';
 }
 
-// TODO duration for now hardcoded
 export function buildDurationAndType(duration: Duration): string {
   switch (duration.value) {
     case 1:
@@ -39,7 +38,7 @@ export function buildEndingRests(rhythmElements: RhythmElement[]): string {
   let endingRests = '';
   let fractionalPart: Fraction = getFractionalPart(combinedDuration);
   while (fractionalPart.n / fractionalPart.d !== 0) {
-    const duration: Duration = {value: asDurationValue(fractionalPart.d)};
+    const duration: Duration = {value: asDurationValue(fractionalPart.d), tie: false};
     endingRests += buildRest(duration);
     combinedDuration = addDuration(combinedDuration, duration);
     fractionalPart = getFractionalPart(combinedDuration);
@@ -89,6 +88,7 @@ export function buildNotes(duration: Duration, tones: Tone[]): string {
       + (index > 0 ? '<chord/>' : '')
       + buildPitch(tone)
       + buildDurationAndType(duration)
+      + buildTie(duration.tie, true)
       + '</note>';
   })
     .join('');
@@ -126,6 +126,16 @@ export function buildRest(duration: Duration): string {
 
 export function buildStep(key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g'): string {
   return '<step>' + key.toUpperCase() + '</step>';
+}
+
+export function buildTie(startTie: boolean, endTie: boolean): string {
+  if (startTie && endTie) {
+    return '<tie type="stop"/><tie type="start"/><notations><tied type="stop"/><tied type="start"/></notations>';
+  }
+  if (startTie) {
+    return '<tie type="start"/><notations><tied type="start"/></notations>';
+  }
+  return '<tie type="stop"/><notations><tied type="stop"/></notations>';
 }
 
 /**
