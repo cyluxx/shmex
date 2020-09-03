@@ -23,7 +23,7 @@ const _reducer = createReducer(
           toneTokens = toneTokens.concat([token]);
           break;
         case 'operator':
-          rhythmElementTokens.push({durationToken, toneTokens, tie: false});
+          rhythmElementTokens.push({durationToken, toneTokens});
           toneTokens = [];
           break;
       }

@@ -34,12 +34,12 @@ describe('buildAlter', () => {
 
 describe('buildDurationAndType', () => {
   it('builds all correct variants, if duration numerator is 1', () => {
-    expect(buildDurationAndType({value: 1, tie: false})).toBe('<duration>32</duration><type>whole</type>');
-    expect(buildDurationAndType({value: 2, tie: false})).toBe('<duration>16</duration><type>half</type>');
-    expect(buildDurationAndType({value: 4, tie: false})).toBe('<duration>8</duration><type>quarter</type>');
-    expect(buildDurationAndType({value: 8, tie: false})).toBe('<duration>4</duration><type>eighth</type>');
-    expect(buildDurationAndType({value: 16, tie: false})).toBe('<duration>2</duration><type>16th</type>');
-    expect(buildDurationAndType({value: 32, tie: false})).toBe('<duration>1</duration><type>32nd</type>');
+    expect(buildDurationAndType({value: 1, tieStart: false, tieStop: false})).toBe('<duration>32</duration><type>whole</type>');
+    expect(buildDurationAndType({value: 2, tieStart: false, tieStop: false})).toBe('<duration>16</duration><type>half</type>');
+    expect(buildDurationAndType({value: 4, tieStart: false, tieStop: false})).toBe('<duration>8</duration><type>quarter</type>');
+    expect(buildDurationAndType({value: 8, tieStart: false, tieStop: false})).toBe('<duration>4</duration><type>eighth</type>');
+    expect(buildDurationAndType({value: 16, tieStart: false, tieStop: false})).toBe('<duration>2</duration><type>16th</type>');
+    expect(buildDurationAndType({value: 32, tieStart: false, tieStop: false})).toBe('<duration>1</duration><type>32nd</type>');
   });
 });
 
@@ -50,17 +50,17 @@ describe('buildEndingRests', () => {
   });
 
   it('builds no rests, if rhythmElements fit into 4/4 time signature', () => {
-    const rhythmElements: RhythmElement[] = [{duration: {value: 1, tie: false}, tones: []}];
+    const rhythmElements: RhythmElement[] = [{duration: {value: 1, tieStart: false, tieStop: false}, tones: []}];
     expect(buildEndingRests(rhythmElements)).toBe('');
   });
 
   it('builds a 32nd, if rhythmElements exceed by a half, a quarter, an eighth, a 16th and a 32nd', () => {
     const rhythmElements: RhythmElement[] = [
-      {duration: {value: 2, tie: false}, tones: []},
-      {duration: {value: 4, tie: false}, tones: []},
-      {duration: {value: 8, tie: false}, tones: []},
-      {duration: {value: 16, tie: false}, tones: []},
-      {duration: {value: 32, tie: false}, tones: []},
+      {duration: {value: 2, tieStart: false, tieStop: false}, tones: []},
+      {duration: {value: 4, tieStart: false, tieStop: false}, tones: []},
+      {duration: {value: 8, tieStart: false, tieStop: false}, tones: []},
+      {duration: {value: 16, tieStart: false, tieStop: false}, tones: []},
+      {duration: {value: 32, tieStart: false, tieStop: false}, tones: []},
     ];
     expect(buildEndingRests(rhythmElements)).toBe(
       '<note><rest /><duration>1</duration><type>32nd</type></note>'
@@ -69,9 +69,9 @@ describe('buildEndingRests', () => {
 
   it('builds a 16th, and a half rest, if rhythmElements exceed by a quarter, an eighth and a 16th', () => {
     const rhythmElements: RhythmElement[] = [
-      {duration: {value: 4, tie: false}, tones: []},
-      {duration: {value: 8, tie: false}, tones: []},
-      {duration: {value: 16, tie: false}, tones: []},
+      {duration: {value: 4, tieStart: false, tieStop: false}, tones: []},
+      {duration: {value: 8, tieStart: false, tieStop: false}, tones: []},
+      {duration: {value: 16, tieStart: false, tieStop: false}, tones: []},
     ];
     expect(buildEndingRests(rhythmElements)).toBe(
       '<note><rest /><duration>2</duration><type>16th</type></note>' +
@@ -80,7 +80,7 @@ describe('buildEndingRests', () => {
   });
 
   it('builds a 32nd, a 16th, an 8th, a quarter and a half rest, if rhythmElements exceed by a 32nd', () => {
-    const rhythmElements: RhythmElement[] = [{duration: {value: 32, tie: false}, tones: []}];
+    const rhythmElements: RhythmElement[] = [{duration: {value: 32, tieStart: false, tieStop: false}, tones: []}];
     expect(buildEndingRests(rhythmElements)).toBe(
       '<note><rest /><duration>1</duration><type>32nd</type></note>' +
       '<note><rest /><duration>2</duration><type>16th</type></note>' +
@@ -112,7 +112,7 @@ describe('buildMeasures', () => {
           tones: [],
           duration: {
             value: 1,
-            tie: false,
+            tieStart: false, tieStop: false,
           }
         }]
       }
@@ -128,7 +128,7 @@ describe('buildMeasures', () => {
           tones: [],
           duration: {
             value: 2,
-            tie: false,
+            tieStart: false, tieStop: false,
           }
         }]
       }
@@ -145,7 +145,7 @@ describe('buildMeasures', () => {
             tones: [],
             duration: {
               value: 1,
-              tie: false,
+              tieStart: false, tieStop: false,
             }
           }
         ]
@@ -156,7 +156,7 @@ describe('buildMeasures', () => {
             tones: [],
             duration: {
               value: 2,
-              tie: false,
+              tieStart: false, tieStop: false,
             }
           }
         ]
@@ -171,7 +171,7 @@ describe('buildNotes', () => {
   it('builds single note correctly', () => {
     const duration: Duration = {
       value: 1,
-      tie: false,
+      tieStart: false, tieStop: false,
     };
     const tones: Tone[] = [
       {
@@ -189,7 +189,7 @@ describe('buildNotes', () => {
   it('builds multiple notes correctly', () => {
     const duration: Duration = {
       value: 1,
-      tie: false,
+      tieStart: false, tieStop: false,
     };
     const tones: Tone[] = [
       {
@@ -226,7 +226,7 @@ describe('buildNotes', () => {
   it('returns an empty string, when no notes', () => {
     const duration: Duration = {
       value: 1,
-      tie: false,
+      tieStart: false, tieStop: false,
     };
     const tones: Tone[] = [];
     expect(buildNotes(duration, tones)).toBe('');
@@ -235,7 +235,7 @@ describe('buildNotes', () => {
   it('does not build duplicate notes', () => {
     const duration: Duration = {
       value: 1,
-      tie: false,
+      tieStart: false, tieStop: false,
     };
     const tones: Tone[] = [
       {

@@ -38,7 +38,7 @@ export function buildEndingRests(rhythmElements: RhythmElement[]): string {
   let endingRests = '';
   let fractionalPart: Fraction = getFractionalPart(combinedDuration);
   while (fractionalPart.n / fractionalPart.d !== 0) {
-    const duration: Duration = {value: asDurationValue(fractionalPart.d), tie: false};
+    const duration: Duration = {value: asDurationValue(fractionalPart.d), tieStart: false, tieStop: false};
     endingRests += buildRest(duration);
     combinedDuration = addDuration(combinedDuration, duration);
     fractionalPart = getFractionalPart(combinedDuration);
@@ -88,7 +88,7 @@ export function buildNotes(duration: Duration, tones: Tone[]): string {
       + (index > 0 ? '<chord/>' : '')
       + buildPitch(tone)
       + buildDurationAndType(duration)
-      + buildTie(duration.tie, true)
+      + buildTie(duration.tieStart, duration.tieStop)
       + '</note>';
   })
     .join('');
@@ -128,14 +128,17 @@ export function buildStep(key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g'): string 
   return '<step>' + key.toUpperCase() + '</step>';
 }
 
-export function buildTie(startTie: boolean, endTie: boolean): string {
-  if (startTie && endTie) {
+export function buildTie(tieStart: boolean, tieStop: boolean): string {
+  if (tieStart && tieStop) {
     return '<tie type="stop"/><tie type="start"/><notations><tied type="stop"/><tied type="start"/></notations>';
   }
-  if (startTie) {
+  if (tieStart) {
     return '<tie type="start"/><notations><tied type="start"/></notations>';
   }
-  return '<tie type="stop"/><notations><tied type="stop"/></notations>';
+  if (tieStop) {
+    return '<tie type="stop"/><notations><tied type="stop"/></notations>';
+  }
+  return '';
 }
 
 /**

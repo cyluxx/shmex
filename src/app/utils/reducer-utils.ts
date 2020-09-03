@@ -19,11 +19,12 @@ export function divideRhythmElementTokensByMeasure(rhythmElementTokens: RhythmEl
       measuredRhythmElementTokens[measuredRhythmElementTokens.length - 1].push({
         ...rhythmElementToken,
         durationToken: diff,
-        tie: true
+        tieStart: true
       });
       measuredRhythmElementTokens.push([{
         ...rhythmElementToken,
-        durationToken: rhythmElementToken.durationToken.sub(diff)
+        durationToken: rhythmElementToken.durationToken.sub(diff),
+        tieStop: true
       }]);
       durationSum = rhythmElementToken.durationToken.sub(diff);
     } else if (diff > rhythmElementToken.durationToken) {
@@ -64,11 +65,34 @@ export function divideRhythmElementTokenByNumerator(rhythmElementToken: RhythmEl
   } else {
     durationTokens = decomposeAsc(rhythmElementToken.durationToken);
   }
-  return durationTokens.map((durationToken, index, tokens) => ({
-    ...rhythmElementToken,
-    durationToken,
-    tie: (index !== tokens.length - 1)
-  }));
+  return durationTokens.map((durationToken, index, tokens) => {
+    if (tokens.length === 1) {
+      return {
+        ...rhythmElementToken,
+        durationToken
+      };
+    }
+    if (index === 0) {
+      return {
+        ...rhythmElementToken,
+        durationToken,
+        tieStart: true
+      };
+    }
+    if (index === tokens.length - 1) {
+      return {
+        ...rhythmElementToken,
+        durationToken,
+        tieStop: true
+      };
+    }
+    return {
+      ...rhythmElementToken,
+      durationToken,
+      tieStart: true,
+      tieStop: true
+    };
+  });
 }
 
 export function toDurationToken(durationTokenString: string): Fraction {
@@ -79,10 +103,11 @@ export function toDurationToken(durationTokenString: string): Fraction {
 /**
  * Converts a durationToken into an array, containing at least one duration, or multiple tied durations.
  */
-export function toDuration(durationToken: Fraction, tie?: boolean): Duration {
+export function toDuration(durationToken: Fraction, tieStart: boolean | undefined, tieStop: boolean | undefined): Duration {
   return {
     value: asDurationValue(durationToken.d),
-    tie
+    tieStart: tieStart || false,
+    tieStop: tieStop || false,
   };
 }
 
@@ -97,7 +122,7 @@ export function toMeasures(measuredRhythmElementTokens: RhythmElementToken[][]):
 export function toRhythmElements(rhythmElementTokens: RhythmElementToken[]): RhythmElement[] {
   return rhythmElementTokens.map(rhythmElementToken => ({
     tones: toTones(rhythmElementToken.toneTokens),
-    duration: toDuration(rhythmElementToken.durationToken, rhythmElementToken.tie)
+    duration: toDuration(rhythmElementToken.durationToken, rhythmElementToken.tieStart, rhythmElementToken.tieStop)
   }));
 }
 

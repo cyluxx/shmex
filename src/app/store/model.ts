@@ -25,7 +25,8 @@ export interface RhythmElement {
 
 export interface Duration {
   value: 1 | 2 | 4 | 8 | 16 | 32;
-  tie: boolean;
+  tieStart: boolean;
+  tieStop: boolean;
 }
 
 export interface Tone {
@@ -37,5 +38,6 @@ export interface Tone {
 export interface RhythmElementToken {
   durationToken: Fraction;
   toneTokens: string[];
-  tie: boolean;
+  tieStart?: boolean;
+  tieStop?: boolean;
 }
