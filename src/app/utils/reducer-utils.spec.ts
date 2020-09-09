@@ -58,6 +58,24 @@ describe('divideRhythmElementTokensByMeasure', () => {
       ]
     ]);
   });
+
+  it('returns three measures with tied rhythm elements, when rhythm elements has a duration fitting in tree measures', () => {
+    expect(divideRhythmElementTokensByMeasure([
+      {durationToken: new Fraction(3, 4), toneTokens: []},
+      {durationToken: new Fraction(9, 4), toneTokens: []}
+    ])).toEqual([
+      [
+        {durationToken: new Fraction(3, 4), toneTokens: []},
+        {durationToken: new Fraction(1, 4), toneTokens: [], tieStart: true}
+      ],
+      [
+        {durationToken: new Fraction(1, 1), toneTokens: [], tieStop: true, tieStart: true}
+      ],
+      [
+        {durationToken: new Fraction(1, 1), toneTokens: [], tieStop: true}
+      ]
+    ]);
+  });
 });
 
 describe('divideRhythmElementTokenByNumerator', () => {

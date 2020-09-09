@@ -21,6 +21,15 @@ export function divideRhythmElementTokensByMeasure(rhythmElementTokens: RhythmEl
         durationToken: diff,
         tieStart: true
       });
+      while (rhythmElementToken.durationToken.sub(diff) > new Fraction(1)) {
+        measuredRhythmElementTokens.push([{
+          ...rhythmElementToken,
+          durationToken: new Fraction(1),
+          tieStop: true,
+          tieStart: true
+        }]);
+        rhythmElementToken.durationToken = rhythmElementToken.durationToken.sub(1);
+      }
       measuredRhythmElementTokens.push([{
         ...rhythmElementToken,
         durationToken: rhythmElementToken.durationToken.sub(diff),
