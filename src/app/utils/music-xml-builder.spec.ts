@@ -6,7 +6,7 @@ import {
   buildStep,
   buildPitch,
   buildOctave,
-  buildNotes, buildMeasures
+  buildNotes, buildMeasures, buildTie
 } from './music-xml-builder';
 import {Duration, Measure, RhythmElement, Tone} from '../store/model';
 
@@ -165,6 +165,27 @@ describe('buildMeasures', () => {
     expect(buildMeasures(measures)).toContain('<measure number="1">');
     expect(buildMeasures(measures)).toContain('<measure number="2">');
   });
+
+  it('builds one measure with tones', () => {
+    const measures: Measure[] = [
+      {
+        rhythmElements: [{
+          tones: [{
+            octave: 4,
+            accidental: 'b',
+            key: 'd'
+          }],
+          duration: {
+            value: 1,
+            tieStart: false, tieStop: false,
+          }
+        }]
+      }
+    ];
+    expect(buildMeasures(measures)).toContain('<measure number="1">');
+    expect(buildMeasures(measures)).toContain('<note>');
+    expect(buildMeasures(measures)).not.toContain('<measure number="2">');
+  });
 });
 
 describe('buildNotes', () => {
@@ -290,5 +311,18 @@ describe('buildStep', () => {
     expect(buildStep('e')).toBe('<step>E</step>');
     expect(buildStep('f')).toBe('<step>F</step>');
     expect(buildStep('g')).toBe('<step>G</step>');
+  });
+});
+
+describe('buildTie', () => {
+  it('builds tie correctly', () => {
+    expect(buildTie(false, false))
+      .toBe('');
+    expect(buildTie(false, true))
+      .toBe('<tie type="stop"/><notations><tied type="stop"/></notations>');
+    expect(buildTie(true, false))
+      .toBe('<tie type="start"/><notations><tied type="start"/></notations>');
+    expect(buildTie(true, true))
+      .toBe('<tie type="stop"/><tie type="start"/><notations><tied type="stop"/><tied type="start"/></notations>');
   });
 });
