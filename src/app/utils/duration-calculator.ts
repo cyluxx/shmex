@@ -27,10 +27,6 @@ export function decomposeDesc(fraction: Fraction): Fraction[] {
   return decomposeDesc(sub).concat(candidate);
 }
 
-export function fitsInMeasure(fraction: Fraction): boolean {
-  return fraction.valueOf() <= 1;
-}
-
 export function getFractionalPart(fraction: Fraction): Fraction {
   return fraction.mod(1);
 }
