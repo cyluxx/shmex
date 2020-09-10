@@ -1,4 +1,9 @@
-import {divideRhythmElementTokenByNumerator, divideRhythmElementTokensByMeasure, toDurationToken, toTones} from './reducer-utils';
+import {
+  divideRhythmElementTokenByNumerator,
+  divideRhythmElementTokensByMeasure,
+  toDurationToken,
+  toTones
+} from './reducer-utils';
 import {RhythmElementToken} from '../store/model';
 import Fraction from 'fraction.js';
 

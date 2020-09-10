@@ -1,7 +1,6 @@
 import {Duration, Measure, RhythmElement, RhythmElementToken, Tone} from '../store/model';
 import {asDurationValue, decomposeAsc, decomposeDesc, sumFractions} from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
-import {constructDurationTree} from './duration-tree';
 
 /**
  * Divides rhythm element tokens into measures. Ties two tokens, whenever there is a measure bar in between.
@@ -51,17 +50,6 @@ export function divideRhythmElementTokensByMeasure(rhythmElementTokens: RhythmEl
     measuredRhythmElementTokens.pop();
   }
   return measuredRhythmElementTokens;
-}
-
-/**
- * Divides a rhythm element token by the rules of a given duration tree (currently only 4/4)
- */
-export function divideRhythmElementTokenByTree(rhythmElementTokens: RhythmElementToken[], position: Fraction): RhythmElementToken[] {
-  const durationTree = constructDurationTree();
-  // if da ist ein knoten mit corresponding value und position return value
-  // ODER if da ist ein knoten
-  // ansonsten
-  return [];
 }
 
 /**
@@ -122,7 +110,8 @@ export function toDuration(durationToken: Fraction, tieStart: boolean | undefine
 
 export function toMeasures(measuredRhythmElementTokens: RhythmElementToken[][]): Measure[] {
   return measuredRhythmElementTokens.map(rhythmElementTokens => ({
-    rhythmElements: toRhythmElements(rhythmElementTokens.flatMap((rhythmElementToken, index, rets) => (
+    rhythmElements: toRhythmElements(rhythmElementTokens
+      .flatMap((rhythmElementToken, index, rets) => (
       divideRhythmElementTokenByNumerator(rhythmElementToken, sumFractions(rets.slice(0, index).map(value => value.durationToken)))
     )))
   }));
