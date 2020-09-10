@@ -53,7 +53,8 @@ export function divideRhythmElementTokensByMeasure(rhythmElementTokens: RhythmEl
 }
 
 /**
- * Divides an overlong duration token by its numerator. Depending on the position, the returned array is sorted asc or desc.
+ * Divides an overlong duration token by its numerator and returns tied rhythm elements.
+ * Depending on the position, the returned array is sorted asc or desc.
  */
 export function divideRhythmElementTokenByNumerator(rhythmElementToken: RhythmElementToken, position: Fraction): RhythmElementToken[] {
   let durationTokens: Fraction[];
@@ -98,7 +99,7 @@ export function toDurationToken(durationTokenString: string): Fraction {
 }
 
 /**
- * Converts a durationToken into an array, containing at least one duration, or multiple tied durations.
+ * Converts a durationToken into a duration.
  */
 export function toDuration(durationToken: Fraction, tieStart: boolean | undefined, tieStop: boolean | undefined): Duration {
   return {
