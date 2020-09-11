@@ -12,8 +12,10 @@ import {StoreModule} from '@ngrx/store';
 import {reducer} from './store/reducer';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {RenderComponent} from './components/render/render.component';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import {ToolbarComponent} from './components/toolbar/toolbar.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -22,16 +24,18 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     RenderComponent,
     ToolbarComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        CodemirrorModule,
-        FormsModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        StoreModule.forRoot({app: reducer}, {}),
-        StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
-        MatToolbarModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    CodemirrorModule,
+    FormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    StoreModule.forRoot({app: reducer}, {}),
+    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
