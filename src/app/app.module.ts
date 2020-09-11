@@ -6,28 +6,32 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {EditComponent} from './components/edit/edit.component';
-import {CodemirrorModule} from "@ctrl/ngx-codemirror";
-import {FormsModule} from "@angular/forms";
+import {CodemirrorModule} from '@ctrl/ngx-codemirror';
+import {FormsModule} from '@angular/forms';
 import {StoreModule} from '@ngrx/store';
-import {reducer} from "./store/reducer";
+import {reducer} from './store/reducer';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {RenderComponent} from './components/render/render.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
     AppComponent,
     EditComponent,
-    RenderComponent
+    RenderComponent,
+    ToolbarComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    CodemirrorModule,
-    FormsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-    StoreModule.forRoot({app: reducer}, {}),
-    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production})
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        CodemirrorModule,
+        FormsModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+        StoreModule.forRoot({app: reducer}, {}),
+        StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
+        MatToolbarModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
