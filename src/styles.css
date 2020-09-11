@@ -1,3 +1,4 @@
+@import '~bootstrap/dist/css/bootstrap-grid.min.css';
 @import "~codemirror/lib/codemirror.css";
 @import "~codemirror/theme/material-darker.css";
 
