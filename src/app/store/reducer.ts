@@ -1,13 +1,18 @@
 import {Action, createReducer, on} from '@ngrx/store';
 import {AppState, initialAppState, RhythmElementToken} from './model';
-import {parseShmexlText} from './actions';
+import {editCover, editSheets, parseShmexlText} from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
 import {divideRhythmElementTokensByMeasure, toDurationToken, toMeasures} from '../utils/reducer-utils';
 import Fraction from 'fraction.js/fraction';
+import {ToolbarState} from './enum';
 
 const _reducer = createReducer(
   initialAppState,
+
+  on(editCover, state => ({...state, toolbar: {state: ToolbarState.EDIT_COVER}})),
+
+  on(editSheets, state => ({...state, toolbar: {state: ToolbarState.EDIT_SHEETS}})),
 
   on(parseShmexlText, (state, {shmexlText}) => {
     const rhythmElementTokens: RhythmElementToken[] = [];

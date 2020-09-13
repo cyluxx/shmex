@@ -1,13 +1,13 @@
-<div class="container-fluid p-0 mat-app-background">
+<div class="container-fluid mat-app-background">
   <div class="row">
-    <div class="col">
+    <div class="col pr-0 pl-0">
       <app-toolbar></app-toolbar>
     </div>
   </div>
   <div class="row">
     <div class="col-lg">
-      <app-edit></app-edit>
-      <app-edit-cover></app-edit-cover>
+      <app-edit *ngIf="(toolbarState$ | async) === EDIT_SHEETS"></app-edit>
+      <app-edit-cover *ngIf="(toolbarState$ | async) === EDIT_COVER"></app-edit-cover>
     </div>
     <div class="col-lg">
       <app-render></app-render>

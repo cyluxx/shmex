@@ -1,5 +1,8 @@
-<mat-toolbar class="mat-background-primary">
-  <button mat-icon-button aria-label="Add meta data, like song title or composer">
-    <mat-icon aria-hidden="false" aria-label="Add meta data icon">text_fields</mat-icon>
+<mat-toolbar color="primary">
+  <button (click)="onEditCover()" mat-icon-button aria-label="Edit cover, like song title or composer">
+    <mat-icon aria-hidden="false" aria-label="Edit cover icon">text_fields</mat-icon>
+  </button>
+  <button (click)="onEditSheets()" mat-icon-button aria-label="Edit sheets">
+    <mat-icon aria-hidden="false" aria-label="Edit sheets icon">edit</mat-icon>
   </button>
 </mat-toolbar>

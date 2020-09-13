@@ -1,17 +1,24 @@
 import Fraction from 'fraction.js/fraction';
+import {ToolbarState} from './enum';
 
 export const initialAppState: AppState = {
+  toolbar: {
+    state: ToolbarState.EDIT_SHEETS
+  },
   track: {
     measures: []
   }
 };
 
 export interface AppState {
+  toolbar: Toolbar;
   track: Track;
 }
 
-export interface Track {
-  measures: Measure[];
+export interface Duration {
+  value: 1 | 2 | 4 | 8 | 16 | 32;
+  tieStart: boolean;
+  tieStop: boolean;
 }
 
 export interface Measure {
@@ -23,10 +30,11 @@ export interface RhythmElement {
   tones: Tone[];
 }
 
-export interface Duration {
-  value: 1 | 2 | 4 | 8 | 16 | 32;
-  tieStart: boolean;
-  tieStop: boolean;
+export interface RhythmElementToken {
+  durationToken: Fraction;
+  toneTokens: string[];
+  tieStart?: boolean;
+  tieStop?: boolean;
 }
 
 export interface Tone {
@@ -35,9 +43,10 @@ export interface Tone {
   octave: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 }
 
-export interface RhythmElementToken {
-  durationToken: Fraction;
-  toneTokens: string[];
-  tieStart?: boolean;
-  tieStop?: boolean;
+export interface Toolbar {
+  state: ToolbarState;
+}
+
+export interface Track {
+  measures: Measure[];
 }
