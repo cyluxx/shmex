@@ -2,6 +2,9 @@ import Fraction from 'fraction.js/fraction';
 import {ToolbarState} from './enum';
 
 export const initialAppState: AppState = {
+  cover: {
+    title: 'Untitled Score'
+  },
   toolbar: {
     state: ToolbarState.EDIT_SHEETS
   },
@@ -11,8 +14,13 @@ export const initialAppState: AppState = {
 };
 
 export interface AppState {
+  cover: Cover;
   toolbar: Toolbar;
   track: Track;
+}
+
+export interface Cover {
+  title: string;
 }
 
 export interface Duration {
