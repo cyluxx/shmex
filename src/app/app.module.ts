@@ -16,13 +16,16 @@ import {ToolbarComponent} from './components/toolbar/toolbar.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import { EditCoverComponent } from './components/edit-cover/edit-cover.component';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
     AppComponent,
     EditComponent,
     RenderComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    EditCoverComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +37,8 @@ import {MatButtonModule} from '@angular/material/button';
     StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
     MatToolbarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
