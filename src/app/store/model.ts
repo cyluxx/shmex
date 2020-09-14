@@ -3,7 +3,10 @@ import {ToolbarState} from './enum';
 
 export const initialAppState: AppState = {
   cover: {
-    title: 'Untitled Score'
+    title: 'Title',
+    subtitle: 'Subtitle',
+    creator1: 'Composer',
+    creator2: 'Lyricist'
   },
   toolbar: {
     state: ToolbarState.EDIT_SHEETS
@@ -21,6 +24,9 @@ export interface AppState {
 
 export interface Cover {
   title: string;
+  subtitle: string;
+  creator1: string;
+  creator2: string;
 }
 
 export interface Duration {

@@ -1,6 +1,6 @@
 import {Action, createReducer, on} from '@ngrx/store';
 import {AppState, initialAppState, RhythmElementToken} from './model';
-import {editCover, editSheets, editTitle, parseShmexlText} from './actions';
+import {editCover, editCreator1, editCreator2, editSheets, editSubtitle, editTitle, parseShmexlText} from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
 import {divideRhythmElementTokensByMeasure, toDurationToken, toMeasures} from '../utils/reducer-utils';
@@ -12,7 +12,13 @@ const _reducer = createReducer(
 
   on(editCover, state => ({...state, toolbar: {...state.toolbar, state: ToolbarState.EDIT_COVER}})),
 
+  on(editCreator1, (state, {creator1}) => ({...state, cover: {...state.cover, creator1}})),
+
+  on(editCreator2, (state, {creator2}) => ({...state, cover: {...state.cover, creator2}})),
+
   on(editSheets, state => ({...state, toolbar: {...state.toolbar, state: ToolbarState.EDIT_SHEETS}})),
+
+  on(editSubtitle, (state, {subtitle}) => ({...state, cover: {...state.cover, subtitle}})),
 
   on(editTitle, (state, {title}) => ({...state, cover: {...state.cover, title}})),
 

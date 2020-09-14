@@ -10,23 +10,23 @@
   <div class="col">
     <mat-form-field class="full-width">
       <mat-label>Subtitle</mat-label>
-      <input matInput placeholder="Am">
+      <input [ngModel]="subtitle$ | async" (ngModelChange)="onSubtitleChange($event)" matInput placeholder="Maybe a version or key">
     </mat-form-field>
   </div>
 </div>
 <div class="row">
   <div class="col">
     <mat-form-field class="full-width">
-      <mat-label>Composer</mat-label>
-      <input matInput placeholder="Name Surname">
+      <mat-label>Creator 1</mat-label>
+      <input [ngModel]="creator1$ | async" (ngModelChange)="onCreator1Change($event)" matInput placeholder="Name Surname">
     </mat-form-field>
   </div>
 </div>
 <div class="row">
   <div class="col">
     <mat-form-field class="full-width">
-      <mat-label>Arranger</mat-label>
-      <input matInput placeholder="Name Surname">
+      <mat-label>Creator 2</mat-label>
+      <input [ngModel]="creator2$ | async" (ngModelChange)="onCreator2Change($event)" matInput placeholder="Name Surname">
     </mat-form-field>
   </div>
 </div>

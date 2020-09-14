@@ -9,6 +9,16 @@ export const selectCover = createSelector(
   (state: AppState) => state.cover
 );
 
+export const selectCreator1 = createSelector(
+  selectCover,
+  cover => cover.creator1
+);
+
+export const selectCreator2 = createSelector(
+  selectCover,
+  cover => cover.creator2
+);
+
 export const selectCurrentToolbarState = createSelector(
   selectAppState,
   (state: AppState) => state.toolbar.state
@@ -25,6 +35,11 @@ export const selectMusicXml = createSelector(
   (track, cover) => {
     return build(track, cover);
   }
+);
+
+export const selectSubtitle = createSelector(
+  selectCover,
+  cover => cover.subtitle
 );
 
 export const selectTitle = createSelector(
