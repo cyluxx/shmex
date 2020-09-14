@@ -2,7 +2,7 @@
   <div class="col">
     <mat-form-field class="full-width">
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Untitled Score">
+      <input [ngModel]="title$ | async" (ngModelChange)="onTitleChange($event)" matInput placeholder="Untitled Score">
     </mat-form-field>
   </div>
 </div>

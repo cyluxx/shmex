@@ -1,8 +1,13 @@
 import {createSelector} from '@ngrx/store';
-import {AppState, Track} from './model';
+import {AppState} from './model';
 import {build} from '../utils/music-xml-builder';
 
 const selectAppState = state => state.app;
+
+export const selectCover = createSelector(
+  selectAppState,
+  (state: AppState) => state.cover
+);
 
 export const selectCurrentToolbarState = createSelector(
   selectAppState,
@@ -16,7 +21,13 @@ export const selectCurrentTrack = createSelector(
 
 export const selectMusicXml = createSelector(
   selectCurrentTrack,
-  (track: Track) => {
-    return build(track);
+  selectCover,
+  (track, cover) => {
+    return build(track, cover);
   }
+);
+
+export const selectTitle = createSelector(
+  selectCover,
+  cover => cover.title
 );

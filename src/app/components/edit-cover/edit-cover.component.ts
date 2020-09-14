@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {editTitle} from '../../store/actions';
+import {Observable} from 'rxjs';
+import {selectTitle} from '../../store/selectors';
 
 @Component({
   selector: 'app-edit-cover',
@@ -7,11 +11,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditCoverComponent implements OnInit {
 
-  constructor() { }
+  title$: Observable<string>;
 
-  ngOnInit(): void {
+  constructor(private store: Store) {
   }
 
+  ngOnInit(): void {
+    this.title$ = this.store.select(selectTitle);
+  }
 
-
+  onTitleChange(title: string) {
+    this.store.dispatch(editTitle({title}));
+  }
 }

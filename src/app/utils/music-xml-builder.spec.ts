@@ -12,9 +12,9 @@ import {Duration, Measure, RhythmElement, Tone} from '../store/model';
 
 describe('build', () => {
   it('builds empty xml', () => {
-    expect(build({measures: []})).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
-    expect(build({measures: []})).toContain('<score-partwise version="3.1">');
-    expect(build({measures: []})).toContain('</score-partwise>');
+    expect(build({measures: []}, { title: ''})).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
+    expect(build({measures: []}, { title: ''})).toContain('<score-partwise version="3.1">');
+    expect(build({measures: []}, { title: ''})).toContain('</score-partwise>');
   });
 });
 
