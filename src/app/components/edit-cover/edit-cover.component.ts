@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {editCreator1, editCreator2, editSubtitle, editTitle} from '../../store/actions';
+import {editCreator1, editCreator2, editTitle} from '../../store/actions';
 import {Observable} from 'rxjs';
-import {selectCreator1, selectCreator2, selectSubtitle, selectTitle} from '../../store/selectors';
+import {selectCreator1, selectCreator2, selectTitle} from '../../store/selectors';
 
 @Component({
   selector: 'app-edit-cover',
@@ -12,7 +12,6 @@ import {selectCreator1, selectCreator2, selectSubtitle, selectTitle} from '../..
 export class EditCoverComponent implements OnInit {
 
   title$: Observable<string>;
-  subtitle$: Observable<string>;
   creator1$: Observable<string>;
   creator2$: Observable<string>;
 
@@ -21,17 +20,12 @@ export class EditCoverComponent implements OnInit {
 
   ngOnInit(): void {
     this.title$ = this.store.select(selectTitle);
-    this.subtitle$ = this.store.select(selectSubtitle);
     this.creator1$ = this.store.select(selectCreator1);
     this.creator2$ = this.store.select(selectCreator2);
   }
 
   onTitleChange(title: string) {
     this.store.dispatch(editTitle({title}));
-  }
-
-  onSubtitleChange(subtitle: string) {
-    this.store.dispatch(editSubtitle({subtitle}));
   }
 
   onCreator1Change(creator1: string) {

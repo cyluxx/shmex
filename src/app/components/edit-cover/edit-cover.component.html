@@ -9,14 +9,6 @@
 <div class="row">
   <div class="col">
     <mat-form-field class="full-width">
-      <mat-label>Subtitle</mat-label>
-      <input [ngModel]="subtitle$ | async" (ngModelChange)="onSubtitleChange($event)" matInput placeholder="Maybe a version or key">
-    </mat-form-field>
-  </div>
-</div>
-<div class="row">
-  <div class="col">
-    <mat-form-field class="full-width">
       <mat-label>Creator 1</mat-label>
       <input [ngModel]="creator1$ | async" (ngModelChange)="onCreator1Change($event)" matInput placeholder="Name Surname">
     </mat-form-field>

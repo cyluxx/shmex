@@ -37,11 +37,6 @@ export const selectMusicXml = createSelector(
   }
 );
 
-export const selectSubtitle = createSelector(
-  selectCover,
-  cover => cover.subtitle
-);
-
 export const selectTitle = createSelector(
   selectCover,
   cover => cover.title

@@ -11,14 +11,11 @@ export function buildAlter(accidental: '#' | 'b'): string {
 }
 
 export function buildCover(cover: Cover): string {
-  let result = '';
-  if (cover.title) {
-    result += '<movement-title>' + cover.title + '</movement-title>';
-  }
-  if (cover.creator1 || cover.creator2) {
-    result += '<identification><creator type="composer">' + cover.creator1 + '</creator><creator type="lyricist">' + cover.creator2 + '</creator></identification>';
-  }
-  return result;
+  return '<movement-title>' + cover.title + '</movement-title>' +
+    '<identification>' +
+    '<creator type="composer">' + cover.creator1 + '</creator>' +
+    '<creator type="lyricist">' + cover.creator2 + '</creator>' +
+    '</identification>';
 }
 
 export function buildDurationAndType(duration: Duration): string {
