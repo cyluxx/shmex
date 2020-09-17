@@ -12,7 +12,7 @@ describe('EditCoverComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ EditCoverComponent ],
-      providers: [provideMockStore({initialState: initialAppState})],
+      providers: [provideMockStore({initialState: {app: initialAppState}})],
     })
     .compileComponents();
   });
