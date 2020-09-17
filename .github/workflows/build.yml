@@ -41,6 +41,9 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Check Code Formatting
+        run: npm run format:check
+
       - name: Build
         run: npm run build:prod
 

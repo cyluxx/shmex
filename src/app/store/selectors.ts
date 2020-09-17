@@ -2,11 +2,11 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from './model';
 import {build} from '../utils/music-xml-builder';
 
-const selectAppState = state => state.app;
+const selectAppState = (state): AppState => state.app;
 
 export const selectCover = createSelector(
   selectAppState,
-  (state: AppState) => state.cover
+  state => state.cover
 );
 
 export const selectCreator1 = createSelector(
@@ -21,12 +21,12 @@ export const selectCreator2 = createSelector(
 
 export const selectCurrentToolbarState = createSelector(
   selectAppState,
-  (state: AppState) => state.toolbar.state
+  state => state.toolbar.state
 );
 
 export const selectCurrentTrack = createSelector(
   selectAppState,
-  (state: AppState) => state.track
+  state => state.track
 );
 
 export const selectMusicXml = createSelector(
