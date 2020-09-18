@@ -6,6 +6,7 @@
     "build:prod": "ng build --prod",
     "clean": "rimraf ./dist",
     "e2e": "ng e2e",
+    "format:all": "prettier --config ./.prettierrc --write \"src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}\"",
     "format:check": "prettier --config ./.prettierrc --list-different \"src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}\"",
     "format:fix": "pretty-quick --staged",
     "lint": "ng lint",
