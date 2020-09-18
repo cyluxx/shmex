@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {EditComponent} from './edit.component';
-import {MockStore, provideMockStore} from '@ngrx/store/testing';
-import {initialAppState} from '../../store/model';
+import { EditComponent } from './edit.component';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { initialAppState } from '../../store/model';
 
 describe('EditComponent', () => {
   let component: EditComponent;
@@ -12,9 +12,8 @@ describe('EditComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EditComponent],
-      providers: [provideMockStore({initialState: {app: initialAppState}})],
-    })
-      .compileComponents();
+      providers: [provideMockStore({ initialState: { app: initialAppState } })],
+    }).compileComponents();
   });
 
   beforeEach(() => {

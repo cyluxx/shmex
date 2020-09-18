@@ -1,6 +1,6 @@
-import {Cover, Duration, Measure, RhythmElement, Tone, Track} from '../store/model';
-import {isRest, removeDuplicateTones} from './model-utils';
-import {addDuration, asDurationValue, getFractionalPart} from './duration-calculator';
+import { Cover, Duration, Measure, RhythmElement, Tone, Track } from '../store/model';
+import { isRest, removeDuplicateTones } from './model-utils';
+import { addDuration, asDurationValue, getFractionalPart } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 
 export function buildAlter(accidental: '#' | 'b'): string {
@@ -11,11 +11,19 @@ export function buildAlter(accidental: '#' | 'b'): string {
 }
 
 export function buildCover(cover: Cover): string {
-  return '<movement-title>' + cover.title + '</movement-title>' +
+  return (
+    '<movement-title>' +
+    cover.title +
+    '</movement-title>' +
     '<identification>' +
-    '<creator type="composer">' + cover.creator1 + '</creator>' +
-    '<creator type="lyricist">' + cover.creator2 + '</creator>' +
-    '</identification>';
+    '<creator type="composer">' +
+    cover.creator1 +
+    '</creator>' +
+    '<creator type="lyricist">' +
+    cover.creator2 +
+    '</creator>' +
+    '</identification>'
+  );
 }
 
 export function buildDurationAndType(duration: Duration): string {
@@ -40,13 +48,13 @@ export function buildDurationAndType(duration: Duration): string {
  */
 export function buildEndingRests(rhythmElements: RhythmElement[]): string {
   let combinedDuration: Fraction = new Fraction(1, 1);
-  rhythmElements.map(rhythmElement => {
+  rhythmElements.map((rhythmElement) => {
     combinedDuration = addDuration(combinedDuration, rhythmElement.duration);
   });
   let endingRests = '';
   let fractionalPart: Fraction = getFractionalPart(combinedDuration);
   while (fractionalPart.n / fractionalPart.d !== 0) {
-    const duration: Duration = {value: asDurationValue(fractionalPart.d), tieStart: false, tieStop: false};
+    const duration: Duration = { value: asDurationValue(fractionalPart.d), tieStart: false, tieStop: false };
     endingRests += buildRest(duration);
     combinedDuration = addDuration(combinedDuration, duration);
     fractionalPart = getFractionalPart(combinedDuration);
@@ -59,18 +67,24 @@ export function buildMeasureAttributes(): string {
   return '<attributes><divisions>8</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>';
 }
 
-export function buildMeasure(measureRhythmElements: RhythmElement[], index: number, allRhythmElements: RhythmElement[][]): string {
+export function buildMeasure(
+  measureRhythmElements: RhythmElement[],
+  index: number,
+  allRhythmElements: RhythmElement[][]
+): string {
   const measureNumber = index + 1;
   let result = '<measure number="' + measureNumber + '">';
   if (measureNumber === 1) {
     result += buildMeasureAttributes();
   }
-  result += measureRhythmElements.map(rhythmElement => {
-    if (isRest(rhythmElement)) {
-      return buildRest(rhythmElement.duration);
-    }
-    return buildNotes(rhythmElement.duration, rhythmElement.tones);
-  }).join('');
+  result += measureRhythmElements
+    .map((rhythmElement) => {
+      if (isRest(rhythmElement)) {
+        return buildRest(rhythmElement.duration);
+      }
+      return buildNotes(rhythmElement.duration, rhythmElement.tones);
+    })
+    .join('');
   if (index === allRhythmElements.length - 1) {
     result += buildEndingRests(measureRhythmElements);
     result += '<barline location="right"><bar-style>light-heavy</bar-style></barline>';
@@ -84,21 +98,24 @@ export function buildMeasures(measures: Measure[]): string {
     return buildMeasure([], 0, [[]]);
   }
   return measures
-    .map(measure => measure.rhythmElements)
+    .map((measure) => measure.rhythmElements)
     .map(buildMeasure)
     .join('');
 }
 
 export function buildNotes(duration: Duration, tones: Tone[]): string {
-  return removeDuplicateTones(tones).map((tone, index) => {
-    return '<note>'
-      // add chord tag, only when more then one tone
-      + (index > 0 ? '<chord/>' : '')
-      + buildPitch(tone)
-      + buildDurationAndType(duration)
-      + buildTie(duration.tieStart, duration.tieStop)
-      + '</note>';
-  })
+  return removeDuplicateTones(tones)
+    .map((tone, index) => {
+      return (
+        '<note>' +
+        // add chord tag, only when more then one tone
+        (index > 0 ? '<chord/>' : '') +
+        buildPitch(tone) +
+        buildDurationAndType(duration) +
+        buildTie(duration.tieStart, duration.tieStop) +
+        '</note>'
+      );
+    })
     .join('');
 }
 
@@ -107,9 +124,7 @@ export function buildOctave(octave: number): string {
 }
 
 export function buildPart(track: Track): string {
-  return '<part id="P1">'
-    + buildMeasures(track.measures)
-    + '</part>';
+  return '<part id="P1">' + buildMeasures(track.measures) + '</part>';
 }
 
 // TODO for now hardcoded
@@ -118,18 +133,11 @@ export function buildPartList(): string {
 }
 
 export function buildPitch(tone: Tone): string {
-  return '<pitch>'
-    + buildStep(tone.key)
-    + buildAlter(tone.accidental)
-    + buildOctave(tone.octave)
-    + '</pitch>';
+  return '<pitch>' + buildStep(tone.key) + buildAlter(tone.accidental) + buildOctave(tone.octave) + '</pitch>';
 }
 
 export function buildRest(duration: Duration): string {
-  return '<note>'
-    + '<rest />'
-    + buildDurationAndType(duration)
-    + '</note>';
+  return '<note>' + '<rest />' + buildDurationAndType(duration) + '</note>';
 }
 
 export function buildStep(key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g'): string {
@@ -153,11 +161,13 @@ export function buildTie(tieStart: boolean, tieStop: boolean): string {
  * Wraps body into meta information, and thus finalizes xml string
  */
 export function build(track: Track, cover: Cover): string {
-  return '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
-    + '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">'
-    + '<score-partwise version="3.1">'
-    + buildCover(cover)
-    + buildPartList()
-    + buildPart(track)
-    + '</score-partwise>';
+  return (
+    '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
+    '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">' +
+    '<score-partwise version="3.1">' +
+    buildCover(cover) +
+    buildPartList() +
+    buildPart(track) +
+    '</score-partwise>'
+  );
 }

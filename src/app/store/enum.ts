@@ -1,4 +1,4 @@
 export enum ToolbarState {
   EDIT_COVER,
-  EDIT_SHEETS
+  EDIT_SHEETS,
 }

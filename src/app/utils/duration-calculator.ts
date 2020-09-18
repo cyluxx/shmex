@@ -1,4 +1,4 @@
-import {Duration} from '../store/model';
+import { Duration } from '../store/model';
 import Fraction from 'fraction.js/fraction';
 
 export function addDuration(fraction: Fraction, duration: Duration): Fraction {

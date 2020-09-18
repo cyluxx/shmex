@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditCoverComponent } from './edit-cover.component';
-import {MockStore, provideMockStore} from '@ngrx/store/testing';
-import {initialAppState} from '../../store/model';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { initialAppState } from '../../store/model';
 
 describe('EditCoverComponent', () => {
   let component: EditCoverComponent;
@@ -11,10 +11,9 @@ describe('EditCoverComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditCoverComponent ],
-      providers: [provideMockStore({initialState: {app: initialAppState}})],
-    })
-    .compileComponents();
+      declarations: [EditCoverComponent],
+      providers: [provideMockStore({ initialState: { app: initialAppState } })],
+    }).compileComponents();
   });
 
   beforeEach(() => {

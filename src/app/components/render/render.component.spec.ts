@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {RenderComponent} from './render.component';
-import {MockStore, provideMockStore} from '@ngrx/store/testing';
-import {initialAppState} from '../../store/model';
+import { RenderComponent } from './render.component';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { initialAppState } from '../../store/model';
 
 describe('RenderComponent', () => {
   let component: RenderComponent;
@@ -12,9 +12,8 @@ describe('RenderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [RenderComponent],
-      providers: [provideMockStore({initialState: {app: initialAppState}})],
-    })
-      .compileComponents();
+      providers: [provideMockStore({ initialState: { app: initialAppState } })],
+    }).compileComponents();
   });
 
   beforeEach(() => {

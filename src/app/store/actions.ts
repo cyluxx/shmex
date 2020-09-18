@@ -1,4 +1,4 @@
-import {createAction, props} from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 export const editCover = createAction('[Toolbar] edit cover');
 export const editCreator1 = createAction('[Edit cover] edit creator 1', props<{ creator1: string }>());

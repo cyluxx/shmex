@@ -1,18 +1,18 @@
 import Fraction from 'fraction.js/fraction';
-import {ToolbarState} from './enum';
+import { ToolbarState } from './enum';
 
 export const initialAppState: AppState = {
   cover: {
     title: 'Title',
     creator1: 'Composer',
-    creator2: 'Lyricist'
+    creator2: 'Lyricist',
   },
   toolbar: {
-    state: ToolbarState.EDIT_SHEETS
+    state: ToolbarState.EDIT_SHEETS,
   },
   track: {
-    measures: []
-  }
+    measures: [],
+  },
 };
 
 export interface AppState {
