@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OpenSheetMusicDisplay } from 'opensheetmusicdisplay';
 import { Store } from '@ngrx/store';
 import { selectMusicXml } from '../../store/selectors';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 // import format from 'xml-formatter';
 
@@ -11,10 +11,11 @@ import { switchMap } from 'rxjs/operators';
   templateUrl: './render.component.html',
   styleUrls: ['./render.component.css'],
 })
-export class RenderComponent implements AfterViewInit, OnInit {
+export class RenderComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('container', { static: false }) container: ElementRef;
 
   musicXml$: Observable<string>;
+  musicXmlSubscription: Subscription;
 
   constructor(private store: Store) {}
 
@@ -24,7 +25,7 @@ export class RenderComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     const osmd = new OpenSheetMusicDisplay(this.container.nativeElement);
-    this.musicXml$
+    this.musicXmlSubscription = this.musicXml$
       .pipe(
         switchMap((next) => {
           // console.log(format(next));
@@ -34,5 +35,9 @@ export class RenderComponent implements AfterViewInit, OnInit {
       .subscribe(() => {
         osmd.render();
       });
+  }
+
+  ngOnDestroy() {
+    this.musicXmlSubscription.unsubscribe();
   }
 }
