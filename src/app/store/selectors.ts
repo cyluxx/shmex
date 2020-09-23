@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from './model';
-import { build } from '../utils/music-xml-builder';
+import { build as buildXml } from '../utils/music-xml-builder';
+import { build as buildShmexl } from '../utils/shmexl-text-builder';
 
 const selectAppState = (state): AppState => state.app;
 
@@ -14,8 +15,8 @@ export const selectCurrentToolbarState = createSelector(selectAppState, (state) 
 
 export const selectCurrentTrack = createSelector(selectAppState, (state) => state.track);
 
-export const selectMusicXml = createSelector(selectCurrentTrack, selectCover, (track, cover) => {
-  return build(track, cover);
-});
+export const selectMusicXml = createSelector(selectCurrentTrack, selectCover, (track, cover) => buildXml(track, cover));
+
+export const selectShmexlText = createSelector(selectCurrentTrack, (track) => buildShmexl(track));
 
 export const selectTitle = createSelector(selectCover, (cover) => cover.title);
