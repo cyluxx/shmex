@@ -1,4 +1,4 @@
-import { groupTiedElements, reduceMeasures } from './shmexl-text-builder';
+import { groupTiedElements, reduceMeasures, sumTiedDurations } from './shmexl-text-builder';
 import { RhythmElement, RhythmElementToken } from '../store/model';
 import Fraction from 'fraction.js';
 
@@ -85,5 +85,60 @@ describe('reduceMeasures', () => {
         },
       ])
     ).toEqual({ rhythmElements: [someRhythmElement, someRhythmElement] });
+  });
+});
+
+describe('sumTiedDurations', () => {
+  it('returns empty array, when empty array', () => {
+    expect(sumTiedDurations([])).toEqual([]);
+  });
+
+  it('sums array with one element', () => {
+    expect(sumTiedDurations([[someRhythmElementToken]])).toEqual([someRhythmElementToken]);
+  });
+
+  it('sums array with two elements', () => {
+    expect(
+      sumTiedDurations([
+        [
+          {
+            ...someRhythmElementToken,
+            durationToken: new Fraction(1, 4),
+          },
+          {
+            ...someRhythmElementToken,
+            durationToken: new Fraction(1, 4),
+          },
+        ],
+      ])
+    ).toEqual([{ ...someRhythmElementToken, durationToken: new Fraction(1, 2) }]);
+  });
+
+  it('sums two arrays', () => {
+    expect(
+      sumTiedDurations([
+        [
+          {
+            ...someRhythmElementToken,
+            durationToken: new Fraction(1, 4),
+          },
+        ],
+        [
+          {
+            ...someRhythmElementToken,
+            durationToken: new Fraction(1, 4),
+          },
+        ],
+      ])
+    ).toEqual([
+      {
+        ...someRhythmElementToken,
+        durationToken: new Fraction(1, 4),
+      },
+      {
+        ...someRhythmElementToken,
+        durationToken: new Fraction(1, 4),
+      },
+    ]);
   });
 });
