@@ -1,6 +1,15 @@
-import { groupTiedElements } from './shmexl-text-builder';
-import { RhythmElementToken } from '../store/model';
+import { groupTiedElements, reduceMeasures } from './shmexl-text-builder';
+import { RhythmElement, RhythmElementToken } from '../store/model';
 import Fraction from 'fraction.js';
+
+const someRhythmElement: RhythmElement = {
+  duration: {
+    value: 1,
+    tieStart: false,
+    tieStop: false,
+  },
+  tones: [],
+};
 
 const someRhythmElementToken: RhythmElementToken = {
   toneTokens: ['a4'],
@@ -47,5 +56,34 @@ describe('groupTiedElements', () => {
         { ...someRhythmElementToken, tieStop: true },
       ],
     ]);
+  });
+});
+
+describe('reduceMeasures', () => {
+  it('returns empty array, when empty array', () => {
+    expect(reduceMeasures([])).toEqual({ rhythmElements: [] });
+  });
+
+  it('reduces to one measure, when one measure', () => {
+    expect(
+      reduceMeasures([
+        {
+          rhythmElements: [someRhythmElement],
+        },
+      ])
+    ).toEqual({ rhythmElements: [someRhythmElement] });
+  });
+
+  it('reduces to one measure, when two measures', () => {
+    expect(
+      reduceMeasures([
+        {
+          rhythmElements: [someRhythmElement],
+        },
+        {
+          rhythmElements: [someRhythmElement],
+        },
+      ])
+    ).toEqual({ rhythmElements: [someRhythmElement, someRhythmElement] });
   });
 });

@@ -27,9 +27,12 @@ export function groupTiedElements(rhythmElementTokens: RhythmElementToken[]): Rh
  * Reduce an array of measures to one giant measure
  */
 export function reduceMeasures(measures: Measure[]): Measure {
-  return measures.reduce((accumulator, currentMeasure) => ({
-    rhythmElements: accumulator.rhythmElements.concat(currentMeasure.rhythmElements),
-  }));
+  return measures.reduce(
+    (accumulator, currentMeasure) => ({
+      rhythmElements: accumulator.rhythmElements.concat(currentMeasure.rhythmElements),
+    }),
+    { rhythmElements: [] }
+  );
 }
 
 /**
