@@ -1,11 +1,12 @@
 import {
+  build,
   groupTiedElements,
   reduceMeasures,
   sumTiedDurations,
   toRhythmElementToken,
   toString,
 } from './shmexl-text-builder';
-import { RhythmElement, RhythmElementToken } from '../store/model';
+import { RhythmElement, RhythmElementToken, Tone } from '../store/model';
 import Fraction from 'fraction.js';
 
 const someRhythmElement: RhythmElement = {
@@ -21,6 +22,47 @@ const someRhythmElementToken: RhythmElementToken = {
   toneTokens: ['a4'],
   durationToken: new Fraction(1, 4),
 };
+
+const someTone: Tone = {
+  key: 'a',
+  octave: 4,
+};
+
+describe('build', () => {
+  it('returns empty string, when empty track', () => {
+    expect(build({ measures: [] })).toEqual('');
+  });
+
+  it('builds correct shmexl string', () => {
+    expect(
+      build({
+        measures: [
+          {
+            rhythmElements: [
+              { ...someRhythmElement, duration: { ...someRhythmElement.duration, value: 2 } },
+              {
+                ...someRhythmElement,
+                duration: { ...someRhythmElement.duration, value: 2, tieStart: true },
+                tones: [someTone],
+              },
+            ],
+          },
+          {
+            rhythmElements: [
+              {
+                ...someRhythmElement,
+                duration: { ...someRhythmElement.duration, value: 2, tieStop: true },
+                tones: [someTone],
+              },
+              { ...someRhythmElement, duration: { ...someRhythmElement.duration, value: 4 } },
+              { ...someRhythmElement, duration: { ...someRhythmElement.duration, value: 4 }, tones: [someTone] },
+            ],
+          },
+        ],
+      })
+    ).toEqual('1/2, 1/1 a4, 1/4, 1/4 a4, ');
+  });
+});
 
 describe('groupTiedElements', () => {
   it('returns empty array, when empty array', () => {
@@ -205,6 +247,6 @@ describe('toString', () => {
         durationToken: new Fraction(1, 8),
         toneTokens: ['a4', 'c#5', 'e5'],
       })
-    ).toEqual('1/8 a4 c#5 e5,');
+    ).toEqual('1/8 a4 c#5 e5, ');
   });
 });

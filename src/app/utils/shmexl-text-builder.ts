@@ -1,6 +1,9 @@
 import { Measure, RhythmElement, RhythmElementToken, Track } from '../store/model';
 import Fraction from 'fraction.js';
 
+/**
+ * Converts a track into a shmexl string
+ */
 export function build(track: Track): string {
   const reducedMeasures = reduceMeasures(track.measures);
   const rets = reducedMeasures.rhythmElements.map((rhythmElement) => toRhythmElementToken(rhythmElement));
@@ -67,8 +70,8 @@ export function toString(rhythmElementToken: RhythmElementToken): string {
     rhythmElementToken.durationToken.n +
     '/' +
     rhythmElementToken.durationToken.d +
-    ' ' +
+    (rhythmElementToken.toneTokens.length > 0 ? ' ' : '') +
     rhythmElementToken.toneTokens.join(' ') +
-    ','
+    ', '
   );
 }
