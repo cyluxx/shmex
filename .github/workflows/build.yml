@@ -1,4 +1,5 @@
 name: Build
+
 on:
   push:
     branches:
@@ -32,17 +33,6 @@ jobs:
 
       - name: Remove dist dir
         run: npm run clean
-
-      - name: Test
-        run: npm run test:ci
-
-      - name: Upload coverage report
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Check Code Formatting
-        run: npm run format:check
 
       - name: Build
         run: npm run build:prod
