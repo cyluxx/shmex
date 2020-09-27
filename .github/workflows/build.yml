@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
@@ -22,7 +25,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
       - name: Node ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -33,6 +35,17 @@ jobs:
 
       - name: Remove dist dir
         run: npm run clean
+
+      - name: Test
+        run: npm run test:ci
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Check Code Formatting
+        run: npm run format:check
 
       - name: Build
         run: npm run build:prod
