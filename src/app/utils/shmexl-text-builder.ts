@@ -53,7 +53,7 @@ export function sumTiedDurations(groupedRhythmElementTokens: RhythmElementToken[
 export function toRhythmElementToken(rhythmElement: RhythmElement): RhythmElementToken {
   return {
     durationToken: new Fraction(1, rhythmElement.duration.value),
-    toneTokens: rhythmElement.tones.map((tone) => tone.key + tone.accidental ?? '' + tone.octave + ' '),
+    toneTokens: rhythmElement.tones.map((tone) => tone.key + (tone.accidental ?? '') + tone.octave),
     tieStart: rhythmElement.duration.tieStart,
     tieStop: rhythmElement.duration.tieStop,
   };
@@ -68,7 +68,7 @@ export function toString(rhythmElementToken: RhythmElementToken): string {
     '/' +
     rhythmElementToken.durationToken.d +
     ' ' +
-    rhythmElementToken.toneTokens +
+    rhythmElementToken.toneTokens.join(' ') +
     ','
   );
 }

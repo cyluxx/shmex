@@ -1,4 +1,10 @@
-import { groupTiedElements, reduceMeasures, sumTiedDurations } from './shmexl-text-builder';
+import {
+  groupTiedElements,
+  reduceMeasures,
+  sumTiedDurations,
+  toRhythmElementToken,
+  toString,
+} from './shmexl-text-builder';
 import { RhythmElement, RhythmElementToken } from '../store/model';
 import Fraction from 'fraction.js';
 
@@ -140,5 +146,65 @@ describe('sumTiedDurations', () => {
         durationToken: new Fraction(1, 4),
       },
     ]);
+  });
+});
+
+describe('toRhythmElementToken', () => {
+  it('converts a rhythmElement without accidental', () => {
+    expect(
+      toRhythmElementToken({
+        duration: {
+          value: 4,
+          tieStop: false,
+          tieStart: false,
+        },
+        tones: [
+          {
+            key: 'a',
+            octave: 4,
+          },
+        ],
+      })
+    ).toEqual({
+      durationToken: new Fraction(1, 4),
+      toneTokens: ['a4'],
+      tieStart: false,
+      tieStop: false,
+    });
+  });
+
+  it('converts a rhythmElement with accidental', () => {
+    expect(
+      toRhythmElementToken({
+        duration: {
+          value: 4,
+          tieStop: false,
+          tieStart: false,
+        },
+        tones: [
+          {
+            key: 'c',
+            accidental: '#',
+            octave: 5,
+          },
+        ],
+      })
+    ).toEqual({
+      durationToken: new Fraction(1, 4),
+      toneTokens: ['c#5'],
+      tieStart: false,
+      tieStop: false,
+    });
+  });
+});
+
+describe('toString', () => {
+  it('converts a rhythmElement with three tone tokens', () => {
+    expect(
+      toString({
+        durationToken: new Fraction(1, 8),
+        toneTokens: ['a4', 'c#5', 'e5'],
+      })
+    ).toEqual('1/8 a4 c#5 e5,');
   });
 });
