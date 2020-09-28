@@ -41,7 +41,7 @@ const _reducer = createReducer(
     });
 
     const measures = toMeasures(divideRhythmElementTokensByMeasure(rhythmElementTokens));
-    return { ...state, track: { ...state.track, measures } };
+    return { ...state, editor: { ...state.editor, shmexlText }, track: { ...state.track, measures } };
   })
 );
 
