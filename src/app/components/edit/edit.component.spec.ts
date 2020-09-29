@@ -1,24 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditComponent } from './edit.component';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { AppState, initialAppState } from '../../store/model';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from '../../store/reducer';
 
 describe('EditComponent', () => {
   let component: EditComponent;
   let fixture: ComponentFixture<EditComponent>;
-  let store: MockStore<{ app: AppState }>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EditComponent],
-      providers: [provideMockStore({ initialState: { app: initialAppState } })],
+      imports: [StoreModule.forRoot({ app: reducer })],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EditComponent);
-    store = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -27,7 +25,12 @@ describe('EditComponent', () => {
     fixture.destroy();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should trigger shmexlText observable, on shmexlText change', () => {
+    component.onChange('1/4 a4,');
+
+    component.shmexlText$.subscribe((next) => {
+      expect(next).toBe('1/4 a4,');
+      expect(next).not.toBe('');
+    });
   });
 });
