@@ -5,7 +5,7 @@ import { ExportService } from '../../service/export.service';
 import { selectAppState } from '../../store/selectors';
 import { Observable, Subject } from 'rxjs';
 import { AppState } from '../../store/model';
-import { switchMap } from 'rxjs/operators';
+import { withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-toolbar',
@@ -21,7 +21,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.appState$ = this.store.select(selectAppState);
 
-    this.onExportXml.pipe(switchMap(() => this.appState$)).subscribe((appState) => {
+    this.onExportXml.pipe(withLatestFrom(this.appState$)).subscribe(([_, appState]) => {
       this.exportService.exportMusicXml(appState);
     });
   }

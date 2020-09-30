@@ -1,11 +1,11 @@
 <mat-toolbar color="primary">
-  <button (click)="onEditCover()" mat-icon-button aria-label="Edit cover, like song title or composer">
+  <button (click)="onEditCover()" mat-icon-button matTooltip="Edit Title & Creators" aria-label="Edit cover, like song title or composer">
     <mat-icon aria-hidden="false" aria-label="Edit cover icon">text_fields</mat-icon>
   </button>
-  <button (click)="onEditSheets()" mat-icon-button aria-label="Edit sheets">
+  <button (click)="onEditSheets()" mat-icon-button matTooltip="Edit Sheet Music" aria-label="Edit sheets">
     <mat-icon aria-hidden="false" aria-label="Edit sheets icon">edit</mat-icon>
   </button>
-  <button (click)="onExportXml.next($event)" mat-icon-button aria-label="Edit sheets">
+  <button (click)="onExportXml.next($event)" mat-icon-button matTooltip="Export to MusicXML" aria-label="Edit sheets">
     <mat-icon aria-hidden="false" aria-label="Edit sheets icon">cloud_download</mat-icon>
   </button>
 </mat-toolbar>
