@@ -7,6 +7,9 @@ export const initialAppState: AppState = {
     creator1: 'Composer',
     creator2: 'Lyricist',
   },
+  editor: {
+    shmexlText: '',
+  },
   toolbar: {
     state: ToolbarState.EDIT_SHEETS,
   },
@@ -17,6 +20,7 @@ export const initialAppState: AppState = {
 
 export interface AppState {
   cover: Cover;
+  editor: Editor;
   toolbar: Toolbar;
   track: Track;
 }
@@ -31,6 +35,10 @@ export interface Duration {
   value: 1 | 2 | 4 | 8 | 16 | 32;
   tieStart: boolean;
   tieStop: boolean;
+}
+
+export interface Editor {
+  shmexlText: string;
 }
 
 export interface Measure {

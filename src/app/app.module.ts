@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { EditCoverComponent } from './components/edit-cover/edit-cover.component';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [AppComponent, EditComponent, RenderComponent, ToolbarComponent, EditCoverComponent],
@@ -30,6 +31,7 @@ import { MatInputModule } from '@angular/material/input';
     StoreModule.forRoot({ app: reducer }, {}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     MatToolbarModule,
+    MatTooltipModule,
     MatIconModule,
     MatButtonModule,
     MatInputModule,

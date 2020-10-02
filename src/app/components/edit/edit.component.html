@@ -1,9 +1,9 @@
 <ngx-codemirror
-  [(ngModel)]="codeMirrorContent"
+  [ngModel]="shmexlText$ | async"
   [options]="{
     lineNumbers: true,
     theme: 'material-darker',
     mode: 'shmexl'
   }"
-  (ngModelChange)="onChange()"
+  (ngModelChange)="onChange($event)"
 ></ngx-codemirror>
