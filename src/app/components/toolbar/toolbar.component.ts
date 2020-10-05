@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { editCover, editSheets } from '../../store/actions';
+import { editCover, editSheets, goToTrackManager } from '../../store/actions';
 import { ExportService } from '../../service/export.service';
 import { selectAppState } from '../../store/selectors';
 import { Observable, Subject } from 'rxjs';
@@ -32,6 +32,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   onEditSheets() {
     this.store.dispatch(editSheets());
+  }
+
+  onTrackManager() {
+    this.store.dispatch(goToTrackManager());
   }
 
   ngOnDestroy() {
