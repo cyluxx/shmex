@@ -22,7 +22,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TrackManagerComponent } from './components/track-manager/track-manager.component';
 
 @NgModule({
-  declarations: [AppComponent, EditComponent, RenderComponent, ToolbarComponent, EditCoverComponent, TrackManagerComponent],
+  declarations: [
+    AppComponent,
+    EditComponent,
+    RenderComponent,
+    ToolbarComponent,
+    EditCoverComponent,
+    TrackManagerComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

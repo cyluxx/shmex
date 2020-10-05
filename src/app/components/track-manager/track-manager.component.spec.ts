@@ -8,9 +8,8 @@ describe('TrackManagerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TrackManagerComponent ]
-    })
-    .compileComponents();
+      declarations: [TrackManagerComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
