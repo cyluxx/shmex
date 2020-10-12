@@ -14,6 +14,7 @@ export const initialAppState: AppState = {
     state: ToolbarState.EDIT_SHEETS,
   },
   track: {
+    name: 'Piano',
     measures: [],
   },
 };
@@ -68,5 +69,6 @@ export interface Toolbar {
 }
 
 export interface Track {
+  name: string;
   measures: Measure[];
 }

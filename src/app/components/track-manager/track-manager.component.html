@@ -1,1 +1,15 @@
-<p>track-manager works!</p>
+<div class="row mt-3">
+  <div class="col">
+    <div cdkDropList class="track-manager-list" (cdkDropListDropped)="onDrop($event)">
+      <div class="track-manager-box" *ngFor="let track of tracks" cdkDrag>
+        <mat-form-field class="example-full-width">
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="Piano" [value]="track.name">
+        </mat-form-field>
+        <div class="track-manager-handle" cdkDragHandle>
+          <mat-icon aria-hidden="false" aria-label="Drag track">drag_handle</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

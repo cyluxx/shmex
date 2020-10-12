@@ -20,6 +20,8 @@ import { EditCoverComponent } from './components/edit-cover/edit-cover.component
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TrackManagerComponent } from './components/track-manager/track-manager.component';
+import { MatCardModule } from '@angular/material/card';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,8 @@ import { TrackManagerComponent } from './components/track-manager/track-manager.
     MatIconModule,
     MatButtonModule,
     MatInputModule,
+    MatCardModule,
+    DragDropModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
