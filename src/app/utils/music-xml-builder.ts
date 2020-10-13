@@ -124,12 +124,19 @@ export function buildOctave(octave: number): string {
 }
 
 export function buildPart(track: Track): string {
-  return '<part id="P1">' + buildMeasures(track.measures) + '</part>';
+  return `<part id="${track.id}">${buildMeasures(track.measures)}</part>`;
 }
 
-// TODO for now hardcoded
-export function buildPartList(): string {
-  return '<part-list><score-part id="P1"><part-name>Music</part-name></score-part></part-list>';
+export function buildParts(tracks: Track[]): string {
+  return tracks.map((track) => buildPart(track)).join('');
+}
+
+export function buildPartList(tracks: Track[]): string {
+  return (
+    '<part-list>' +
+    tracks.map((track) => `<score-part id="${track.id}"><part-name>${track.name}</part-name></score-part>`).join('') +
+    '</part-list>'
+  );
 }
 
 export function buildPitch(tone: Tone): string {
@@ -160,14 +167,14 @@ export function buildTie(tieStart: boolean, tieStop: boolean): string {
 /**
  * Wraps body into meta information, and thus finalizes xml string
  */
-export function build(track: Track, cover: Cover): string {
+export function build(cover: Cover, tracks: Track[]): string {
   return (
     '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
     '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">' +
     '<score-partwise version="3.1">' +
     buildCover(cover) +
-    buildPartList() +
-    buildPart(track) +
+    buildPartList(tracks) +
+    buildParts(tracks) +
     '</score-partwise>'
   );
 }

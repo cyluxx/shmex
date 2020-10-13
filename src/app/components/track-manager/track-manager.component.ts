@@ -12,6 +12,7 @@ export class TrackManagerComponent implements OnInit {
     {
       name: 'test',
       measures: [],
+      id: '',
     },
   ];
 
