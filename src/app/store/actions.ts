@@ -8,3 +8,4 @@ export const editSheets = createAction('[Toolbar] edit sheets');
 export const editTitle = createAction('[Edit cover] edit title', props<{ title: string }>());
 export const goToTrackManager = createAction('[Toolbar] go to track manager');
 export const parseShmexlText = createAction('[Edit] parse shmexl text', props<{ editorText: string }>());
+export const renameTrack = createAction('[Track Manager] rename track', props<{ id: string; newName: string }>());

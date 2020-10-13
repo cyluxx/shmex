@@ -4,7 +4,7 @@ import { Track } from '../../store/model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectTracks } from '../../store/selectors';
-import { addNewTrack } from '../../store/actions';
+import { addNewTrack, renameTrack } from '../../store/actions';
 
 @Component({
   selector: 'app-track-manager',
@@ -28,5 +28,9 @@ export class TrackManagerComponent implements OnInit {
 
   onDrop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.tracks, event.previousIndex, event.currentIndex);
+  }
+
+  onRenameTrack(id: string, newName: string) {
+    this.store.dispatch(renameTrack({ id, newName }));
   }
 }

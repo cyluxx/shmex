@@ -4,7 +4,7 @@
       <div class="track-manager-box" *ngFor="let track of tracks" cdkDrag>
         <mat-form-field class="example-full-width">
           <mat-label>Name</mat-label>
-          <input matInput placeholder="Piano" [value]="track.name">
+          <input #input matInput placeholder="Piano" (input)="onRenameTrack(track.id, input.value)" [value]="track.name">
         </mat-form-field>
         <div class="track-manager-handle" cdkDragHandle>
           <mat-icon aria-hidden="false" aria-label="Drag track">drag_handle</mat-icon>

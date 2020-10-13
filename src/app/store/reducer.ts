@@ -9,6 +9,7 @@ import {
   editTitle,
   goToTrackManager,
   parseShmexlText,
+  renameTrack,
 } from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
@@ -73,6 +74,16 @@ const _reducer = createReducer(
 
       return { ...state, editor: { shmexlTexts }, score: { tracks } };
     }
+  ),
+
+  on(
+    renameTrack,
+    (state, { id, newName }): AppState => ({
+      ...state,
+      score: {
+        tracks: state.score.tracks.map((track) => (track.id === id ? { ...track, name: newName } : track)),
+      },
+    })
   )
 );
 
