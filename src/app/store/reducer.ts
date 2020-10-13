@@ -1,6 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { AppState, initialAppState, RhythmElementToken, ShmexlText, Track } from './model';
 import {
+  addNewTrack,
   editCover,
   editCreator1,
   editCreator2,
@@ -14,9 +15,18 @@ import * as CodeMirror from 'codemirror';
 import { divideRhythmElementTokensByMeasure, toDurationToken, toMeasures } from '../utils/reducer-utils';
 import Fraction from 'fraction.js/fraction';
 import { ToolbarState } from './enum';
+import { v4 as uuidv4 } from 'uuid';
 
 const _reducer = createReducer(
   initialAppState,
+
+  on(
+    addNewTrack,
+    (state): AppState => ({
+      ...state,
+      score: { tracks: [...state.score.tracks, { name: 'New Track', id: uuidv4(), measures: [] }] },
+    })
+  ),
 
   on(editCover, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.EDIT_COVER } })),
 

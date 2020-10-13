@@ -4,6 +4,7 @@ import { Track } from '../../store/model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectTracks } from '../../store/selectors';
+import { addNewTrack } from '../../store/actions';
 
 @Component({
   selector: 'app-track-manager',
@@ -19,6 +20,10 @@ export class TrackManagerComponent implements OnInit {
   ngOnInit(): void {
     this.tracks$ = this.store.select(selectTracks);
     this.tracks$.subscribe((tracks) => (this.tracks = tracks));
+  }
+
+  onAddNewTrack() {
+    this.store.dispatch(addNewTrack());
   }
 
   onDrop(event: CdkDragDrop<string[]>) {
