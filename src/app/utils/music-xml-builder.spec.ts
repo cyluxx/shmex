@@ -14,20 +14,10 @@ import { Duration, Measure, RhythmElement, Tone } from '../store/model';
 
 describe('build', () => {
   it('builds empty xml', () => {
-    expect(
-      build(
-        { measures: [] },
-        {
-          title: '',
-          creator1: '',
-          creator2: '',
-        }
-      )
-    ).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
-    expect(build({ measures: [] }, { title: '', creator1: '', creator2: '' })).toContain(
-      '<score-partwise version="3.1">'
-    );
-    expect(build({ measures: [] }, { title: '', creator1: '', creator2: '' })).toContain('</score-partwise>');
+    const xml = build({ title: '', creator1: '', creator2: '' }, []);
+    expect(xml).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
+    expect(xml).toContain('<score-partwise version="3.1">');
+    expect(xml).toContain('</score-partwise>');
   });
 });
 

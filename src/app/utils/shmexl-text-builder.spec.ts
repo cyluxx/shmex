@@ -30,12 +30,14 @@ const someTone: Tone = {
 
 describe('build', () => {
   it('returns empty string, when empty track', () => {
-    expect(build({ measures: [] })).toEqual('');
+    expect(build({ id: 'foo', name: 'foo', measures: [] })).toEqual('');
   });
 
   it('builds correct shmexl string', () => {
     expect(
       build({
+        id: 'foo',
+        name: 'foo',
         measures: [
           {
             rhythmElements: [
