@@ -1,25 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Track } from '../../store/model';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { selectTracks } from '../../store/selectors';
-import { addNewTrack, renameTrack } from '../../store/actions';
+import { addNewTrack, renameTrack, reorderTracks } from '../../store/actions';
 
 @Component({
   selector: 'app-track-manager',
   templateUrl: './track-manager.component.html',
   styleUrls: ['./track-manager.component.css'],
 })
-export class TrackManagerComponent implements OnInit {
+export class TrackManagerComponent implements OnInit, OnDestroy {
   tracks$: Observable<Track[]>;
   tracks: Track[];
+  tracksSubscription: Subscription;
 
   constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.tracks$ = this.store.select(selectTracks);
-    this.tracks$.subscribe((tracks) => (this.tracks = tracks));
+    this.tracksSubscription = this.tracks$.subscribe((tracks) => (this.tracks = tracks));
   }
 
   onAddNewTrack() {
@@ -27,10 +28,16 @@ export class TrackManagerComponent implements OnInit {
   }
 
   onDrop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.tracks, event.previousIndex, event.currentIndex);
+    const tracks = [...this.tracks];
+    moveItemInArray(tracks, event.previousIndex, event.currentIndex);
+    this.store.dispatch(reorderTracks({ tracks }));
   }
 
-  onRenameTrack(id: string, newName: string) {
-    this.store.dispatch(renameTrack({ id, newName }));
+  onRenameTrack(id: string, event: any) {
+    this.store.dispatch(renameTrack({ id, newName: event.target.value }));
+  }
+
+  ngOnDestroy() {
+    this.tracksSubscription.unsubscribe();
   }
 }

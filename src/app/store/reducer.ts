@@ -10,6 +10,7 @@ import {
   goToTrackManager,
   parseShmexlText,
   renameTrack,
+  reorderTracks,
 } from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
@@ -84,7 +85,9 @@ const _reducer = createReducer(
         tracks: state.score.tracks.map((track) => (track.id === id ? { ...track, name: newName } : track)),
       },
     })
-  )
+  ),
+
+  on(reorderTracks, (state, { tracks }): AppState => ({ ...state, score: { tracks } }))
 );
 
 export function reducer(state: AppState | undefined, action: Action) {
