@@ -5,6 +5,11 @@
     </div>
   </div>
   <div class="row">
+    <div class="col p-3">
+      <app-track-tabs *ngIf="(toolbarState$ | async) === EDIT_SHEETS"></app-track-tabs>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-lg">
       <app-edit *ngIf="(toolbarState$ | async) === EDIT_SHEETS"></app-edit>
       <app-edit-cover *ngIf="(toolbarState$ | async) === EDIT_COVER"></app-edit-cover>

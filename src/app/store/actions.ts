@@ -11,3 +11,4 @@ export const goToTrackManager = createAction('[Toolbar] go to track manager');
 export const parseShmexlText = createAction('[Edit] parse shmexl text', props<{ editorText: string }>());
 export const renameTrack = createAction('[Track Manager] rename track', props<{ id: string; newName: string }>());
 export const reorderTracks = createAction('[Track Manager] reorder tracks', props<{ tracks: Track[] }>());
+export const setCurrentTrack = createAction('[Track Tabs] set current track', props<{ id: string }>());

@@ -22,6 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TrackManagerComponent } from './components/track-manager/track-manager.component';
 import { MatCardModule } from '@angular/material/card';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TrackChipsComponent } from './components/track-chips/track-chips.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ToolbarComponent,
     EditCoverComponent,
     TrackManagerComponent,
+    TrackChipsComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,6 +50,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatInputModule,
     MatCardModule,
     DragDropModule,
+    MatChipsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

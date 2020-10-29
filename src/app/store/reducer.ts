@@ -11,6 +11,7 @@ import {
   parseShmexlText,
   renameTrack,
   reorderTracks,
+  setCurrentTrack,
 } from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
@@ -24,10 +25,14 @@ const _reducer = createReducer(
 
   on(
     addNewTrack,
-    (state): AppState => ({
-      ...state,
-      score: { tracks: [...state.score.tracks, { name: 'New Track', id: uuidv4(), measures: [] }] },
-    })
+    (state): AppState => {
+      const id = uuidv4();
+      return {
+        ...state,
+        score: { tracks: [...state.score.tracks, { name: 'New Track', id, measures: [] }] },
+        editor: { shmexlTexts: [...state.editor.shmexlTexts, { id, value: '' }] },
+      };
+    }
   ),
 
   on(editCover, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.EDIT_COVER } })),
@@ -87,7 +92,9 @@ const _reducer = createReducer(
     })
   ),
 
-  on(reorderTracks, (state, { tracks }): AppState => ({ ...state, score: { tracks } }))
+  on(reorderTracks, (state, { tracks }): AppState => ({ ...state, score: { tracks } })),
+
+  on(setCurrentTrack, (state, { id }): AppState => ({ ...state, currentTrackId: id }))
 );
 
 export function reducer(state: AppState | undefined, action: Action) {
