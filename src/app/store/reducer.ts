@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { AppState, initialAppState, RhythmElementToken, ShmexlText, Track } from './model';
+import { AppState, initialAppState, RhythmElementToken } from './model';
 import {
   addNewTrack,
   editCover,
@@ -15,7 +15,13 @@ import {
 } from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
-import { divideRhythmElementTokensByMeasure, toDurationToken, toMeasures } from '../utils/reducer-utils';
+import {
+  divideRhythmElementTokensByMeasure,
+  toDurationToken,
+  toMeasures,
+  updateShmexlTexts,
+  updateTracks,
+} from '../utils/reducer-utils';
 import Fraction from 'fraction.js/fraction';
 import { ToolbarState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
@@ -69,14 +75,9 @@ const _reducer = createReducer(
         }
       });
 
-      const shmexlTexts: ShmexlText[] = state.editor.shmexlTexts.map((shmexlText) =>
-        shmexlText.id === state.currentTrackId ? { id: shmexlText.id, value: editorText } : shmexlText
-      );
-
+      const shmexlTexts = updateShmexlTexts(state.currentTrackId, editorText, state.editor.shmexlTexts);
       const measures = toMeasures(divideRhythmElementTokensByMeasure(rhythmElementTokens));
-      const tracks: Track[] = state.score.tracks.map((track) =>
-        track.id === state.currentTrackId ? { id: track.id, name: track.name, measures } : track
-      );
+      const tracks = updateTracks(state.currentTrackId, measures, state.score.tracks);
 
       return { ...state, editor: { shmexlTexts }, score: { tracks } };
     }

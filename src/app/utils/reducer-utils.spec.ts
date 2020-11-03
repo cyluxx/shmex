@@ -6,9 +6,26 @@ import {
   toMeasures,
   toRhythmElements,
   toTones,
+  updateShmexlTexts,
+  updateTracks,
 } from './reducer-utils';
-import { RhythmElementToken } from '../store/model';
+import { Measure, RhythmElementToken, ShmexlText, Track } from '../store/model';
 import Fraction from 'fraction.js';
+
+const someMeasure: Measure = {
+  rhythmElements: [
+    {
+      duration: { value: 1, tieStop: false, tieStart: false },
+      tones: [{ key: 'a', octave: 4 }],
+    },
+  ],
+};
+
+const someTrack: Track = {
+  id: 'some id',
+  name: 'some name',
+  measures: [],
+};
 
 describe('divideRhythmElementTokensByMeasure', () => {
   it('returns no measure, when no rhythm elements', () => {
@@ -144,6 +161,73 @@ describe('divideRhythmElementTokenByNumerator', () => {
       { durationToken: new Fraction(1, 2), toneTokens: [], tieStart: true },
       { durationToken: new Fraction(1, 4), toneTokens: [], tieStart: true, tieStop: true },
       { durationToken: new Fraction(1, 16), toneTokens: [], tieStop: true },
+    ]);
+  });
+});
+
+describe('updateShmexlTexts', () => {
+  it('returns [], when shmexlTexts []', () => {
+    expect(updateShmexlTexts('foo', 'foo', [])).toEqual([]);
+  });
+
+  it('updates only the shmexlText with the corresponding track id', () => {
+    const shmexlTexts: ShmexlText[] = [
+      {
+        id: 'someId',
+        value: '1/4 a4,',
+      },
+      {
+        id: 'currentId',
+        value: '1/4 a4,',
+      },
+    ];
+    expect(updateShmexlTexts('currentId', '1/4 c#5,', shmexlTexts)).toEqual([
+      {
+        id: 'someId',
+        value: '1/4 a4,',
+      },
+      {
+        id: 'currentId',
+        value: '1/4 c#5,',
+      },
+    ]);
+  });
+});
+
+describe('updateTracks', () => {
+  it('returns [], when tracks []', () => {
+    expect(updateTracks('foo', [{ rhythmElements: [] }], [])).toEqual([]);
+  });
+
+  it('updates only the track with the corresponding track id, when all tracks have same measure length', () => {
+    const tracks: Track[] = [
+      { ...someTrack, measures: [someMeasure] },
+      { ...someTrack, id: 'currentId' },
+    ];
+    expect(updateTracks('currentId', [someMeasure], tracks)).toEqual([
+      { ...someTrack, measures: [someMeasure] },
+      { ...someTrack, id: 'currentId', measures: [someMeasure] },
+    ]);
+  });
+
+  it('updates all tracks with rest measures to the same smallest possible measure length', () => {
+    const someRestMeasure: Measure = {
+      rhythmElements: [
+        {
+          duration: {
+            value: 1,
+            tieStart: false,
+            tieStop: false,
+          },
+          tones: [],
+        },
+      ],
+    };
+    const tracks: Track[] = [someTrack, { ...someTrack, id: 'currentId' }, { ...someTrack, measures: [someMeasure] }];
+    expect(updateTracks('currentId', [someMeasure, someMeasure], tracks)).toEqual([
+      { ...someTrack, measures: [someRestMeasure, someRestMeasure] },
+      { ...someTrack, id: 'currentId', measures: [someMeasure, someMeasure] },
+      { ...someTrack, measures: [someMeasure, someRestMeasure] },
     ]);
   });
 });

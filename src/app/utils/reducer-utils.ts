@@ -1,4 +1,4 @@
-import { Duration, Measure, RhythmElement, RhythmElementToken, Tone } from '../store/model';
+import { Duration, Measure, RhythmElement, RhythmElementToken, ShmexlText, Tone, Track } from '../store/model';
 import { asDurationValue, decomposeAsc, decomposeDesc, sumFractions } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 
@@ -99,6 +99,47 @@ export function divideRhythmElementTokenByNumerator(
       tieStop: true,
     };
   });
+}
+
+/**
+ * Updates the current shmexlText with the editor text. The other shmexl texts remain unmodified.
+ */
+export function updateShmexlTexts(currentTrackId: string, editorText: string, shmexlTexts: ShmexlText[]): ShmexlText[] {
+  return shmexlTexts.map((shmexlText) =>
+    shmexlText.id === currentTrackId ? { id: shmexlText.id, value: editorText } : shmexlText
+  );
+}
+
+/**
+ * Updates the current track with the current measures. The other tracks append extra measures until all tracks have same length.
+ */
+export function updateTracks(currentTrackId: string, measures: Measure[], tracks: Track[]): Track[] {
+  let maxLength = 0;
+  return tracks
+    .map((track) => {
+      const newTrack = track.id === currentTrackId ? { id: track.id, name: track.name, measures } : track;
+      if (newTrack.measures.length > maxLength) {
+        maxLength = newTrack.measures.length;
+      }
+      return newTrack;
+    })
+    .map((track) => {
+      console.log(maxLength);
+      const extraMeasures = [...Array(maxLength - track.measures.length)].map<Measure>(() => ({
+        rhythmElements: [
+          {
+            tones: [],
+            duration: {
+              value: 1,
+              tieStart: false,
+              tieStop: false,
+            },
+          },
+        ],
+      }));
+      track.measures = track.measures.concat(extraMeasures);
+      return track;
+    });
 }
 
 export function toDurationToken(durationTokenString: string): Fraction {
