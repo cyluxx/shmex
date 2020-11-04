@@ -1,6 +1,8 @@
 import {
+  appendExtraRestMeasures,
   divideRhythmElementTokenByNumerator,
   divideRhythmElementTokensByMeasure,
+  removeExtraRestMeasures,
   toDuration,
   toDurationToken,
   toMeasures,
@@ -26,6 +28,38 @@ const someTrack: Track = {
   name: 'some name',
   measures: [],
 };
+
+describe('appendExtraRestMeasures', () => {
+  it('updates no tracks, if all tracks have the same length', () => {
+    const tracks: Track[] = [someTrack, someTrack];
+    expect(appendExtraRestMeasures(tracks)).toEqual([someTrack, someTrack]);
+  });
+
+  it('updates all tracks with rest measures to the same smallest possible measure length', () => {
+    const someRestMeasure: Measure = {
+      rhythmElements: [
+        {
+          duration: {
+            value: 1,
+            tieStart: false,
+            tieStop: false,
+          },
+          tones: [],
+        },
+      ],
+    };
+    const tracks: Track[] = [
+      someTrack,
+      { ...someTrack, measures: [someMeasure, someMeasure] },
+      { ...someTrack, measures: [someMeasure] },
+    ];
+    expect(appendExtraRestMeasures(tracks)).toEqual([
+      { ...someTrack, measures: [someRestMeasure, someRestMeasure] },
+      { ...someTrack, measures: [someMeasure, someMeasure] },
+      { ...someTrack, measures: [someMeasure, someRestMeasure] },
+    ]);
+  });
+});
 
 describe('divideRhythmElementTokensByMeasure', () => {
   it('returns no measure, when no rhythm elements', () => {
@@ -165,6 +199,28 @@ describe('divideRhythmElementTokenByNumerator', () => {
   });
 });
 
+describe('removeExtraRestMeasures', () => {
+  it('returns [], when tracks []', () => {
+    expect(removeExtraRestMeasures([])).toEqual([]);
+  });
+
+  it('does not remove extra rest measures, when there are no extra measures', () => {
+    expect(removeExtraRestMeasures([{ ...someTrack, measures: [someMeasure] }])).toEqual([
+      { ...someTrack, measures: [someMeasure] },
+    ]);
+  });
+
+  it('removes only extra rest measures at the end', () => {
+    const someRestMeasure: Measure = {
+      ...someMeasure,
+      rhythmElements: [{ tones: [], duration: { value: 1, tieStop: false, tieStart: false } }],
+    };
+    expect(
+      removeExtraRestMeasures([{ ...someTrack, measures: [someRestMeasure, someMeasure, someRestMeasure] }])
+    ).toEqual([{ ...someTrack, measures: [someRestMeasure, someMeasure] }]);
+  });
+});
+
 describe('updateShmexlTexts', () => {
   it('returns [], when shmexlTexts []', () => {
     expect(updateShmexlTexts('foo', 'foo', [])).toEqual([]);
@@ -199,35 +255,11 @@ describe('updateTracks', () => {
     expect(updateTracks('foo', [{ rhythmElements: [] }], [])).toEqual([]);
   });
 
-  it('updates only the track with the corresponding track id, when all tracks have same measure length', () => {
-    const tracks: Track[] = [
-      { ...someTrack, measures: [someMeasure] },
-      { ...someTrack, id: 'currentId' },
-    ];
+  it('updates only the track with the corresponding track id', () => {
+    const tracks: Track[] = [{ ...someTrack }, { ...someTrack, id: 'currentId' }];
     expect(updateTracks('currentId', [someMeasure], tracks)).toEqual([
-      { ...someTrack, measures: [someMeasure] },
+      { ...someTrack },
       { ...someTrack, id: 'currentId', measures: [someMeasure] },
-    ]);
-  });
-
-  it('updates all tracks with rest measures to the same smallest possible measure length', () => {
-    const someRestMeasure: Measure = {
-      rhythmElements: [
-        {
-          duration: {
-            value: 1,
-            tieStart: false,
-            tieStop: false,
-          },
-          tones: [],
-        },
-      ],
-    };
-    const tracks: Track[] = [someTrack, { ...someTrack, id: 'currentId' }, { ...someTrack, measures: [someMeasure] }];
-    expect(updateTracks('currentId', [someMeasure, someMeasure], tracks)).toEqual([
-      { ...someTrack, measures: [someRestMeasure, someRestMeasure] },
-      { ...someTrack, id: 'currentId', measures: [someMeasure, someMeasure] },
-      { ...someTrack, measures: [someMeasure, someRestMeasure] },
     ]);
   });
 });

@@ -16,7 +16,9 @@ import {
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
 import {
+  appendExtraRestMeasures,
   divideRhythmElementTokensByMeasure,
+  removeExtraRestMeasures,
   toDurationToken,
   toMeasures,
   updateShmexlTexts,
@@ -35,7 +37,7 @@ const _reducer = createReducer(
       const id = uuidv4();
       return {
         ...state,
-        score: { tracks: [...state.score.tracks, { name: 'New Track', id, measures: [] }] },
+        score: { tracks: appendExtraRestMeasures([...state.score.tracks, { name: 'New Track', id, measures: [] }]) },
         editor: { shmexlTexts: [...state.editor.shmexlTexts, { id, value: '' }] },
       };
     }
@@ -77,9 +79,10 @@ const _reducer = createReducer(
 
       const shmexlTexts = updateShmexlTexts(state.currentTrackId, editorText, state.editor.shmexlTexts);
       const measures = toMeasures(divideRhythmElementTokensByMeasure(rhythmElementTokens));
-      const tracks = updateTracks(state.currentTrackId, measures, state.score.tracks);
+      const tracks = appendExtraRestMeasures(updateTracks(state.currentTrackId, measures, state.score.tracks));
+      const normalizedTracks = appendExtraRestMeasures(removeExtraRestMeasures(tracks));
 
-      return { ...state, editor: { shmexlTexts }, score: { tracks } };
+      return { ...state, editor: { shmexlTexts }, score: { tracks: normalizedTracks } };
     }
   ),
 

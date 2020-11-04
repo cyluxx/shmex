@@ -1,6 +1,34 @@
 import { Duration, Measure, RhythmElement, RhythmElementToken, ShmexlText, Tone, Track } from '../store/model';
 import { asDurationValue, decomposeAsc, decomposeDesc, sumFractions } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
+import { isRestMeasure } from './model-utils';
+
+/**
+ * appends extra rest measures to tracks until all tracks have the same measure length
+ */
+export function appendExtraRestMeasures(tracks: Track[]): Track[] {
+  let maxLength = 0;
+  tracks.forEach((track) => {
+    if (track.measures.length > maxLength) {
+      maxLength = track.measures.length;
+    }
+  });
+  return tracks.map((track) => {
+    const extraMeasures = [...Array(maxLength - track.measures.length)].map<Measure>(() => ({
+      rhythmElements: [
+        {
+          tones: [],
+          duration: {
+            value: 1,
+            tieStart: false,
+            tieStop: false,
+          },
+        },
+      ],
+    }));
+    return { ...track, measures: track.measures.concat(extraMeasures) };
+  });
+}
 
 /**
  * Divides rhythm element tokens into measures. Ties two tokens, whenever there is a measure bar in between.
@@ -102,6 +130,22 @@ export function divideRhythmElementTokenByNumerator(
 }
 
 /**
+ * removes all appending extra rest measures from all tracks
+ */
+export function removeExtraRestMeasures(tracks: Track[]): Track[] {
+  return tracks.map((track) => {
+    for (let i = track.measures.length - 1; i >= 0; i--) {
+      if (isRestMeasure(track.measures[i])) {
+        track.measures.pop();
+      } else {
+        break;
+      }
+    }
+    return track;
+  });
+}
+
+/**
  * Updates the current shmexlText with the editor text. The other shmexl texts remain unmodified.
  */
 export function updateShmexlTexts(currentTrackId: string, editorText: string, shmexlTexts: ShmexlText[]): ShmexlText[] {
@@ -111,35 +155,10 @@ export function updateShmexlTexts(currentTrackId: string, editorText: string, sh
 }
 
 /**
- * Updates the current track with the current measures. The other tracks append extra measures until all tracks have same length.
+ * Updates the current track with the current measures. The other measures remain unmodified.
  */
 export function updateTracks(currentTrackId: string, measures: Measure[], tracks: Track[]): Track[] {
-  let maxLength = 0;
-  return tracks
-    .map((track) => {
-      const newTrack = track.id === currentTrackId ? { id: track.id, name: track.name, measures } : track;
-      if (newTrack.measures.length > maxLength) {
-        maxLength = newTrack.measures.length;
-      }
-      return newTrack;
-    })
-    .map((track) => {
-      console.log(maxLength);
-      const extraMeasures = [...Array(maxLength - track.measures.length)].map<Measure>(() => ({
-        rhythmElements: [
-          {
-            tones: [],
-            duration: {
-              value: 1,
-              tieStart: false,
-              tieStop: false,
-            },
-          },
-        ],
-      }));
-      track.measures = track.measures.concat(extraMeasures);
-      return track;
-    });
+  return tracks.map((track) => (track.id === currentTrackId ? { id: track.id, name: track.name, measures } : track));
 }
 
 export function toDurationToken(durationTokenString: string): Fraction {
