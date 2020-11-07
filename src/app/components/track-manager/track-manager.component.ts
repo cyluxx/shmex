@@ -3,7 +3,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Track } from '../../store/model';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { selectTracks } from '../../store/selectors';
+import { selectAllTracks } from '../../store/selectors';
 import { addNewTrack, renameTrack, reorderTracks } from '../../store/actions';
 
 @Component({
@@ -19,7 +19,7 @@ export class TrackManagerComponent implements OnInit, OnDestroy {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.tracks$ = this.store.select(selectTracks);
+    this.tracks$ = this.store.select(selectAllTracks);
     this.tracksSubscription = this.tracks$.subscribe((tracks) => (this.tracks = tracks));
   }
 
@@ -30,7 +30,7 @@ export class TrackManagerComponent implements OnInit, OnDestroy {
   onDrop(event: CdkDragDrop<string[]>) {
     const tracks = [...this.tracks];
     moveItemInArray(tracks, event.previousIndex, event.currentIndex);
-    this.store.dispatch(reorderTracks({ tracks }));
+    this.store.dispatch(reorderTracks({ groups: [{ tracks }] }));
   }
 
   onRenameTrack(id: string, event: any) {

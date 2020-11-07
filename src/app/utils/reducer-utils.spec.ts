@@ -8,10 +8,10 @@ import {
   toMeasures,
   toRhythmElements,
   toTones,
-  updateShmexlTexts,
-  updateTracks,
+  updateCurrentShmexlText,
+  updateCurrentTrack,
 } from './reducer-utils';
-import { Measure, RhythmElementToken, ShmexlText, Track } from '../store/model';
+import { Group, Measure, RhythmElementToken, ShmexlText, Track } from '../store/model';
 import Fraction from 'fraction.js';
 
 const someMeasure: Measure = {
@@ -31,8 +31,8 @@ const someTrack: Track = {
 
 describe('appendExtraRestMeasures', () => {
   it('updates no tracks, if all tracks have the same length', () => {
-    const tracks: Track[] = [someTrack, someTrack];
-    expect(appendExtraRestMeasures(tracks)).toEqual([someTrack, someTrack]);
+    const groups: Group[] = [{ tracks: [someTrack, someTrack] }];
+    expect(appendExtraRestMeasures(groups)).toEqual([{ tracks: [someTrack, someTrack] }]);
   });
 
   it('updates all tracks with rest measures to the same smallest possible measure length', () => {
@@ -48,15 +48,18 @@ describe('appendExtraRestMeasures', () => {
         },
       ],
     };
-    const tracks: Track[] = [
-      someTrack,
-      { ...someTrack, measures: [someMeasure, someMeasure] },
-      { ...someTrack, measures: [someMeasure] },
+    const groups: Group[] = [
+      { tracks: [someTrack, { ...someTrack, measures: [someMeasure, someMeasure] }] },
+      { tracks: [{ ...someTrack, measures: [someMeasure] }] },
     ];
-    expect(appendExtraRestMeasures(tracks)).toEqual([
-      { ...someTrack, measures: [someRestMeasure, someRestMeasure] },
-      { ...someTrack, measures: [someMeasure, someMeasure] },
-      { ...someTrack, measures: [someMeasure, someRestMeasure] },
+    expect(appendExtraRestMeasures(groups)).toEqual([
+      {
+        tracks: [
+          { ...someTrack, measures: [someRestMeasure, someRestMeasure] },
+          { ...someTrack, measures: [someMeasure, someMeasure] },
+        ],
+      },
+      { tracks: [{ ...someTrack, measures: [someMeasure, someRestMeasure] }] },
     ]);
   });
 });
@@ -205,8 +208,8 @@ describe('removeExtraRestMeasures', () => {
   });
 
   it('does not remove extra rest measures, when there are no extra measures', () => {
-    expect(removeExtraRestMeasures([{ ...someTrack, measures: [someMeasure] }])).toEqual([
-      { ...someTrack, measures: [someMeasure] },
+    expect(removeExtraRestMeasures([{ tracks: [{ ...someTrack, measures: [someMeasure] }] }])).toEqual([
+      { tracks: [{ ...someTrack, measures: [someMeasure] }] },
     ]);
   });
 
@@ -216,14 +219,16 @@ describe('removeExtraRestMeasures', () => {
       rhythmElements: [{ tones: [], duration: { value: 1, tieStop: false, tieStart: false } }],
     };
     expect(
-      removeExtraRestMeasures([{ ...someTrack, measures: [someRestMeasure, someMeasure, someRestMeasure] }])
-    ).toEqual([{ ...someTrack, measures: [someRestMeasure, someMeasure] }]);
+      removeExtraRestMeasures([
+        { tracks: [{ ...someTrack, measures: [someRestMeasure, someMeasure, someRestMeasure] }] },
+      ])
+    ).toEqual([{ tracks: [{ ...someTrack, measures: [someRestMeasure, someMeasure] }] }]);
   });
 });
 
 describe('updateShmexlTexts', () => {
   it('returns [], when shmexlTexts []', () => {
-    expect(updateShmexlTexts('foo', 'foo', [])).toEqual([]);
+    expect(updateCurrentShmexlText('foo', 'foo', [])).toEqual([]);
   });
 
   it('updates only the shmexlText with the corresponding track id', () => {
@@ -237,7 +242,7 @@ describe('updateShmexlTexts', () => {
         value: '1/4 a4,',
       },
     ];
-    expect(updateShmexlTexts('currentId', '1/4 c#5,', shmexlTexts)).toEqual([
+    expect(updateCurrentShmexlText('currentId', '1/4 c#5,', shmexlTexts)).toEqual([
       {
         id: 'someId',
         value: '1/4 a4,',
@@ -252,14 +257,22 @@ describe('updateShmexlTexts', () => {
 
 describe('updateTracks', () => {
   it('returns [], when tracks []', () => {
-    expect(updateTracks('foo', [{ rhythmElements: [] }], [])).toEqual([]);
+    expect(updateCurrentTrack('foo', [{ rhythmElements: [] }], [])).toEqual([]);
   });
 
   it('updates only the track with the corresponding track id', () => {
-    const tracks: Track[] = [{ ...someTrack }, { ...someTrack, id: 'currentId' }];
-    expect(updateTracks('currentId', [someMeasure], tracks)).toEqual([
-      { ...someTrack },
-      { ...someTrack, id: 'currentId', measures: [someMeasure] },
+    const groups: Group[] = [{ tracks: [someTrack] }, { tracks: [{ ...someTrack, id: 'currentId' }] }];
+    expect(updateCurrentTrack('currentId', [someMeasure], groups)).toEqual([
+      { tracks: [someTrack] },
+      {
+        tracks: [
+          {
+            ...someTrack,
+            id: 'currentId',
+            measures: [someMeasure],
+          },
+        ],
+      },
     ]);
   });
 });

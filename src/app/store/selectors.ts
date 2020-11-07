@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from './model';
 import { build as buildXml } from '../utils/music-xml-builder';
+import { getAllGroupTracks } from '../utils/model-utils';
 
 const _selectAppState = (state): AppState => state.app;
 
@@ -17,9 +18,11 @@ export const selectTitle = createSelector(selectCover, (cover) => cover.title);
 
 export const selectShmexlTexts = createSelector(selectEditor, (editor) => editor.shmexlTexts);
 
-export const selectTracks = createSelector(selectScore, (score) => score.tracks);
+export const selectGroups = createSelector(selectScore, (score) => score.groups);
 
-export const selectMusicXml = createSelector(selectCover, selectTracks, (cover, tracks) => buildXml(cover, tracks));
+export const selectAllTracks = createSelector(selectGroups, getAllGroupTracks);
+
+export const selectMusicXml = createSelector(selectCover, selectScore, (cover, score) => buildXml(cover, score));
 
 export const selectCurrentEditorText = createSelector(
   selectCurrentTrackId,

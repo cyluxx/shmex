@@ -1,4 +1,4 @@
-import { Duration, Measure, RhythmElement, RhythmElementToken, ShmexlText, Tone, Track } from '../store/model';
+import { Duration, Group, Measure, RhythmElement, RhythmElementToken, ShmexlText, Tone } from '../store/model';
 import { asDurationValue, decomposeAsc, decomposeDesc, sumFractions } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 import { isRestMeasure } from './model-utils';
@@ -6,28 +6,32 @@ import { isRestMeasure } from './model-utils';
 /**
  * appends extra rest measures to tracks until all tracks have the same measure length
  */
-export function appendExtraRestMeasures(tracks: Track[]): Track[] {
+export function appendExtraRestMeasures(groups: Group[]): Group[] {
   let maxLength = 0;
-  tracks.forEach((track) => {
-    if (track.measures.length > maxLength) {
-      maxLength = track.measures.length;
-    }
-  });
-  return tracks.map((track) => {
-    const extraMeasures = [...Array(maxLength - track.measures.length)].map<Measure>(() => ({
-      rhythmElements: [
-        {
-          tones: [],
-          duration: {
-            value: 1,
-            tieStart: false,
-            tieStop: false,
+  groups.forEach((group) =>
+    group.tracks.forEach((track) => {
+      if (track.measures.length > maxLength) {
+        maxLength = track.measures.length;
+      }
+    })
+  );
+  return groups.map((group) => ({
+    tracks: group.tracks.map((track) => {
+      const extraMeasures = [...Array(maxLength - track.measures.length)].map<Measure>(() => ({
+        rhythmElements: [
+          {
+            tones: [],
+            duration: {
+              value: 1,
+              tieStart: false,
+              tieStop: false,
+            },
           },
-        },
-      ],
-    }));
-    return { ...track, measures: track.measures.concat(extraMeasures) };
-  });
+        ],
+      }));
+      return { ...track, measures: track.measures.concat(extraMeasures) };
+    }),
+  }));
 }
 
 /**
@@ -132,23 +136,29 @@ export function divideRhythmElementTokenByNumerator(
 /**
  * removes all appending extra rest measures from all tracks
  */
-export function removeExtraRestMeasures(tracks: Track[]): Track[] {
-  return tracks.map((track) => {
-    for (let i = track.measures.length - 1; i >= 0; i--) {
-      if (isRestMeasure(track.measures[i])) {
-        track.measures.pop();
-      } else {
-        break;
+export function removeExtraRestMeasures(groups: Group[]): Group[] {
+  return groups.map((group) => ({
+    tracks: group.tracks.map((track) => {
+      for (let i = track.measures.length - 1; i >= 0; i--) {
+        if (isRestMeasure(track.measures[i])) {
+          track.measures.pop();
+        } else {
+          break;
+        }
       }
-    }
-    return track;
-  });
+      return track;
+    }),
+  }));
 }
 
 /**
  * Updates the current shmexlText with the editor text. The other shmexl texts remain unmodified.
  */
-export function updateShmexlTexts(currentTrackId: string, editorText: string, shmexlTexts: ShmexlText[]): ShmexlText[] {
+export function updateCurrentShmexlText(
+  currentTrackId: string,
+  editorText: string,
+  shmexlTexts: ShmexlText[]
+): ShmexlText[] {
   return shmexlTexts.map((shmexlText) =>
     shmexlText.id === currentTrackId ? { id: shmexlText.id, value: editorText } : shmexlText
   );
@@ -157,8 +167,18 @@ export function updateShmexlTexts(currentTrackId: string, editorText: string, sh
 /**
  * Updates the current track with the current measures. The other measures remain unmodified.
  */
-export function updateTracks(currentTrackId: string, measures: Measure[], tracks: Track[]): Track[] {
-  return tracks.map((track) => (track.id === currentTrackId ? { id: track.id, name: track.name, measures } : track));
+export function updateCurrentTrack(currentTrackId: string, measures: Measure[], groups: Group[]): Group[] {
+  return groups.map((group) => ({
+    tracks: group.tracks.map((track) =>
+      track.id === currentTrackId
+        ? {
+            id: track.id,
+            name: track.name,
+            measures,
+          }
+        : track
+    ),
+  }));
 }
 
 export function toDurationToken(durationTokenString: string): Fraction {

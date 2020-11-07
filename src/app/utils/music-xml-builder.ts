@@ -1,4 +1,4 @@
-import { Cover, Duration, Measure, RhythmElement, Tone, Track } from '../store/model';
+import { Cover, Duration, Measure, RhythmElement, Score, Tone, Track } from '../store/model';
 import { isRest, removeDuplicateTones } from './model-utils';
 import { addDuration, asDurationValue, getFractionalPart } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
@@ -167,14 +167,14 @@ export function buildTie(tieStart: boolean, tieStop: boolean): string {
 /**
  * Wraps body into meta information, and thus finalizes xml string
  */
-export function build(cover: Cover, tracks: Track[]): string {
+export function build(cover: Cover, score: Score): string {
   return (
     '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
     '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">' +
     '<score-partwise version="3.1">' +
     buildCover(cover) +
-    buildPartList(tracks) +
-    buildParts(tracks) +
+    score.groups.map((group) => buildPartList(group.tracks)).join('') +
+    score.groups.map((group) => buildParts(group.tracks)).join('') +
     '</score-partwise>'
   );
 }

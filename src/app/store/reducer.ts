@@ -21,8 +21,8 @@ import {
   removeExtraRestMeasures,
   toDurationToken,
   toMeasures,
-  updateShmexlTexts,
-  updateTracks,
+  updateCurrentShmexlText,
+  updateCurrentTrack,
 } from '../utils/reducer-utils';
 import Fraction from 'fraction.js/fraction';
 import { ToolbarState } from './enum';
@@ -37,7 +37,21 @@ const _reducer = createReducer(
       const id = uuidv4();
       return {
         ...state,
-        score: { tracks: appendExtraRestMeasures([...state.score.tracks, { name: 'New Track', id, measures: [] }]) },
+        score: {
+          groups: state.score.groups.map((group, index) => {
+            if (index === state.score.groups.length - 1) {
+              return {
+                ...group,
+                tracks: group.tracks.concat({
+                  name: 'New Track',
+                  id,
+                  measures: [],
+                }),
+              };
+            }
+            return group;
+          }),
+        },
         editor: { shmexlTexts: [...state.editor.shmexlTexts, { id, value: '' }] },
       };
     }
@@ -77,12 +91,13 @@ const _reducer = createReducer(
         }
       });
 
-      const shmexlTexts = updateShmexlTexts(state.currentTrackId, editorText, state.editor.shmexlTexts);
+      const shmexlTexts = updateCurrentShmexlText(state.currentTrackId, editorText, state.editor.shmexlTexts);
       const measures = toMeasures(divideRhythmElementTokensByMeasure(rhythmElementTokens));
-      const tracks = appendExtraRestMeasures(updateTracks(state.currentTrackId, measures, state.score.tracks));
-      const normalizedTracks = appendExtraRestMeasures(removeExtraRestMeasures(tracks));
+      const groups = appendExtraRestMeasures(
+        removeExtraRestMeasures(updateCurrentTrack(state.currentTrackId, measures, state.score.groups))
+      );
 
-      return { ...state, editor: { shmexlTexts }, score: { tracks: normalizedTracks } };
+      return { ...state, editor: { shmexlTexts }, score: { groups } };
     }
   ),
 
@@ -91,12 +106,21 @@ const _reducer = createReducer(
     (state, { id, newName }): AppState => ({
       ...state,
       score: {
-        tracks: state.score.tracks.map((track) => (track.id === id ? { ...track, name: newName } : track)),
+        groups: state.score.groups.map((group) => ({
+          tracks: group.tracks.map((track) =>
+            track.id === id
+              ? {
+                  ...track,
+                  name: newName,
+                }
+              : track
+          ),
+        })),
       },
     })
   ),
 
-  on(reorderTracks, (state, { tracks }): AppState => ({ ...state, score: { tracks } })),
+  on(reorderTracks, (state, { groups }): AppState => ({ ...state, score: { groups } })),
 
   on(setCurrentTrack, (state, { id }): AppState => ({ ...state, currentTrackId: id }))
 );

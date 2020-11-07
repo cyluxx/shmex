@@ -14,7 +14,7 @@ import { Duration, Measure, RhythmElement, Tone } from '../store/model';
 
 describe('build', () => {
   it('builds empty xml', () => {
-    const xml = build({ title: '', creator1: '', creator2: '' }, []);
+    const xml = build({ title: '', creator1: '', creator2: '' }, { groups: [] });
     expect(xml).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
     expect(xml).toContain('<score-partwise version="3.1">');
     expect(xml).toContain('</score-partwise>');

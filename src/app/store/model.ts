@@ -20,11 +20,15 @@ export const initialAppState: AppState = {
     ],
   },
   score: {
-    tracks: [
+    groups: [
       {
-        id: initialTrackId,
-        name: 'Piano',
-        measures: [],
+        tracks: [
+          {
+            id: initialTrackId,
+            name: 'Piano',
+            measures: [],
+          },
+        ],
       },
     ],
   },
@@ -57,9 +61,8 @@ export interface Editor {
   shmexlTexts: ShmexlText[];
 }
 
-export interface ShmexlText {
-  id: string;
-  value: string;
+export interface Group {
+  tracks: Track[];
 }
 
 export interface Measure {
@@ -79,7 +82,12 @@ export interface RhythmElementToken {
 }
 
 export interface Score {
-  tracks: Track[];
+  groups: Group[];
+}
+
+export interface ShmexlText {
+  id: string;
+  value: string;
 }
 
 export interface Tone {
