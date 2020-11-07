@@ -38,19 +38,21 @@ const _reducer = createReducer(
       return {
         ...state,
         score: {
-          groups: state.score.groups.map((group, index) => {
-            if (index === state.score.groups.length - 1) {
-              return {
-                ...group,
-                tracks: group.tracks.concat({
-                  name: 'New Track',
-                  id,
-                  measures: [],
-                }),
-              };
-            }
-            return group;
-          }),
+          groups: appendExtraRestMeasures(
+            state.score.groups.map((group, index) => {
+              if (index === state.score.groups.length - 1) {
+                return {
+                  ...group,
+                  tracks: group.tracks.concat({
+                    name: 'New Track',
+                    id,
+                    measures: [],
+                  }),
+                };
+              }
+              return group;
+            })
+          ),
         },
         editor: { shmexlTexts: [...state.editor.shmexlTexts, { id, value: '' }] },
       };

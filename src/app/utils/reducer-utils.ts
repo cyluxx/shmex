@@ -139,14 +139,16 @@ export function divideRhythmElementTokenByNumerator(
 export function removeExtraRestMeasures(groups: Group[]): Group[] {
   return groups.map((group) => ({
     tracks: group.tracks.map((track) => {
-      for (let i = track.measures.length - 1; i >= 0; i--) {
-        if (isRestMeasure(track.measures[i])) {
-          track.measures.pop();
-        } else {
-          break;
+      let lastNonRestMeasureIndex = 0;
+      track.measures.forEach((measure, index) => {
+        if (!isRestMeasure(measure)) {
+          lastNonRestMeasureIndex = index;
         }
-      }
-      return track;
+      });
+      return {
+        ...track,
+        measures: track.measures.slice(0, lastNonRestMeasureIndex + 1),
+      };
     }),
   }));
 }
