@@ -1,13 +1,16 @@
 <div class="row mt-3">
   <div class="col">
-    <div cdkDropList class="track-manager-list" (cdkDropListDropped)="onDrop($event)">
-      <div class="track-manager-box" *ngFor="let track of tracks" cdkDrag>
-        <mat-form-field>
-          <mat-label>Name</mat-label>
-          <input matInput placeholder="Piano" (blur)="onRenameTrack(track.id, $event)" [value]="track.name">
-        </mat-form-field>
-        <div class="track-manager-handle" cdkDragHandle>
-          <mat-icon aria-hidden="false" aria-label="Drag track">drag_handle</mat-icon>
+    <div cdkDropListGroup>
+      <div *ngFor="let group of groups$ | async; let i = index" cdkDropList [cdkDropListData]="group.tracks"
+           (cdkDropListDropped)="onDrop($event)" [id]="'track-manager-group-' + i" class="track-manager-list">
+        <div class="track-manager-box" *ngFor="let track of group.tracks" cdkDrag>
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput placeholder="Piano" (blur)="onRenameTrack(track.id, $event)" [value]="track.name">
+          </mat-form-field>
+          <div class="track-manager-handle" cdkDragHandle>
+            <mat-icon aria-hidden="false" aria-label="Drag track">drag_handle</mat-icon>
+          </div>
         </div>
       </div>
     </div>
@@ -15,9 +18,13 @@
 </div>
 <div class="row mt-3">
   <div class="col">
-    <button (click)="onAddNewTrack()" mat-raised-button color="accent">
+    <button (click)="onAddNewTrack()" mat-raised-button color="primary">
       <mat-icon aria-hidden="false" aria-label="Add track">playlist_add</mat-icon>
       Add Track
+    </button>
+    <button (click)="onAddNewGroup()" mat-raised-button color="accent">
+      <mat-icon aria-hidden="false" aria-label="Add track">library_add</mat-icon>
+      Add Group
     </button>
   </div>
 </div>

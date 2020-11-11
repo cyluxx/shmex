@@ -1,4 +1,4 @@
-import { Cover, Duration, Measure, RhythmElement, Score, Tone, Track } from '../store/model';
+import { Cover, Duration, Group, Measure, RhythmElement, Score, Tone, Track } from '../store/model';
 import { isRest, removeDuplicateTones } from './model-utils';
 import { addDuration, asDurationValue, getFractionalPart } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
@@ -127,16 +127,34 @@ export function buildPart(track: Track): string {
   return `<part id="${track.id}">${buildMeasures(track.measures)}</part>`;
 }
 
-export function buildParts(tracks: Track[]): string {
-  return tracks.map((track) => buildPart(track)).join('');
+export function buildPartGroup(group: Group, index: number): string {
+  return (
+    `<part-group number="${index}" type="start">` +
+    '<group-symbol>bracket</group-symbol>' +
+    '<group-barline>yes</group-barline>' +
+    '</part-group>' +
+    buildScoreParts(group.tracks) +
+    `<part-group number="${index}" type="stop"/>`
+  );
 }
 
-export function buildPartList(tracks: Track[]): string {
+export function buildPartList(groups: Group[]): string {
   return (
     '<part-list>' +
-    tracks.map((track) => `<score-part id="${track.id}"><part-name>${track.name}</part-name></score-part>`).join('') +
+    groups
+      .map((group, index) => {
+        if (group.tracks.length > 1) {
+          return buildPartGroup(group, index);
+        }
+        return buildScoreParts(group.tracks);
+      })
+      .join('') +
     '</part-list>'
   );
+}
+
+export function buildParts(tracks: Track[]): string {
+  return tracks.map((track) => buildPart(track)).join('');
 }
 
 export function buildPitch(tone: Tone): string {
@@ -145,6 +163,12 @@ export function buildPitch(tone: Tone): string {
 
 export function buildRest(duration: Duration): string {
   return '<note>' + '<rest />' + buildDurationAndType(duration) + '</note>';
+}
+
+export function buildScoreParts(tracks: Track[]): string {
+  return tracks
+    .map((track) => `<score-part id="${track.id}"><part-name>${track.name}</part-name></score-part>`)
+    .join('');
 }
 
 export function buildStep(key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g'): string {
@@ -173,7 +197,7 @@ export function build(cover: Cover, score: Score): string {
     '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">' +
     '<score-partwise version="3.1">' +
     buildCover(cover) +
-    score.groups.map((group) => buildPartList(group.tracks)).join('') +
+    buildPartList(score.groups) +
     score.groups.map((group) => buildParts(group.tracks)).join('') +
     '</score-partwise>'
   );

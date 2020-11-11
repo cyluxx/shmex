@@ -1,6 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { AppState, initialAppState, RhythmElementToken } from './model';
 import {
+  addNewGroup,
   addNewTrack,
   editCover,
   editCreator1,
@@ -8,10 +9,11 @@ import {
   editSheets,
   editTitle,
   goToTrackManager,
+  moveTrack,
   parseShmexlText,
   renameTrack,
-  reorderTracks,
   setCurrentTrack,
+  transferTrack,
 } from './actions';
 import 'codemirror/addon/runmode/runmode';
 import * as CodeMirror from 'codemirror';
@@ -27,9 +29,12 @@ import {
 import Fraction from 'fraction.js/fraction';
 import { ToolbarState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
+import { moveItem } from '../utils/array-utils';
 
 const _reducer = createReducer(
   initialAppState,
+
+  on(addNewGroup, (state): AppState => ({ ...state, score: { groups: [...state.score.groups, { tracks: [] }] } })),
 
   on(
     addNewTrack,
@@ -70,6 +75,21 @@ const _reducer = createReducer(
   on(editTitle, (state, { title }): AppState => ({ ...state, cover: { ...state.cover, title } })),
 
   on(goToTrackManager, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.TRACK_MANAGER } })),
+
+  on(
+    moveTrack,
+    (state, { tracks, groupIndex, previousIndex, currentIndex }): AppState => ({
+      ...state,
+      score: {
+        groups: state.score.groups.map((group, index) => {
+          if (index === groupIndex) {
+            return { ...group, tracks: moveItem(tracks, previousIndex, currentIndex) };
+          }
+          return group;
+        }),
+      },
+    })
+  ),
 
   on(
     parseShmexlText,
@@ -122,9 +142,31 @@ const _reducer = createReducer(
     })
   ),
 
-  on(reorderTracks, (state, { groups }): AppState => ({ ...state, score: { groups } })),
+  on(setCurrentTrack, (state, { id }): AppState => ({ ...state, currentTrackId: id })),
 
-  on(setCurrentTrack, (state, { id }): AppState => ({ ...state, currentTrackId: id }))
+  on(
+    transferTrack,
+    (state, { previousGroupIndex, currentGroupIndex, previousIndex, currentIndex }): AppState => {
+      const toInsert = state.score.groups[previousGroupIndex].tracks[previousIndex];
+      return {
+        ...state,
+        score: {
+          groups: state.score.groups.map((group, i) => {
+            if (i === previousGroupIndex) {
+              return { ...group, tracks: group.tracks.filter((_, j) => j !== previousIndex) };
+            }
+            if (i === currentGroupIndex) {
+              return {
+                ...group,
+                tracks: group.tracks.slice(0, currentIndex).concat(toInsert, group.tracks.slice(currentIndex)),
+              };
+            }
+            return group;
+          }),
+        },
+      };
+    }
+  )
 );
 
 export function reducer(state: AppState | undefined, action: Action) {
