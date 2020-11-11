@@ -8,6 +8,9 @@
             <mat-label>Name</mat-label>
             <input matInput placeholder="Piano" (blur)="onRenameTrack(track.id, $event)" [value]="track.name">
           </mat-form-field>
+          <button *ngIf="showDeleteTrack(groups$ | async)" mat-icon-button (click)="onDeleteTrack(track.id)" color="warn" aria-label="Delete track">
+            <mat-icon>delete_sweep</mat-icon>
+          </button>
           <div class="track-manager-handle" cdkDragHandle>
             <mat-icon aria-hidden="false" aria-label="Drag track">drag_handle</mat-icon>
           </div>
@@ -22,9 +25,13 @@
       <mat-icon aria-hidden="false" aria-label="Add track">playlist_add</mat-icon>
       Add Track
     </button>
-    <button (click)="onAddNewGroup()" mat-flat-button color="accent">
+    <button (click)="onAddNewGroup()" mat-flat-button color="accent" class="mr-2">
       <mat-icon aria-hidden="false" aria-label="Add track">library_add</mat-icon>
       Add Group
+    </button>
+    <button *ngIf="showDeleteEmptyGroups(groups$ | async)" (click)="onDeleteEmptyGroups()" mat-flat-button color="warn">
+      <mat-icon aria-hidden="false" aria-label="Add track">delete</mat-icon>
+      Delete empty groups
     </button>
   </div>
 </div>

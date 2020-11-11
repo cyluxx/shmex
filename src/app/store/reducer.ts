@@ -3,6 +3,8 @@ import { AppState, initialAppState, RhythmElementToken } from './model';
 import {
   addNewGroup,
   addNewTrack,
+  deleteEmptyGroups,
+  deleteTrack,
   editCover,
   editCreator1,
   editCreator2,
@@ -62,6 +64,24 @@ const _reducer = createReducer(
         editor: { shmexlTexts: [...state.editor.shmexlTexts, { id, value: '' }] },
       };
     }
+  ),
+
+  on(
+    deleteEmptyGroups,
+    (state): AppState => ({
+      ...state,
+      score: { groups: state.score.groups.filter((group) => group.tracks.length > 0) },
+    })
+  ),
+
+  on(
+    deleteTrack,
+    (state, { id }): AppState => ({
+      ...state,
+      score: {
+        groups: state.score.groups.map((group) => ({ tracks: group.tracks.filter((track) => track.id !== id) })),
+      },
+    })
   ),
 
   on(editCover, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.EDIT_COVER } })),

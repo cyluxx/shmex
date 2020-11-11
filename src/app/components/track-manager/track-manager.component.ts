@@ -4,7 +4,15 @@ import { Group, Track } from '../../store/model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectGroups } from '../../store/selectors';
-import { addNewGroup, addNewTrack, moveTrack, renameTrack, transferTrack } from '../../store/actions';
+import {
+  addNewGroup,
+  addNewTrack,
+  deleteEmptyGroups,
+  deleteTrack,
+  moveTrack,
+  renameTrack,
+  transferTrack,
+} from '../../store/actions';
 
 @Component({
   selector: 'app-track-manager',
@@ -26,6 +34,14 @@ export class TrackManagerComponent implements OnInit {
 
   onAddNewTrack() {
     this.store.dispatch(addNewTrack());
+  }
+
+  onDeleteEmptyGroups() {
+    this.store.dispatch(deleteEmptyGroups());
+  }
+
+  onDeleteTrack(id: string) {
+    this.store.dispatch(deleteTrack({ id }));
   }
 
   onDrop(event: CdkDragDrop<Track[]>) {
@@ -56,5 +72,25 @@ export class TrackManagerComponent implements OnInit {
 
   parseGroupIndex(id: string): number {
     return parseInt(id.charAt(id.length - 1), 10);
+  }
+
+  showDeleteEmptyGroups(groups: Group[]): boolean {
+    for (const group of groups) {
+      if (group.tracks.length === 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  showDeleteTrack(groups: Group[]): boolean {
+    let trackCount = 0;
+    for (const group of groups) {
+      trackCount += group.tracks.length;
+      if (trackCount > 1) {
+        return true;
+      }
+    }
+    return false;
   }
 }
