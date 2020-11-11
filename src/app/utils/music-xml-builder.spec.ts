@@ -9,8 +9,17 @@ import {
   buildNotes,
   buildMeasures,
   buildTie,
+  buildPartGroup,
+  buildScoreParts,
+  buildPartList,
 } from './music-xml-builder';
-import { Duration, Measure, RhythmElement, Tone } from '../store/model';
+import { Duration, Measure, RhythmElement, Tone, Track } from '../store/model';
+
+const someTrack: Track = {
+  id: 'someId',
+  name: 'someName',
+  measures: [],
+};
 
 describe('build', () => {
   it('builds empty xml', () => {
@@ -333,6 +342,43 @@ describe('buildPitch', () => {
       key: 'g',
     };
     expect(buildPitch(tone)).toBe('<pitch><step>G</step><alter>1</alter><octave>8</octave></pitch>');
+  });
+});
+
+describe('buildPartGroup', () => {
+  it('builds part group correctly', () => {
+    expect(buildPartGroup({ tracks: [] }, 42)).toBe(
+      '<part-group number="42" type="start">' +
+        '<group-symbol>bracket</group-symbol>' +
+        '<group-barline>yes</group-barline>' +
+        '</part-group>' +
+        '<part-group number="42" type="stop"/>'
+    );
+  });
+});
+
+describe('buildPartList', () => {
+  it('does not build part group, when group tracks length 1', () => {
+    expect(buildPartList([{ tracks: [someTrack] }])).toContain('score-part');
+    expect(buildPartList([{ tracks: [someTrack] }])).not.toContain('part-group');
+  });
+
+  it('builds part group, when group tracks length 2', () => {
+    expect(buildPartList([{ tracks: [someTrack, someTrack] }])).toContain('part-group');
+  });
+});
+
+describe('buildScoreParts', () => {
+  it('builds score part with id and name', () => {
+    expect(
+      buildScoreParts([
+        {
+          ...someTrack,
+          id: 'testId',
+          name: 'testName',
+        },
+      ])
+    ).toBe('<score-part id="testId"><part-name>testName</part-name></score-part>');
   });
 });
 
