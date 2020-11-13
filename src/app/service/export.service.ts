@@ -11,7 +11,7 @@ export class ExportService {
   constructor() {}
 
   public exportMusicXml(appState: AppState) {
-    const blob = new Blob([format(build(appState.track, appState.cover))], { type: 'text/xml;charset=utf-8' });
+    const blob = new Blob([format(build(appState.cover, appState.score))], { type: 'text/xml;charset=utf-8' });
     saveAs(blob, this.formatFilename(appState.cover.title));
   }
 

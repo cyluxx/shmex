@@ -1,8 +1,24 @@
 import { createAction, props } from '@ngrx/store';
+import { Track } from './model';
 
+export const addNewGroup = createAction('[Track Manager] add new group');
+export const addNewTrack = createAction('[Track Manager] add new track');
+export const deleteEmptyGroups = createAction('[Track Manager] delete empty groups');
+export const deleteTrack = createAction('[Track Manager] delete track', props<{ id: string }>());
 export const editCover = createAction('[Toolbar] edit cover');
 export const editCreator1 = createAction('[Edit cover] edit creator 1', props<{ creator1: string }>());
 export const editCreator2 = createAction('[Edit cover] edit creator 2', props<{ creator2: string }>());
 export const editSheets = createAction('[Toolbar] edit sheets');
 export const editTitle = createAction('[Edit cover] edit title', props<{ title: string }>());
-export const parseShmexlText = createAction('[Edit] parse shmexl text', props<{ shmexlText: string }>());
+export const goToTrackManager = createAction('[Toolbar] go to track manager');
+export const moveTrack = createAction(
+  'Track manager move track',
+  props<{ tracks: Track[]; groupIndex: number; previousIndex: number; currentIndex: number }>()
+);
+export const parseShmexlText = createAction('[Edit] parse shmexl text', props<{ editorText: string }>());
+export const renameTrack = createAction('[Track Manager] rename track', props<{ id: string; newName: string }>());
+export const setCurrentTrack = createAction('[Track Tabs] set current track', props<{ id: string }>());
+export const transferTrack = createAction(
+  '[Track Manager] reorder tracks',
+  props<{ previousGroupIndex: number; currentGroupIndex: number; previousIndex: number; currentIndex: number }>()
+);

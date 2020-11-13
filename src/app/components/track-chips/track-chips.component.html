@@ -1,0 +1,5 @@
+<mat-chip-list aria-label="Track selection">
+  <mat-chip *ngFor="let track of tracks$ | async" (click)="onSelectTrack(track.id)"
+            [selected]="track.id === (currentTrackId$ | async)"
+            color="accent">{{track.name}}</mat-chip>
+</mat-chip-list>

@@ -1,5 +1,8 @@
 import Fraction from 'fraction.js/fraction';
 import { ToolbarState } from './enum';
+import { v4 as uuidv4 } from 'uuid';
+
+const initialTrackId: string = uuidv4();
 
 export const initialAppState: AppState = {
   cover: {
@@ -7,22 +10,39 @@ export const initialAppState: AppState = {
     creator1: 'Composer',
     creator2: 'Lyricist',
   },
+  currentTrackId: initialTrackId,
   editor: {
-    shmexlText: '',
+    shmexlTexts: [
+      {
+        id: initialTrackId,
+        value: '',
+      },
+    ],
+  },
+  score: {
+    groups: [
+      {
+        tracks: [
+          {
+            id: initialTrackId,
+            name: 'Piano',
+            measures: [],
+          },
+        ],
+      },
+    ],
   },
   toolbar: {
     state: ToolbarState.EDIT_SHEETS,
-  },
-  track: {
-    measures: [],
   },
 };
 
 export interface AppState {
   cover: Cover;
+  currentTrackId: string;
   editor: Editor;
+  score: Score;
   toolbar: Toolbar;
-  track: Track;
 }
 
 export interface Cover {
@@ -38,7 +58,11 @@ export interface Duration {
 }
 
 export interface Editor {
-  shmexlText: string;
+  shmexlTexts: ShmexlText[];
+}
+
+export interface Group {
+  tracks: Track[];
 }
 
 export interface Measure {
@@ -57,6 +81,15 @@ export interface RhythmElementToken {
   tieStop?: boolean;
 }
 
+export interface Score {
+  groups: Group[];
+}
+
+export interface ShmexlText {
+  id: string;
+  value: string;
+}
+
 export interface Tone {
   key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g';
   accidental?: '#' | 'b';
@@ -68,5 +101,7 @@ export interface Toolbar {
 }
 
 export interface Track {
+  id: string;
+  name: string;
   measures: Measure[];
 }

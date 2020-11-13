@@ -19,9 +19,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { EditCoverComponent } from './components/edit-cover/edit-cover.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TrackManagerComponent } from './components/track-manager/track-manager.component';
+import { MatCardModule } from '@angular/material/card';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TrackChipsComponent } from './components/track-chips/track-chips.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
-  declarations: [AppComponent, EditComponent, RenderComponent, ToolbarComponent, EditCoverComponent],
+  declarations: [
+    AppComponent,
+    EditComponent,
+    RenderComponent,
+    ToolbarComponent,
+    EditCoverComponent,
+    TrackManagerComponent,
+    TrackChipsComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -35,6 +48,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatButtonModule,
     MatInputModule,
+    MatCardModule,
+    DragDropModule,
+    MatChipsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

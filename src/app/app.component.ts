@@ -12,6 +12,7 @@ import { ToolbarState } from './store/enum';
 export class AppComponent implements OnInit {
   EDIT_COVER = ToolbarState.EDIT_COVER;
   EDIT_SHEETS = ToolbarState.EDIT_SHEETS;
+  TRACK_MANAGER = ToolbarState.TRACK_MANAGER;
 
   toolbarState$: Observable<ToolbarState>;
 

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { parseShmexlText } from '../../store/actions';
 import { Observable } from 'rxjs';
-import { selectShmexl } from '../../store/selectors';
+import { selectCurrentEditorText } from '../../store/selectors';
 
 @Component({
   selector: 'app-edit',
@@ -15,10 +15,10 @@ export class EditComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.shmexlText$ = this.store.select(selectShmexl);
+    this.shmexlText$ = this.store.select(selectCurrentEditorText);
   }
 
   onChange(shmexlText: string): void {
-    this.store.dispatch(parseShmexlText({ shmexlText }));
+    this.store.dispatch(parseShmexlText({ editorText: shmexlText }));
   }
 }

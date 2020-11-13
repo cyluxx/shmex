@@ -1,6 +1,38 @@
-import { Duration, Measure, RhythmElement, RhythmElementToken, Tone } from '../store/model';
+import { Duration, Group, Measure, RhythmElement, RhythmElementToken, ShmexlText, Tone } from '../store/model';
 import { asDurationValue, decomposeAsc, decomposeDesc, sumFractions } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
+import { isRestMeasure } from './model-utils';
+
+/**
+ * appends extra rest measures to tracks until all tracks have the same measure length
+ */
+export function appendExtraRestMeasures(groups: Group[]): Group[] {
+  let maxLength = 0;
+  groups.forEach((group) =>
+    group.tracks.forEach((track) => {
+      if (track.measures.length > maxLength) {
+        maxLength = track.measures.length;
+      }
+    })
+  );
+  return groups.map((group) => ({
+    tracks: group.tracks.map((track) => {
+      const extraMeasures = [...Array(maxLength - track.measures.length)].map<Measure>(() => ({
+        rhythmElements: [
+          {
+            tones: [],
+            duration: {
+              value: 1,
+              tieStart: false,
+              tieStop: false,
+            },
+          },
+        ],
+      }));
+      return { ...track, measures: track.measures.concat(extraMeasures) };
+    }),
+  }));
+}
 
 /**
  * Divides rhythm element tokens into measures. Ties two tokens, whenever there is a measure bar in between.
@@ -99,6 +131,56 @@ export function divideRhythmElementTokenByNumerator(
       tieStop: true,
     };
   });
+}
+
+/**
+ * removes all appending extra rest measures from all tracks
+ */
+export function removeExtraRestMeasures(groups: Group[]): Group[] {
+  return groups.map((group) => ({
+    tracks: group.tracks.map((track) => {
+      let lastNonRestMeasureIndex = 0;
+      track.measures.forEach((measure, index) => {
+        if (!isRestMeasure(measure)) {
+          lastNonRestMeasureIndex = index;
+        }
+      });
+      return {
+        ...track,
+        measures: track.measures.slice(0, lastNonRestMeasureIndex + 1),
+      };
+    }),
+  }));
+}
+
+/**
+ * Updates the current shmexlText with the editor text. The other shmexl texts remain unmodified.
+ */
+export function updateCurrentShmexlText(
+  currentTrackId: string,
+  editorText: string,
+  shmexlTexts: ShmexlText[]
+): ShmexlText[] {
+  return shmexlTexts.map((shmexlText) =>
+    shmexlText.id === currentTrackId ? { id: shmexlText.id, value: editorText } : shmexlText
+  );
+}
+
+/**
+ * Updates the current track with the current measures. The other measures remain unmodified.
+ */
+export function updateCurrentTrack(currentTrackId: string, measures: Measure[], groups: Group[]): Group[] {
+  return groups.map((group) => ({
+    tracks: group.tracks.map((track) =>
+      track.id === currentTrackId
+        ? {
+            id: track.id,
+            name: track.name,
+            measures,
+          }
+        : track
+    ),
+  }));
 }
 
 export function toDurationToken(durationTokenString: string): Fraction {
