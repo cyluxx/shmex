@@ -6,6 +6,7 @@ import { getAllGroupTracks } from '../utils/model-utils';
 const _selectAppState = (state): AppState => state.app;
 
 export const selectAppState = createSelector(_selectAppState, (state) => state);
+export const selectAudioPlayerState = createSelector(_selectAppState, (state) => state.audioPlayer.state);
 export const selectCover = createSelector(_selectAppState, (state) => state.cover);
 export const selectCurrentToolbarState = createSelector(_selectAppState, (state) => state.toolbar.state);
 export const selectCurrentTrackId = createSelector(_selectAppState, (state) => state.currentTrackId);

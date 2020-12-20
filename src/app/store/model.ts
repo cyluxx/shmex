@@ -1,10 +1,13 @@
 import Fraction from 'fraction.js/fraction';
-import { ToolbarState } from './enum';
+import { AudioPlayerState, ToolbarState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialTrackId: string = uuidv4();
 
 export const initialAppState: AppState = {
+  audioPlayer: {
+    state: AudioPlayerState.STOP,
+  },
   cover: {
     title: 'Title',
     creator1: 'Composer',
@@ -38,11 +41,16 @@ export const initialAppState: AppState = {
 };
 
 export interface AppState {
+  audioPlayer: AudioPlayer;
   cover: Cover;
   currentTrackId: string;
   editor: Editor;
   score: Score;
   toolbar: Toolbar;
+}
+
+export interface AudioPlayer {
+  state: AudioPlayerState;
 }
 
 export interface Cover {

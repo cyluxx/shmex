@@ -14,6 +14,7 @@ import {
   moveTrack,
   parseShmexlText,
   renameTrack,
+  setAudioPlayerState,
   setCurrentTrack,
   transferTrack,
 } from './actions';
@@ -160,6 +161,11 @@ const _reducer = createReducer(
         })),
       },
     })
+  ),
+
+  on(
+    setAudioPlayerState,
+    (state, { audioPlayerState }): AppState => ({ ...state, audioPlayer: { state: audioPlayerState } })
   ),
 
   on(setCurrentTrack, (state, { id }): AppState => ({ ...state, currentTrackId: id })),

@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Track } from './model';
+import { AudioPlayerState } from './enum';
 
 export const addNewGroup = createAction('[Track Manager] add new group');
 export const addNewTrack = createAction('[Track Manager] add new track');
@@ -17,6 +18,10 @@ export const moveTrack = createAction(
 );
 export const parseShmexlText = createAction('[Edit] parse shmexl text', props<{ editorText: string }>());
 export const renameTrack = createAction('[Track Manager] rename track', props<{ id: string; newName: string }>());
+export const setAudioPlayerState = createAction(
+  '[Audio Player] set state',
+  props<{ audioPlayerState: AudioPlayerState }>()
+);
 export const setCurrentTrack = createAction('[Track Tabs] set current track', props<{ id: string }>());
 export const transferTrack = createAction(
   '[Track Manager] reorder tracks',

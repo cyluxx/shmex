@@ -40,6 +40,7 @@
     "file-saver": "^2.0.2",
     "fraction.js": "^4.0.12",
     "opensheetmusicdisplay": "^0.8.2",
+    "osmd-audio-player": "^0.6.3",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
     "uuid": "^8.3.1",

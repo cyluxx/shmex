@@ -1,0 +1,14 @@
+<button *ngIf="(audioPlayerState$ | async) !== playState" (click)="onPlay()" mat-icon-button
+        matTooltip="Export to MusicXML"
+        id="play-button" aria-label="Edit sheets">
+  <mat-icon aria-hidden="false" aria-label="Edit sheets icon">play_arrow</mat-icon>
+</button>
+<button *ngIf="(audioPlayerState$ | async) === playState" (click)="onPause()" mat-icon-button
+        matTooltip="Export to MusicXML"
+        id="pause-button" aria-label="Edit sheets">
+  <mat-icon aria-hidden="false" aria-label="Edit sheets icon">pause</mat-icon>
+</button>
+<button (click)="onStop()" mat-icon-button matTooltip="Export to MusicXML"
+        id="stop-button" aria-label="Edit sheets">
+  <mat-icon aria-hidden="false" aria-label="Edit sheets icon">stop</mat-icon>
+</button>
