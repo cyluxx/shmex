@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AudioPlayerComponent } from './audio-player.component';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from '../../store/reducer';
 
 describe('AudioPlayerComponent', () => {
   let component: AudioPlayerComponent;
@@ -8,9 +10,9 @@ describe('AudioPlayerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AudioPlayerComponent ]
-    })
-    .compileComponents();
+      declarations: [AudioPlayerComponent],
+      imports: [StoreModule.forRoot({ app: reducer })],
+    }).compileComponents();
   });
 
   beforeEach(() => {

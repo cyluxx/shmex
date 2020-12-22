@@ -30,14 +30,21 @@ import {
   updateCurrentTrack,
 } from '../utils/reducer-utils';
 import Fraction from 'fraction.js/fraction';
-import { ToolbarState } from './enum';
+import { AudioPlayerState, ToolbarState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
 import { moveItem } from '../utils/array-utils';
 
 const _reducer = createReducer(
   initialAppState,
 
-  on(addNewGroup, (state): AppState => ({ ...state, score: { groups: [...state.score.groups, { tracks: [] }] } })),
+  on(
+    addNewGroup,
+    (state): AppState => ({
+      ...state,
+      score: { groups: [...state.score.groups, { tracks: [] }] },
+      audioPlayer: { state: AudioPlayerState.STOP },
+    })
+  ),
 
   on(
     addNewTrack,
@@ -63,6 +70,7 @@ const _reducer = createReducer(
           ),
         },
         editor: { shmexlTexts: [...state.editor.shmexlTexts, { id, value: '' }] },
+        audioPlayer: { state: AudioPlayerState.STOP },
       };
     }
   ),
@@ -72,6 +80,7 @@ const _reducer = createReducer(
     (state): AppState => ({
       ...state,
       score: { groups: state.score.groups.filter((group) => group.tracks.length > 0) },
+      audioPlayer: { state: AudioPlayerState.STOP },
     })
   ),
 
@@ -82,18 +91,40 @@ const _reducer = createReducer(
       score: {
         groups: state.score.groups.map((group) => ({ tracks: group.tracks.filter((track) => track.id !== id) })),
       },
+      audioPlayer: { state: AudioPlayerState.STOP },
     })
   ),
 
   on(editCover, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.EDIT_COVER } })),
 
-  on(editCreator1, (state, { creator1 }): AppState => ({ ...state, cover: { ...state.cover, creator1 } })),
+  on(
+    editCreator1,
+    (state, { creator1 }): AppState => ({
+      ...state,
+      cover: { ...state.cover, creator1 },
+      audioPlayer: { state: AudioPlayerState.STOP },
+    })
+  ),
 
-  on(editCreator2, (state, { creator2 }): AppState => ({ ...state, cover: { ...state.cover, creator2 } })),
+  on(
+    editCreator2,
+    (state, { creator2 }): AppState => ({
+      ...state,
+      cover: { ...state.cover, creator2 },
+      audioPlayer: { state: AudioPlayerState.STOP },
+    })
+  ),
 
   on(editSheets, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.EDIT_SHEETS } })),
 
-  on(editTitle, (state, { title }): AppState => ({ ...state, cover: { ...state.cover, title } })),
+  on(
+    editTitle,
+    (state, { title }): AppState => ({
+      ...state,
+      cover: { ...state.cover, title },
+      audioPlayer: { state: AudioPlayerState.STOP },
+    })
+  ),
 
   on(goToTrackManager, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.TRACK_MANAGER } })),
 
@@ -109,6 +140,7 @@ const _reducer = createReducer(
           return group;
         }),
       },
+      audioPlayer: { state: AudioPlayerState.STOP },
     })
   ),
 
@@ -140,7 +172,7 @@ const _reducer = createReducer(
         removeExtraRestMeasures(updateCurrentTrack(state.currentTrackId, measures, state.score.groups))
       );
 
-      return { ...state, editor: { shmexlTexts }, score: { groups } };
+      return { ...state, editor: { shmexlTexts }, score: { groups }, audioPlayer: { state: AudioPlayerState.STOP } };
     }
   ),
 
@@ -160,6 +192,7 @@ const _reducer = createReducer(
           ),
         })),
       },
+      audioPlayer: { state: AudioPlayerState.STOP },
     })
   ),
 
@@ -190,6 +223,7 @@ const _reducer = createReducer(
             return group;
           }),
         },
+        audioPlayer: { state: AudioPlayerState.STOP },
       };
     }
   )
