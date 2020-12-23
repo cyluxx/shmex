@@ -191,12 +191,12 @@ export function buildTie(tieStart: boolean, tieStop: boolean): string {
 /**
  * Wraps body into meta information, and thus finalizes xml string
  */
-export function build(cover: Cover, score: Score): string {
+export function build(score: Score): string {
   return (
     '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
     '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">' +
     '<score-partwise version="3.1">' +
-    buildCover(cover) +
+    buildCover(score.cover) +
     buildPartList(score.groups) +
     score.groups.map((group) => buildParts(group.tracks)).join('') +
     '</score-partwise>'

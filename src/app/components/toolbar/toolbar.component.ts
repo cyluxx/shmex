@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { editCover, editSheets, goToTrackManager } from '../../store/actions';
 import { ExportService } from '../../service/export.service';
-import { selectAppState } from '../../store/selectors';
+import { selectScore } from '../../store/selectors';
 import { Observable, Subject } from 'rxjs';
-import { AppState } from '../../store/model';
+import { Score } from '../../store/model';
 import { withLatestFrom } from 'rxjs/operators';
 
 @Component({
@@ -14,15 +14,15 @@ import { withLatestFrom } from 'rxjs/operators';
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   onExportXml = new Subject();
-  appState$: Observable<AppState>;
+  score$: Observable<Score>;
 
   constructor(private exportService: ExportService, private store: Store) {}
 
   ngOnInit() {
-    this.appState$ = this.store.select(selectAppState);
+    this.score$ = this.store.select(selectScore);
 
-    this.onExportXml.pipe(withLatestFrom(this.appState$)).subscribe(([_, appState]) => {
-      this.exportService.exportMusicXml(appState);
+    this.onExportXml.pipe(withLatestFrom(this.score$)).subscribe(([_, score]) => {
+      this.exportService.exportMusicXml(score);
     });
   }
 

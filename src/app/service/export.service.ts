@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AppState } from '../store/model';
+import { Score } from '../store/model';
 import { saveAs } from 'file-saver';
 import format from 'xml-formatter';
 import { build } from '../utils/music-xml-builder';
@@ -10,9 +10,9 @@ import { build } from '../utils/music-xml-builder';
 export class ExportService {
   constructor() {}
 
-  public exportMusicXml(appState: AppState) {
-    const blob = new Blob([format(build(appState.cover, appState.score))], { type: 'text/xml;charset=utf-8' });
-    saveAs(blob, this.formatFilename(appState.cover.title));
+  public exportMusicXml(score: Score) {
+    const blob = new Blob([format(build(score))], { type: 'text/xml;charset=utf-8' });
+    saveAs(blob, this.formatFilename(score.cover.title));
   }
 
   public formatFilename(fileName: string): string {

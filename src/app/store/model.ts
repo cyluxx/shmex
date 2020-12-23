@@ -5,14 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const initialTrackId: string = uuidv4();
 
 export const initialAppState: AppState = {
-  audioPlayer: {
-    state: AudioPlayerState.STOP,
-  },
-  cover: {
-    title: 'Title',
-    creator1: 'Composer',
-    creator2: 'Lyricist',
-  },
+  audioPlayer: AudioPlayerState.STOP,
   currentTrackId: initialTrackId,
   editor: {
     shmexlTexts: [
@@ -23,6 +16,11 @@ export const initialAppState: AppState = {
     ],
   },
   score: {
+    cover: {
+      title: 'Title',
+      creator1: 'Composer',
+      creator2: 'Lyricist',
+    },
     groups: [
       {
         tracks: [
@@ -35,22 +33,15 @@ export const initialAppState: AppState = {
       },
     ],
   },
-  toolbar: {
-    state: ToolbarState.EDIT_SHEETS,
-  },
+  toolbar: ToolbarState.EDIT_SHEETS,
 };
 
 export interface AppState {
-  audioPlayer: AudioPlayer;
-  cover: Cover;
+  audioPlayer: AudioPlayerState;
   currentTrackId: string;
   editor: Editor;
   score: Score;
-  toolbar: Toolbar;
-}
-
-export interface AudioPlayer {
-  state: AudioPlayerState;
+  toolbar: ToolbarState;
 }
 
 export interface Cover {
@@ -90,6 +81,7 @@ export interface RhythmElementToken {
 }
 
 export interface Score {
+  cover: Cover;
   groups: Group[];
 }
 
@@ -102,10 +94,6 @@ export interface Tone {
   key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g';
   accidental?: '#' | 'b';
   octave: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-}
-
-export interface Toolbar {
-  state: ToolbarState;
 }
 
 export interface Track {
