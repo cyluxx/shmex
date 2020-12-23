@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { selectAudioPlayerState, selectMusicXml } from '../../store/selectors';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import format from 'xml-formatter';
+// import format from 'xml-formatter';
 import AudioPlayer from 'osmd-audio-player';
 import { AudioPlayerState } from '../../store/enum';
 
@@ -36,7 +36,7 @@ export class RenderComponent implements AfterViewInit, OnInit, OnDestroy {
     this.musicXmlSubscription = this.musicXml$
       .pipe(
         switchMap((next) => {
-          console.log(format(next));
+          // console.log(format(next));
           return osmd.load(next);
         })
       )

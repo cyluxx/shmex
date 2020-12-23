@@ -1,14 +1,14 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { AppState, initialAppState } from '../../store/model';
 import { ExportService } from '../../service/export.service';
+import { ToolbarState } from '../../store/enum';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from '../../store/reducer';
 
 describe('ToolbarComponent', () => {
   let component: ToolbarComponent;
   let fixture: ComponentFixture<ToolbarComponent>;
-  let store: MockStore<{ app: AppState }>;
   let mockExportService: any;
 
   beforeEach(
@@ -16,17 +16,14 @@ describe('ToolbarComponent', () => {
       mockExportService = jasmine.createSpyObj(['exportMusicXml']);
       TestBed.configureTestingModule({
         declarations: [ToolbarComponent],
-        providers: [
-          provideMockStore({ initialState: { app: initialAppState } }),
-          { provide: ExportService, useValue: mockExportService },
-        ],
+        providers: [{ provide: ExportService, useValue: mockExportService }],
+        imports: [StoreModule.forRoot({ app: reducer })],
       }).compileComponents();
     })
   );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ToolbarComponent);
-    store = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -43,4 +40,31 @@ describe('ToolbarComponent', () => {
     tick();
     expect(mockExportService.exportMusicXml).toHaveBeenCalledTimes(1);
   }));
+
+  it('should set the toolbar state to TRACK_MANAGER, onTrackManager', (done) => {
+    component.onTrackManager();
+
+    component.appState$.subscribe((next) => {
+      expect(next.toolbar.state).toBe(ToolbarState.TRACK_MANAGER);
+      done();
+    });
+  });
+
+  it('should set the toolbar state to EDIT_SHEETS, on onEditSheets', (done) => {
+    component.onEditSheets();
+
+    component.appState$.subscribe((next) => {
+      expect(next.toolbar.state).toBe(ToolbarState.EDIT_SHEETS);
+      done();
+    });
+  });
+
+  it('should set the toolbar state to EDIT_COVER, on onEditCover', (done) => {
+    component.onEditCover();
+
+    component.appState$.subscribe((next) => {
+      expect(next.toolbar.state).toBe(ToolbarState.EDIT_COVER);
+      done();
+    });
+  });
 });
