@@ -5,17 +5,15 @@ import {
   addNewTrack,
   deleteEmptyGroups,
   deleteTrack,
-  editCover,
   editCreator1,
   editCreator2,
-  editSheets,
   editTitle,
-  goToTrackManager,
   moveTrack,
   parseShmexlText,
   renameTrack,
   setAudioPlayerState,
   setCurrentTrack,
+  setToolbarState,
   transferTrack,
 } from './actions';
 import 'codemirror/addon/runmode/runmode';
@@ -30,7 +28,7 @@ import {
   updateCurrentTrack,
 } from '../utils/reducer-utils';
 import Fraction from 'fraction.js/fraction';
-import { AudioPlayerState, ToolbarState } from './enum';
+import { AudioPlayerState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
 import { moveItem } from '../utils/array-utils';
 
@@ -97,8 +95,6 @@ const _reducer = createReducer(
     })
   ),
 
-  on(editCover, (state): AppState => ({ ...state, toolbar: ToolbarState.EDIT_COVER })),
-
   on(
     editCreator1,
     (state, { creator1 }): AppState => ({
@@ -117,8 +113,6 @@ const _reducer = createReducer(
     })
   ),
 
-  on(editSheets, (state): AppState => ({ ...state, toolbar: ToolbarState.EDIT_SHEETS })),
-
   on(
     editTitle,
     (state, { title }): AppState => ({
@@ -127,8 +121,6 @@ const _reducer = createReducer(
       audioPlayer: AudioPlayerState.STOP,
     })
   ),
-
-  on(goToTrackManager, (state): AppState => ({ ...state, toolbar: ToolbarState.TRACK_MANAGER })),
 
   on(
     moveTrack,
@@ -208,6 +200,8 @@ const _reducer = createReducer(
   on(setAudioPlayerState, (state, { audioPlayerState }): AppState => ({ ...state, audioPlayer: audioPlayerState })),
 
   on(setCurrentTrack, (state, { id }): AppState => ({ ...state, currentTrackId: id })),
+
+  on(setToolbarState, (state, { toolbarState }): AppState => ({ ...state, toolbar: toolbarState })),
 
   on(
     transferTrack,

@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { editCover, editSheets, goToTrackManager } from '../../store/actions';
 import { ExportService } from '../../service/export.service';
 import { selectScore } from '../../store/selectors';
 import { Observable, Subject } from 'rxjs';
 import { Score } from '../../store/model';
 import { withLatestFrom } from 'rxjs/operators';
+import { setToolbarState } from '../../store/actions';
+import { ToolbarState } from '../../store/enum';
 
 @Component({
   selector: 'app-toolbar',
@@ -27,15 +28,15 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   onEditCover() {
-    this.store.dispatch(editCover());
+    this.store.dispatch(setToolbarState({ toolbarState: ToolbarState.EDIT_COVER }));
   }
 
   onEditSheets() {
-    this.store.dispatch(editSheets());
+    this.store.dispatch(setToolbarState({ toolbarState: ToolbarState.EDIT_SHEETS }));
   }
 
   onTrackManager() {
-    this.store.dispatch(goToTrackManager());
+    this.store.dispatch(setToolbarState({ toolbarState: ToolbarState.TRACK_MANAGER }));
   }
 
   ngOnDestroy() {
