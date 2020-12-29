@@ -1,5 +1,6 @@
 import { Measure, RhythmElement, RhythmElementToken, Track } from '../store/model';
 import Fraction from 'fraction.js';
+import { addDuration, toFraction } from './duration-calculator';
 
 /**
  * Converts a track into a shmexl string
@@ -74,4 +75,39 @@ export function toString(rhythmElementToken: RhythmElementToken): string {
     rhythmElementToken.toneTokens.join(' ') +
     ', '
   );
+}
+
+export function buildMeasures(measures: Measure[]): string {
+  let prev: Fraction = new Fraction(0);
+  let newLines = '';
+  return measures
+    .map((measure) => {
+      let rhythmElementString = '';
+      measure.rhythmElements.forEach((rhythmElement, index, rhythmElements) => {
+        const { duration } = rhythmElement;
+        if (duration.tieStop && duration.tieStart) {
+          prev = addDuration(prev, duration);
+          if (index === rhythmElements.length - 1) {
+            newLines += '\n';
+          }
+        } else if (duration.tieStart) {
+          prev = toFraction(duration);
+          if (index === rhythmElements.length - 1) {
+            newLines += '\n';
+          }
+        } else if (duration.tieStop) {
+          const durationSum = addDuration(prev, duration);
+          rhythmElementString += durationSum.n + '/' + durationSum.d + ', ' + newLines;
+          newLines = '';
+        } else {
+          rhythmElementString += '1/' + duration.value + ', ';
+        }
+      });
+
+      if (newLines === '') {
+        rhythmElementString += '\n';
+      }
+      return rhythmElementString;
+    })
+    .join('');
 }
