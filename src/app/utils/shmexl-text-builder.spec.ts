@@ -333,6 +333,53 @@ describe('buildMeasures', () => {
     ).toEqual('3/1, \n\n\n');
   });
 
+  it('returns 1/2, 1/1, \n1/2, when 1/2 1/2_|_1/2 1/2', () => {
+    expect(
+      buildMeasures([
+        {
+          rhythmElements: [
+            {
+              ...someRhythmElement,
+              duration: {
+                value: 2,
+                tieStart: false,
+                tieStop: false,
+              },
+            },
+            {
+              ...someRhythmElement,
+              duration: {
+                value: 2,
+                tieStart: true,
+                tieStop: false,
+              },
+            },
+          ],
+        },
+        {
+          rhythmElements: [
+            {
+              ...someRhythmElement,
+              duration: {
+                value: 2,
+                tieStart: false,
+                tieStop: true,
+              },
+            },
+            {
+              ...someRhythmElement,
+              duration: {
+                value: 2,
+                tieStart: false,
+                tieStop: false,
+              },
+            },
+          ],
+        },
+      ])
+    ).toEqual('1/2, 1/1, \n1/2, \n');
+  });
+
   it('returns 1/1,\n 1/4, 1/2, 3/16, 1/16,\n when 1/2_1/4_1/4 | 1/4 1/4_1/4 1/8_1/16 1/16', () => {
     expect(
       buildMeasures([
