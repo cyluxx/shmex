@@ -29,7 +29,7 @@ describe('AppComponent', () => {
 
   it('should show the edit component, when the toolbar state is EDIT_SHEETS', () => {
     store.setState({
-      app: { ...initialAppState, toolbar: { ...initialAppState.toolbar, state: ToolbarState.EDIT_SHEETS } },
+      app: { ...initialAppState, toolbar: ToolbarState.EDIT_SHEETS },
     });
 
     component.toolbarState$.subscribe((next) => expect(next).toBe(ToolbarState.EDIT_SHEETS));
@@ -37,7 +37,7 @@ describe('AppComponent', () => {
 
   it('should show the edit cover component, when the toolbar state is EDIT_COVER', () => {
     store.setState({
-      app: { ...initialAppState, toolbar: { ...initialAppState.toolbar, state: ToolbarState.EDIT_COVER } },
+      app: { ...initialAppState, toolbar: ToolbarState.EDIT_COVER },
     });
 
     component.toolbarState$.subscribe((next) => expect(next).toBe(ToolbarState.EDIT_COVER));

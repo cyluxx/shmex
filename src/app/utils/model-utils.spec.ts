@@ -1,4 +1,4 @@
-import { isRest, isRestMeasure, removeDuplicateTones } from './model-utils';
+import { isRest, isRestMeasure } from './model-utils';
 import { RhythmElement, Tone } from '../store/model';
 
 describe('isRest', () => {
@@ -52,26 +52,5 @@ describe('isRestMeasure', () => {
     expect(
       isRestMeasure({ rhythmElements: [{ duration: { value: 1, tieStart: false, tieStop: false }, tones: [] }] })
     ).toBe(true);
-  });
-});
-
-describe('removeDuplicateTones', () => {
-  it('removes duplicate tones', () => {
-    const tones: Tone[] = [
-      {
-        key: 'a',
-        octave: 4,
-      },
-      {
-        key: 'a',
-        octave: 4,
-      },
-    ];
-    expect(removeDuplicateTones(tones)).toEqual([
-      {
-        key: 'a',
-        octave: 4,
-      },
-    ]);
   });
 });

@@ -1,15 +1,11 @@
 import Fraction from 'fraction.js/fraction';
-import { ToolbarState } from './enum';
+import { AudioPlayerState, ToolbarState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialTrackId: string = uuidv4();
 
 export const initialAppState: AppState = {
-  cover: {
-    title: 'Title',
-    creator1: 'Composer',
-    creator2: 'Lyricist',
-  },
+  audioPlayer: AudioPlayerState.STOP,
   currentTrackId: initialTrackId,
   editor: {
     shmexlTexts: [
@@ -20,6 +16,11 @@ export const initialAppState: AppState = {
     ],
   },
   score: {
+    cover: {
+      title: 'Title',
+      creator1: 'Composer',
+      creator2: 'Lyricist',
+    },
     groups: [
       {
         tracks: [
@@ -32,17 +33,15 @@ export const initialAppState: AppState = {
       },
     ],
   },
-  toolbar: {
-    state: ToolbarState.EDIT_SHEETS,
-  },
+  toolbar: ToolbarState.EDIT_SHEETS,
 };
 
 export interface AppState {
-  cover: Cover;
+  audioPlayer: AudioPlayerState;
   currentTrackId: string;
   editor: Editor;
   score: Score;
-  toolbar: Toolbar;
+  toolbar: ToolbarState;
 }
 
 export interface Cover {
@@ -82,6 +81,7 @@ export interface RhythmElementToken {
 }
 
 export interface Score {
+  cover: Cover;
   groups: Group[];
 }
 
@@ -94,10 +94,6 @@ export interface Tone {
   key: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g';
   accidental?: '#' | 'b';
   octave: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-}
-
-export interface Toolbar {
-  state: ToolbarState;
 }
 
 export interface Track {

@@ -1,7 +1,7 @@
 import {
   buildAlter,
   buildDurationAndType,
-  build,
+  buildMusicXml,
   buildEndingRests,
   buildStep,
   buildPitch,
@@ -23,7 +23,7 @@ const someTrack: Track = {
 
 describe('build', () => {
   it('builds empty xml', () => {
-    const xml = build({ title: '', creator1: '', creator2: '' }, { groups: [] });
+    const xml = buildMusicXml({ cover: { title: '', creator1: '', creator2: '' }, groups: [] });
     expect(xml).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
     expect(xml).toContain('<score-partwise version="3.1">');
     expect(xml).toContain('</score-partwise>');
@@ -293,30 +293,6 @@ describe('buildNotes', () => {
     };
     const tones: Tone[] = [];
     expect(buildNotes(duration, tones)).toBe('');
-  });
-
-  it('does not build duplicate notes', () => {
-    const duration: Duration = {
-      value: 1,
-      tieStart: false,
-      tieStop: false,
-    };
-    const tones: Tone[] = [
-      {
-        key: 'a',
-        octave: 4,
-      },
-      {
-        key: 'a',
-        octave: 4,
-      },
-    ];
-    expect(buildNotes(duration, tones)).toBe(
-      '<note>' +
-        '<pitch><step>A</step><octave>4</octave></pitch>' +
-        '<duration>32</duration><type>whole</type>' +
-        '</note>'
-    );
   });
 });
 

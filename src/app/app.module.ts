@@ -24,6 +24,7 @@ import { MatCardModule } from '@angular/material/card';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TrackChipsComponent } from './components/track-chips/track-chips.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { MatChipsModule } from '@angular/material/chips';
     EditCoverComponent,
     TrackManagerComponent,
     TrackChipsComponent,
+    AudioPlayerComponent,
   ],
   imports: [
     BrowserModule,

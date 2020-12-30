@@ -1,14 +1,13 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { AppState, initialAppState } from '../../store/model';
 import { ExportService } from '../../service/export.service';
+import { StoreModule } from '@ngrx/store';
+import { reducer } from '../../store/reducer';
 
 describe('ToolbarComponent', () => {
   let component: ToolbarComponent;
   let fixture: ComponentFixture<ToolbarComponent>;
-  let store: MockStore<{ app: AppState }>;
   let mockExportService: any;
 
   beforeEach(
@@ -16,17 +15,14 @@ describe('ToolbarComponent', () => {
       mockExportService = jasmine.createSpyObj(['exportMusicXml']);
       TestBed.configureTestingModule({
         declarations: [ToolbarComponent],
-        providers: [
-          provideMockStore({ initialState: { app: initialAppState } }),
-          { provide: ExportService, useValue: mockExportService },
-        ],
+        providers: [{ provide: ExportService, useValue: mockExportService }],
+        imports: [StoreModule.forRoot({ app: reducer })],
       }).compileComponents();
     })
   );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ToolbarComponent);
-    store = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

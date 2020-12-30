@@ -5,16 +5,16 @@ import {
   addNewTrack,
   deleteEmptyGroups,
   deleteTrack,
-  editCover,
   editCreator1,
   editCreator2,
-  editSheets,
   editTitle,
-  goToTrackManager,
   moveTrack,
   parseShmexlText,
+  prettifyShmexlText,
   renameTrack,
+  setAudioPlayerState,
   setCurrentTrack,
+  setToolbarState,
   transferTrack,
 } from './actions';
 import 'codemirror/addon/runmode/runmode';
@@ -22,6 +22,7 @@ import * as CodeMirror from 'codemirror';
 import {
   appendExtraRestMeasures,
   divideRhythmElementTokensByMeasure,
+  getCurrentTrack,
   removeExtraRestMeasures,
   toDurationToken,
   toMeasures,
@@ -29,14 +30,22 @@ import {
   updateCurrentTrack,
 } from '../utils/reducer-utils';
 import Fraction from 'fraction.js/fraction';
-import { ToolbarState } from './enum';
+import { AudioPlayerState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
 import { moveItem } from '../utils/array-utils';
+import { buildShmexlText } from '../utils/shmexl-text-builder';
 
 const _reducer = createReducer(
   initialAppState,
 
-  on(addNewGroup, (state): AppState => ({ ...state, score: { groups: [...state.score.groups, { tracks: [] }] } })),
+  on(
+    addNewGroup,
+    (state): AppState => ({
+      ...state,
+      score: { ...state.score, groups: [...state.score.groups, { tracks: [] }] },
+      audioPlayer: AudioPlayerState.STOP,
+    })
+  ),
 
   on(
     addNewTrack,
@@ -45,6 +54,7 @@ const _reducer = createReducer(
       return {
         ...state,
         score: {
+          ...state.score,
           groups: appendExtraRestMeasures(
             state.score.groups.map((group, index) => {
               if (index === state.score.groups.length - 1) {
@@ -62,6 +72,7 @@ const _reducer = createReducer(
           ),
         },
         editor: { shmexlTexts: [...state.editor.shmexlTexts, { id, value: '' }] },
+        audioPlayer: AudioPlayerState.STOP,
       };
     }
   ),
@@ -70,7 +81,8 @@ const _reducer = createReducer(
     deleteEmptyGroups,
     (state): AppState => ({
       ...state,
-      score: { groups: state.score.groups.filter((group) => group.tracks.length > 0) },
+      score: { ...state.score, groups: state.score.groups.filter((group) => group.tracks.length > 0) },
+      audioPlayer: AudioPlayerState.STOP,
     })
   ),
 
@@ -79,34 +91,67 @@ const _reducer = createReducer(
     (state, { id }): AppState => ({
       ...state,
       score: {
+        ...state.score,
         groups: state.score.groups.map((group) => ({ tracks: group.tracks.filter((track) => track.id !== id) })),
       },
+      audioPlayer: AudioPlayerState.STOP,
     })
   ),
 
-  on(editCover, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.EDIT_COVER } })),
+  on(
+    editCreator1,
+    (state, { creator1 }): AppState => ({
+      ...state,
+      score: { ...state.score, cover: { ...state.score.cover, creator1 } },
+      audioPlayer: AudioPlayerState.STOP,
+    })
+  ),
 
-  on(editCreator1, (state, { creator1 }): AppState => ({ ...state, cover: { ...state.cover, creator1 } })),
+  on(
+    editCreator2,
+    (state, { creator2 }): AppState => ({
+      ...state,
+      score: { ...state.score, cover: { ...state.score.cover, creator2 } },
+      audioPlayer: AudioPlayerState.STOP,
+    })
+  ),
 
-  on(editCreator2, (state, { creator2 }): AppState => ({ ...state, cover: { ...state.cover, creator2 } })),
-
-  on(editSheets, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.EDIT_SHEETS } })),
-
-  on(editTitle, (state, { title }): AppState => ({ ...state, cover: { ...state.cover, title } })),
-
-  on(goToTrackManager, (state): AppState => ({ ...state, toolbar: { state: ToolbarState.TRACK_MANAGER } })),
+  on(
+    editTitle,
+    (state, { title }): AppState => ({
+      ...state,
+      score: { ...state.score, cover: { ...state.score.cover, title } },
+      audioPlayer: AudioPlayerState.STOP,
+    })
+  ),
 
   on(
     moveTrack,
     (state, { tracks, groupIndex, previousIndex, currentIndex }): AppState => ({
       ...state,
       score: {
+        ...state.score,
         groups: state.score.groups.map((group, index) => {
           if (index === groupIndex) {
             return { ...group, tracks: moveItem(tracks, previousIndex, currentIndex) };
           }
           return group;
         }),
+      },
+      audioPlayer: AudioPlayerState.STOP,
+    })
+  ),
+
+  on(
+    prettifyShmexlText,
+    (state): AppState => ({
+      ...state,
+      editor: {
+        shmexlTexts: updateCurrentShmexlText(
+          state.currentTrackId,
+          buildShmexlText(getCurrentTrack(state.currentTrackId, state.score.groups)),
+          state.editor.shmexlTexts
+        ),
       },
     })
   ),
@@ -139,7 +184,12 @@ const _reducer = createReducer(
         removeExtraRestMeasures(updateCurrentTrack(state.currentTrackId, measures, state.score.groups))
       );
 
-      return { ...state, editor: { shmexlTexts }, score: { groups } };
+      return {
+        ...state,
+        editor: { shmexlTexts },
+        score: { ...state.score, groups },
+        audioPlayer: AudioPlayerState.STOP,
+      };
     }
   ),
 
@@ -148,6 +198,7 @@ const _reducer = createReducer(
     (state, { id, newName }): AppState => ({
       ...state,
       score: {
+        ...state.score,
         groups: state.score.groups.map((group) => ({
           tracks: group.tracks.map((track) =>
             track.id === id
@@ -159,10 +210,15 @@ const _reducer = createReducer(
           ),
         })),
       },
+      audioPlayer: AudioPlayerState.STOP,
     })
   ),
 
+  on(setAudioPlayerState, (state, { audioPlayerState }): AppState => ({ ...state, audioPlayer: audioPlayerState })),
+
   on(setCurrentTrack, (state, { id }): AppState => ({ ...state, currentTrackId: id })),
+
+  on(setToolbarState, (state, { toolbarState }): AppState => ({ ...state, toolbar: toolbarState })),
 
   on(
     transferTrack,
@@ -171,6 +227,7 @@ const _reducer = createReducer(
       return {
         ...state,
         score: {
+          ...state.score,
           groups: state.score.groups.map((group, i) => {
             if (i === previousGroupIndex) {
               return { ...group, tracks: group.tracks.filter((_, j) => j !== previousIndex) };
@@ -184,6 +241,7 @@ const _reducer = createReducer(
             return group;
           }),
         },
+        audioPlayer: AudioPlayerState.STOP,
       };
     }
   )

@@ -25,12 +25,13 @@ describe('EditComponent', () => {
     fixture.destroy();
   });
 
-  it('should trigger shmexlText observable, on shmexlText change', () => {
+  it('should trigger shmexlText observable, on shmexlText change', (done) => {
     component.onChange('1/4 a4,');
 
     component.shmexlText$.subscribe((next) => {
       expect(next).toBe('1/4 a4,');
       expect(next).not.toBe('');
+      done();
     });
   });
 });
