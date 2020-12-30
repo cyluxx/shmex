@@ -6,6 +6,7 @@ import {
   buildMeasures,
   toRhythmElementToken,
   toString,
+  buildTones,
 } from './shmexl-text-builder';
 import { RhythmElement, RhythmElementToken, Tone } from '../store/model';
 import Fraction from 'fraction.js';
@@ -465,5 +466,28 @@ describe('buildMeasures', () => {
         },
       ])
     ).toEqual('1/1, \n1/4, 1/2, 3/16, 1/16, \n');
+  });
+});
+
+describe('buildTones', () => {
+  it('builds empty string, when tones []', () => {
+    expect(buildTones([])).toEqual('');
+  });
+
+  it('builds tone without accidental and with leading space', () => {
+    expect(buildTones([{ key: 'a', octave: 4 }])).toEqual(' a4');
+  });
+
+  it('builds tone with accidental and with leading space', () => {
+    expect(buildTones([{ key: 'a', accidental: 'b', octave: 4 }])).toEqual(' ab4');
+  });
+
+  it('builds multiple tones, separated by space and with leading space', () => {
+    expect(
+      buildTones([
+        { key: 'a', accidental: 'b', octave: 4 },
+        { key: 'e', octave: 5 },
+      ])
+    ).toEqual(' ab4 e5');
   });
 });
