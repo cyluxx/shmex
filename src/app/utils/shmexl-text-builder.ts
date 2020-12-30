@@ -13,21 +13,21 @@ export function buildMeasures(measures: Measure[]): string {
   let current: Fraction = new Fraction(0);
   let newLines = '';
   return measures
-    .map((measure) => {
+    .map((measure, measureIndex) => {
       let rhythmElementString = '';
-      measure.rhythmElements.forEach((rhythmElement, index, rhythmElements) => {
+      measure.rhythmElements.forEach((rhythmElement, rhythmElementIndex, rhythmElements) => {
         const { duration } = rhythmElement;
         current = addDuration(current, duration);
         if (!duration.tieStart) {
           rhythmElementString += `${current.n}/${current.d}${buildTones(rhythmElement.tones)}, ${newLines}`;
           newLines = '';
           current = new Fraction(0);
-        } else if (index === rhythmElements.length - 1) {
+        } else if (rhythmElementIndex === rhythmElements.length - 1) {
           newLines += '\n';
         }
       });
 
-      if (newLines === '') {
+      if (newLines === '' && measureIndex !== measures.length - 1) {
         rhythmElementString += '\n';
       }
       return rhythmElementString;

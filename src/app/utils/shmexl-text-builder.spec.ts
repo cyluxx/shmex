@@ -49,7 +49,7 @@ describe('build', () => {
           },
         ],
       })
-    ).toEqual('1/2, 1/1 a4, \n1/4, 1/4 a4, \n');
+    ).toEqual('1/2, 1/1 a4, \n1/4, 1/4 a4, ');
   });
 });
 
@@ -58,7 +58,7 @@ describe('buildMeasures', () => {
     expect(buildMeasures([])).toEqual('');
   });
 
-  it('returns 2/1, \n\n, when 1/1_|_1/1', () => {
+  it('returns 2/1, \n, when 1/1_|_1/1', () => {
     expect(
       buildMeasures([
         {
@@ -86,10 +86,10 @@ describe('buildMeasures', () => {
           ],
         },
       ])
-    ).toEqual('2/1, \n\n');
+    ).toEqual('2/1, \n');
   });
 
-  it('returns 3/1, \n\n\n, when 1/1_|_1/1_|_1/1', () => {
+  it('returns 3/1, \n\n, when 1/1_|_1/1_|_1/1', () => {
     expect(
       buildMeasures([
         {
@@ -129,7 +129,7 @@ describe('buildMeasures', () => {
           ],
         },
       ])
-    ).toEqual('3/1, \n\n\n');
+    ).toEqual('3/1, \n\n');
   });
 
   it('returns 1/2, 1/1, \n1/2, when 1/2 1/2_|_1/2 1/2', () => {
@@ -176,10 +176,10 @@ describe('buildMeasures', () => {
           ],
         },
       ])
-    ).toEqual('1/2, 1/1, \n1/2, \n');
+    ).toEqual('1/2, 1/1, \n1/2, ');
   });
 
-  it('returns 1/1,\n 1/4, 1/2, 3/16, 1/16,\n when 1/2_1/4_1/4 | 1/4 1/4_1/4 1/8_1/16 1/16', () => {
+  it('returns 1/1,\n 1/4, 1/2, 3/16, 1/16, when 1/2_1/4_1/4 | 1/4 1/4_1/4 1/8_1/16 1/16', () => {
     expect(
       buildMeasures([
         {
@@ -263,7 +263,7 @@ describe('buildMeasures', () => {
           ],
         },
       ])
-    ).toEqual('1/1, \n1/4, 1/2, 3/16, 1/16, \n');
+    ).toEqual('1/1, \n1/4, 1/2, 3/16, 1/16, ');
   });
 });
 
