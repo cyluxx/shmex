@@ -441,4 +441,66 @@ describe('toTones', () => {
       },
     ]);
   });
+
+  it('removes duplicate tones', () => {
+    expect(toTones(['a4', 'a4'])).toEqual([
+      {
+        key: 'a',
+        octave: 4,
+      },
+    ]);
+  });
+
+  it('sorts tones by octave from low to high', () => {
+    expect(toTones(['a3', 'a5', 'a4'])).toEqual([
+      {
+        key: 'a',
+        octave: 3,
+      },
+      {
+        key: 'a',
+        octave: 4,
+      },
+      {
+        key: 'a',
+        octave: 5,
+      },
+    ]);
+  });
+
+  it('sorts tones by key from low to high', () => {
+    expect(toTones(['b4', 'c4', 'f4'])).toEqual([
+      {
+        key: 'c',
+        octave: 4,
+      },
+      {
+        key: 'f',
+        octave: 4,
+      },
+      {
+        key: 'b',
+        octave: 4,
+      },
+    ]);
+  });
+
+  it('sorts tones by accidentals from low to high', () => {
+    expect(toTones(['a#4', 'ab4', 'a4'])).toEqual([
+      {
+        key: 'a',
+        accidental: 'b',
+        octave: 4,
+      },
+      {
+        key: 'a',
+        octave: 4,
+      },
+      {
+        key: 'a',
+        accidental: '#',
+        octave: 4,
+      },
+    ]);
+  });
 });

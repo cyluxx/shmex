@@ -294,30 +294,6 @@ describe('buildNotes', () => {
     const tones: Tone[] = [];
     expect(buildNotes(duration, tones)).toBe('');
   });
-
-  it('does not build duplicate notes', () => {
-    const duration: Duration = {
-      value: 1,
-      tieStart: false,
-      tieStop: false,
-    };
-    const tones: Tone[] = [
-      {
-        key: 'a',
-        octave: 4,
-      },
-      {
-        key: 'a',
-        octave: 4,
-      },
-    ];
-    expect(buildNotes(duration, tones)).toBe(
-      '<note>' +
-        '<pitch><step>A</step><octave>4</octave></pitch>' +
-        '<duration>32</duration><type>whole</type>' +
-        '</note>'
-    );
-  });
 });
 
 describe('buildOctave', () => {

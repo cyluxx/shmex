@@ -223,20 +223,54 @@ export function toRhythmElements(rhythmElementTokens: RhythmElementToken[]): Rhy
   }));
 }
 
+/**
+ * Converts tone tokens to Tone[], removing duplicates and sorting from low to high
+ */
 export function toTones(toneTokens: string[]): Tone[] {
-  return toneTokens.map((token) => {
+  const tones: Tone[] = [];
+  toneTokens.forEach((token) => {
     const splitToneToken = token.split('');
+    let candidateTone: Tone;
     if (splitToneToken.length === 2) {
-      return {
+      candidateTone = {
         key: splitToneToken[0] as 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g',
         octave: +splitToneToken[1] as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8,
       };
     } else {
-      return {
+      candidateTone = {
         key: splitToneToken[0] as 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g',
         accidental: splitToneToken[1] as '#' | 'b',
         octave: +splitToneToken[2] as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8,
       };
     }
+    if (
+      !tones.find(
+        (thisTone) =>
+          thisTone.key === candidateTone.key &&
+          thisTone.octave === candidateTone.octave &&
+          thisTone.accidental === candidateTone.accidental
+      )
+    ) {
+      tones.push(candidateTone);
+    }
+  });
+  return sortTones(tones);
+}
+
+function sortTones(tones: Tone[]) {
+  return tones.sort((a, b) => {
+    if (a.octave !== b.octave) {
+      return a.octave - b.octave;
+    }
+
+    const keyOrder = ['c', 'd', 'e', 'f', 'g', 'a', 'b'];
+    const keyIndexA = keyOrder.indexOf(a.key);
+    const keyIndexB = keyOrder.indexOf(b.key);
+    if (keyIndexA !== keyIndexB) {
+      return keyIndexA - keyIndexB;
+    }
+
+    const accidentalOrder = ['b', undefined, '#'];
+    return accidentalOrder.indexOf(a.accidental) - accidentalOrder.indexOf(b.accidental);
   });
 }

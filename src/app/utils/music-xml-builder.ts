@@ -1,5 +1,5 @@
 import { Cover, Duration, Group, Measure, RhythmElement, Score, Tone, Track } from '../store/model';
-import { isRest, removeDuplicateTones } from './model-utils';
+import { isRest } from './model-utils';
 import { addDuration, asDurationValue, getFractionalPart } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 
@@ -104,7 +104,7 @@ export function buildMeasures(measures: Measure[]): string {
 }
 
 export function buildNotes(duration: Duration, tones: Tone[]): string {
-  return removeDuplicateTones(tones)
+  return tones
     .map((tone, index) => {
       return (
         '<note>' +
