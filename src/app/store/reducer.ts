@@ -10,6 +10,7 @@ import {
   editTitle,
   moveTrack,
   parseShmexlText,
+  prettifyShmexlText,
   renameTrack,
   setAudioPlayerState,
   setCurrentTrack,
@@ -21,6 +22,7 @@ import * as CodeMirror from 'codemirror';
 import {
   appendExtraRestMeasures,
   divideRhythmElementTokensByMeasure,
+  getCurrentTrack,
   removeExtraRestMeasures,
   toDurationToken,
   toMeasures,
@@ -31,6 +33,7 @@ import Fraction from 'fraction.js/fraction';
 import { AudioPlayerState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
 import { moveItem } from '../utils/array-utils';
+import { buildShmexlText } from '../utils/shmexl-text-builder';
 
 const _reducer = createReducer(
   initialAppState,
@@ -136,6 +139,20 @@ const _reducer = createReducer(
         }),
       },
       audioPlayer: AudioPlayerState.STOP,
+    })
+  ),
+
+  on(
+    prettifyShmexlText,
+    (state): AppState => ({
+      ...state,
+      editor: {
+        shmexlTexts: updateCurrentShmexlText(
+          state.currentTrackId,
+          buildShmexlText(getCurrentTrack(state.currentTrackId, state.score.groups)),
+          state.editor.shmexlTexts
+        ),
+      },
     })
   ),
 

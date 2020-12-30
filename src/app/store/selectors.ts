@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from './model';
-import { build as buildXml } from '../utils/music-xml-builder';
+import { buildMusicXml as buildXml } from '../utils/music-xml-builder';
 import { getAllGroupTracks } from '../utils/model-utils';
 
 const _selectAppState = (state): AppState => state.app;

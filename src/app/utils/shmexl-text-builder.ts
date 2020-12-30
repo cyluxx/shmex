@@ -5,7 +5,7 @@ import { addDuration } from './duration-calculator';
 /**
  * Converts a track into a shmexl string
  */
-export function build(track: Track): string {
+export function buildShmexlText(track: Track): string {
   return buildMeasures(track.measures);
 }
 

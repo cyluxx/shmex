@@ -1,4 +1,4 @@
-import { Duration, Group, Measure, RhythmElement, RhythmElementToken, ShmexlText, Tone } from '../store/model';
+import { Duration, Group, Measure, RhythmElement, RhythmElementToken, ShmexlText, Tone, Track } from '../store/model';
 import { asDurationValue, decomposeAsc, decomposeDesc, sumFractions } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 import { isRestMeasure } from './model-utils';
@@ -131,6 +131,16 @@ export function divideRhythmElementTokenByNumerator(
       tieStop: true,
     };
   });
+}
+
+export function getCurrentTrack(currentTrackId: string, groups: Group[]): Track {
+  for (const group of groups) {
+    for (const track of group.tracks) {
+      if (track.id === currentTrackId) {
+        return track;
+      }
+    }
+  }
 }
 
 /**

@@ -1,4 +1,4 @@
-import { build, buildMeasures, buildTones } from './shmexl-text-builder';
+import { buildMeasures, buildShmexlText, buildTones } from './shmexl-text-builder';
 import { RhythmElement, Tone } from '../store/model';
 
 const someRhythmElement: RhythmElement = {
@@ -17,12 +17,12 @@ const someTone: Tone = {
 
 describe('build', () => {
   it('returns empty string, when empty track', () => {
-    expect(build({ id: 'foo', name: 'foo', measures: [] })).toEqual('');
+    expect(buildShmexlText({ id: 'foo', name: 'foo', measures: [] })).toEqual('');
   });
 
   it('builds correct shmexl string', () => {
     expect(
-      build({
+      buildShmexlText({
         id: 'foo',
         name: 'foo',
         measures: [
