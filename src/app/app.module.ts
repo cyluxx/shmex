@@ -25,6 +25,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TrackChipsComponent } from './components/track-chips/track-chips.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
+import { EditGlobalComponent } from './components/edit-global/edit-global.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { AudioPlayerComponent } from './components/audio-player/audio-player.com
     TrackManagerComponent,
     TrackChipsComponent,
     AudioPlayerComponent,
+    EditGlobalComponent,
   ],
   imports: [
     BrowserModule,

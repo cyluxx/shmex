@@ -31,6 +31,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.store.dispatch(setToolbarState({ toolbarState: ToolbarState.EDIT_COVER }));
   }
 
+  onEditGlobal() {
+    this.store.dispatch(setToolbarState({ toolbarState: ToolbarState.EDIT_GLOBAL }));
+  }
+
   onEditSheets() {
     this.store.dispatch(setToolbarState({ toolbarState: ToolbarState.EDIT_SHEETS }));
   }

@@ -13,6 +13,7 @@
     <div class="col-lg">
       <app-edit *ngIf="(toolbarState$ | async) === EDIT_SHEETS"></app-edit>
       <app-edit-cover *ngIf="(toolbarState$ | async) === EDIT_COVER"></app-edit-cover>
+      <app-edit-global *ngIf="(toolbarState$ | async) === EDIT_GLOBAL"></app-edit-global>
       <app-track-manager *ngIf="(toolbarState$ | async) === TRACK_MANAGER"></app-track-manager>
     </div>
     <div class="col-lg">
