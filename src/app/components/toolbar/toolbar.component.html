@@ -1,10 +1,13 @@
 <mat-toolbar color="primary" class="d-flex justify-content-between">
   <div>
     <button (click)="onEditSheets()" mat-icon-button matTooltip="Edit Sheet Music" aria-label="Edit sheets">
-      <mat-icon aria-hidden="false" aria-label="Edit sheets icon">edit</mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Edit sheets icon">music_note</mat-icon>
+    </button>
+    <button (click)="onEditChords()" mat-icon-button matTooltip="Edit Chords" aria-label="Edit chords">
+      <mat-icon aria-hidden="false" aria-label="Edit sheets icon">change_history</mat-icon>
     </button>
     <button (click)="onEditGlobal()" mat-icon-button matTooltip="Edit Global Score Data" aria-label="Edit global score data">
-      <mat-icon aria-hidden="false" aria-label="Edit sheets icon">category</mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Edit sheets icon">emoji_symbols</mat-icon>
     </button>
     <button (click)="onEditCover()" mat-icon-button matTooltip="Edit Title & Creators"
             aria-label="Edit cover, like song title or composer">

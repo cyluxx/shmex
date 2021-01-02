@@ -13,7 +13,6 @@ export const moveTrack = createAction(
   'Track manager move track',
   props<{ tracks: Track[]; groupIndex: number; previousIndex: number; currentIndex: number }>()
 );
-export const parseShmexglText = createAction('[Edit Global] parse shmexgl text', props<{ editorText: string }>());
 export const parseShmexlText = createAction('[Edit] parse shmexl text', props<{ editorText: string }>());
 export const prettifyShmexlText = createAction('[Edit] prettify shmexl text');
 export const renameTrack = createAction('[Track Manager] rename track', props<{ id: string; newName: string }>());

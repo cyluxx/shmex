@@ -5,6 +5,7 @@ export enum AudioPlayerState {
 }
 
 export enum ToolbarState {
+  EDIT_CHORDS,
   EDIT_COVER,
   EDIT_GLOBAL,
   EDIT_SHEETS,

@@ -27,6 +27,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     });
   }
 
+  onEditChords() {
+    this.store.dispatch(setToolbarState({ toolbarState: ToolbarState.EDIT_CHORDS }));
+  }
+
   onEditCover() {
     this.store.dispatch(setToolbarState({ toolbarState: ToolbarState.EDIT_COVER }));
   }

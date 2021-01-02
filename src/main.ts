@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 import './shmexl';
-import './shmexgl';
+import './smlc';
 
 if (environment.production) {
   enableProdMode();

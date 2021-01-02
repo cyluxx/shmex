@@ -26,6 +26,7 @@ import { TrackChipsComponent } from './components/track-chips/track-chips.compon
 import { MatChipsModule } from '@angular/material/chips';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 import { EditGlobalComponent } from './components/edit-global/edit-global.component';
+import { EditChordsComponent } from './components/edit-chords/edit-chords.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { EditGlobalComponent } from './components/edit-global/edit-global.compon
     TrackChipsComponent,
     AudioPlayerComponent,
     EditGlobalComponent,
+    EditChordsComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,9 @@
+<ngx-codemirror
+  [ngModel]="smlcText$ | async"
+  [options]="{
+    lineNumbers: true,
+    theme: 'material-darker',
+    mode: 'smlc'
+  }"
+  (ngModelChange)="onChange($event)"
+></ngx-codemirror>

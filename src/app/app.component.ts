@@ -10,6 +10,7 @@ import { ToolbarState } from './store/enum';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  EDIT_CHORDS = ToolbarState.EDIT_CHORDS;
   EDIT_COVER = ToolbarState.EDIT_COVER;
   EDIT_GLOBAL = ToolbarState.EDIT_GLOBAL;
   EDIT_SHEETS = ToolbarState.EDIT_SHEETS;
