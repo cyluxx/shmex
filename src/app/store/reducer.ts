@@ -10,6 +10,7 @@ import {
   editTitle,
   moveTrack,
   parseShmexlText,
+  parseSmlc,
   prettifyShmexlText,
   renameTrack,
   setAudioPlayerState,
@@ -24,6 +25,7 @@ import {
   divideRhythmElementTokensByMeasure,
   getCurrentTrack,
   removeExtraRestMeasures,
+  toChords,
   toDurationToken,
   toMeasures,
   updateCurrentShmexlText,
@@ -189,6 +191,38 @@ const _reducer = createReducer(
         editor: { shmexlTexts },
         score: { ...state.score, groups },
         audioPlayer: AudioPlayerState.STOP,
+      };
+    }
+  ),
+
+  on(
+    parseSmlc,
+    (state, { smlc }): AppState => {
+      let currentDurationToken: Fraction | null = null;
+      let currentChordToken: string;
+      const chordTokens: { durationToken: Fraction | null; chordString: string }[] = [];
+
+      CodeMirror.runMode(smlc, 'smlc', (token, style) => {
+        switch (style) {
+          case 'atom':
+            currentDurationToken = toDurationToken(token);
+            break;
+          case 'keyword':
+            currentChordToken = token;
+            break;
+          case 'operator':
+            chordTokens.push({ durationToken: currentDurationToken, chordString: currentChordToken });
+            currentDurationToken = null;
+            break;
+        }
+      });
+
+      return {
+        ...state,
+        score: {
+          ...state.score,
+          chords: toChords(chordTokens),
+        },
       };
     }
   ),

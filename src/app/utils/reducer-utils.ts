@@ -1,4 +1,14 @@
-import { Duration, Group, Measure, RhythmElement, RhythmElementToken, ShmexlText, Tone, Track } from '../store/model';
+import {
+  Chord,
+  Duration,
+  Group,
+  Measure,
+  RhythmElement,
+  RhythmElementToken,
+  ShmexlText,
+  Tone,
+  Track,
+} from '../store/model';
 import { asDurationValue, decomposeAsc, decomposeDesc, sumFractions } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 import { isRestMeasure } from './model-utils';
@@ -191,6 +201,10 @@ export function updateCurrentTrack(currentTrackId: string, measures: Measure[], 
         : track
     ),
   }));
+}
+
+export function toChords(chordTokens: { durationToken: Fraction | null; chordString: string }[]): Chord[] {
+  return [];
 }
 
 export function toDurationToken(durationTokenString: string): Fraction {

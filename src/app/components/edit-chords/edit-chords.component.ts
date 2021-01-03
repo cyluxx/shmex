@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { parseSmlc } from '../../store/actions';
 
 @Component({
   selector: 'app-edit-chords',
@@ -9,9 +11,11 @@ import { Observable } from 'rxjs';
 export class EditChordsComponent implements OnInit {
   smlcText$: Observable<string>;
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {}
 
-  onChange(smlcText: string) {}
+  onChange(smlc: string) {
+    this.store.dispatch(parseSmlc({ smlc }));
+  }
 }

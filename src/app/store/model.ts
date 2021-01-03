@@ -1,5 +1,5 @@
 import Fraction from 'fraction.js/fraction';
-import { AudioPlayerState, ToolbarState } from './enum';
+import { AudioPlayerState, ChordExtension, ChordType, ToolbarState } from './enum';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialTrackId: string = uuidv4();
@@ -21,6 +21,7 @@ export const initialAppState: AppState = {
       creator1: 'Composer',
       creator2: 'Lyricist',
     },
+    chords: [],
     groups: [
       {
         tracks: [
@@ -42,6 +43,20 @@ export interface AppState {
   editor: Editor;
   score: Score;
   toolbar: ToolbarState;
+}
+
+export interface Chord {
+  duration: { numerator: number; denominator: number };
+  root: ChordTone;
+  type: ChordType;
+  extension: ChordExtension;
+  add: 9 | 11 | 13;
+  slash: ChordTone;
+}
+
+export interface ChordTone {
+  key: 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G';
+  accidental?: '#' | 'b';
 }
 
 export interface Cover {
@@ -82,6 +97,7 @@ export interface RhythmElementToken {
 
 export interface Score {
   cover: Cover;
+  chords: Chord[];
   groups: Group[];
 }
 

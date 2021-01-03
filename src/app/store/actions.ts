@@ -14,6 +14,7 @@ export const moveTrack = createAction(
   props<{ tracks: Track[]; groupIndex: number; previousIndex: number; currentIndex: number }>()
 );
 export const parseShmexlText = createAction('[Edit] parse shmexl text', props<{ editorText: string }>());
+export const parseSmlc = createAction('[Edit Chords] parse shml', props<{ smlc: string }>());
 export const prettifyShmexlText = createAction('[Edit] prettify shmexl text');
 export const renameTrack = createAction('[Track Manager] rename track', props<{ id: string; newName: string }>());
 export const setAudioPlayerState = createAction(
