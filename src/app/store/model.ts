@@ -49,9 +49,9 @@ export interface Chord {
   duration: { numerator: number; denominator: number };
   root: ChordTone;
   type: ChordType;
-  extension: ChordExtension;
-  add: 9 | 11 | 13;
-  slash: ChordTone;
+  extension?: ChordExtension;
+  add?: 9 | 11 | 13;
+  slash?: ChordTone;
 }
 
 export interface ChordTone {

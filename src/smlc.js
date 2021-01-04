@@ -1,7 +1,8 @@
 import CodeMirror from 'codemirror';
+import 'codemirror/addon/mode/simple';
 
 const chord = {
-  regex: /[A-G][#b]?(dim7?|aug|j9|13|7#5|7b9#5|7b5#9|7sus4|sus2|5|m?(6?9?|7(b5)?|j7|11|add9)?)?(\/[A-G][#b]?)?/,
+  regex: /[A-G][#b]?(((m|aug|dim)?M?|\*)(6|7|b?9|11|13)?|M?(6|7|9|11|13)?(sus2|sus4)|5|7b5)?(add(9|11|13))?(\/[A-G][#b]?)?/,
   token: 'keyword',
   next: 'separator',
 };

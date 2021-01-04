@@ -23,7 +23,7 @@ const someTrack: Track = {
 
 describe('build', () => {
   it('builds empty xml', () => {
-    const xml = buildMusicXml({ cover: { title: '', creator1: '', creator2: '' }, groups: [] });
+    const xml = buildMusicXml({ cover: { title: '', creator1: '', creator2: '' }, groups: [], chords: [] });
     expect(xml).toContain('<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
     expect(xml).toContain('<score-partwise version="3.1">');
     expect(xml).toContain('</score-partwise>');

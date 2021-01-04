@@ -1,5 +1,6 @@
 import {
   Chord,
+  ChordTone,
   Duration,
   Group,
   Measure,
@@ -12,6 +13,7 @@ import {
 import { asDurationValue, decomposeAsc, decomposeDesc, sumFractions } from './duration-calculator';
 import Fraction from 'fraction.js/fraction';
 import { isRestMeasure } from './model-utils';
+import { ChordExtension, ChordType } from '../store/enum';
 
 /**
  * appends extra rest measures to tracks until all tracks have the same measure length
@@ -204,7 +206,66 @@ export function updateCurrentTrack(currentTrackId: string, measures: Measure[], 
 }
 
 export function toChords(chordTokens: { durationToken: Fraction | null; chordString: string }[]): Chord[] {
-  return [];
+  return chordTokens.map((token) => {
+    let chordString = token.chordString;
+
+    let duration = { numerator: 1, denominator: 1 };
+    if (token.durationToken) {
+      duration = { numerator: token.durationToken.n, denominator: token.durationToken.d };
+    }
+
+    let root: ChordTone = { key: chordString.charAt(0) as 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' };
+    chordString = chordString.substring(1);
+    if (chordString.charAt(0) === '#' || chordString.charAt(0) === 'b') {
+      root = { ...root, accidental: chordString.charAt(0) as '#' | 'b' };
+      chordString = chordString.substring(1);
+    }
+
+    let type: ChordType = ChordType.MAJOR;
+    Object.values(ChordType).forEach((ct) => {
+      if (chordString.includes(ct)) {
+        type = ct;
+      }
+    });
+
+    let chord: Chord = { duration, root, type };
+
+    let extension: ChordExtension;
+    Object.values(ChordExtension).forEach((ce) => {
+      if (chordString.includes(ce)) {
+        extension = ce;
+      }
+    });
+    if (extension) {
+      chord = { ...chord, extension };
+    }
+
+    let add: 9 | 11 | 13;
+    if (chordString.includes('add9')) {
+      add = 9;
+    } else if (chordString.includes('add11')) {
+      add = 11;
+    } else if (chordString.includes('add13')) {
+      add = 13;
+    }
+    if (add) {
+      chord = { ...chord, add };
+    }
+
+    let slash: ChordTone;
+    const splittedChordString = chordString.split('/');
+    if (splittedChordString.length > 1) {
+      slash = { key: chordString.charAt(0) as 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' };
+      if (splittedChordString[1].length === 2) {
+        slash = { ...slash, accidental: chordString.charAt(0) as '#' | 'b' };
+      }
+    }
+    if (slash) {
+      chord = { ...chord, slash };
+    }
+
+    return chord;
+  });
 }
 
 export function toDurationToken(durationTokenString: string): Fraction {
