@@ -36,7 +36,7 @@
     "@ngrx/store": "^10.0.0",
     "@ngrx/store-devtools": "^10.0.0",
     "bootstrap": "^4.5.2",
-    "codemirror": "^5.53.2",
+    "codemirror": "^5.58.2",
     "file-saver": "^2.0.2",
     "fraction.js": "^4.0.12",
     "opensheetmusicdisplay": "^0.8.7",
